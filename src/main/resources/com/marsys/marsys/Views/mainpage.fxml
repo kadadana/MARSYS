@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="com.marsys.marsys.Controllers.MainController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <Button minHeight="50.0" minWidth="250.0" onAction="#goToSalesScreen" text="Sale" textAlignment="CENTER" />
+    <Button minHeight="50.0" minWidth="250.0" onAction="#goToProductEntryScreen" text="Product Entry" textAlignment="CENTER" />
+    <Button minHeight="50.0" minWidth="250.0" onAction="#goToStockInventoryScreen" text="Stock and Inventory" textAlignment="CENTER" />
+    <Button minHeight="50.0" minWidth="250.0" onAction="#goToSalesReportsScreen" text="Reports" textAlignment="CENTER" />
+    <Button minHeight="50.0" minWidth="250.0" onAction="#goToProductManagementScreen" text="Product Management" textAlignment="CENTER" />
+    <Button minHeight="50.0" minWidth="250.0" onAction="#goToEmployeeManagementScreen" text="Employee Management" textAlignment="CENTER" />
+    <Button minHeight="50.0" minWidth="250.0" onAction="#goToDiscountCampaignScreen" text="Discount and Campaign Management" textAlignment="CENTER" />
+    <Button minHeight="35.0" minWidth="100.0" onAction="#exitApp" text="Logout" textAlignment="CENTER" />
+</VBox>
