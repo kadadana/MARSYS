@@ -5,6 +5,8 @@ import java.sql.*;
 public class Repository {
     public String url = "jdbc:sqlite:src/main/resources/Repositories/MARSYS_DB.db";
 
+    //Bu metodu çağırırken almak istediğin verinin tablo adı, sütun adı ve id sini veriyorsun.
+    //Fonksiyon o verilerle bir select sorgusu çalıştırarak sana geri dönüş yapıyor.
     public String getCellById(String tableName, String columnName, String id) {
         String query = "SELECT [" + columnName + "] FROM [" + tableName + "] WHERE ID = ?";
         String cell = null;
