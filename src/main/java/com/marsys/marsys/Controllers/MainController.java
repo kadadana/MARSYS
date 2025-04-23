@@ -47,10 +47,37 @@ public class MainController {
 
 
     }
-    public void goToProductEntryScreen() {
+    public void goToProductEntryScreen(ActionEvent event) {
+        if(user.getPosition().equals("MANAGER")||user.getPosition().equals("WAREHOUSE")){
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/marsys/marsys/Views/productentry.fxml"));
+                Parent productentryRoot = loader.load();
+
+                Stage stage  = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Scene productentryScene  = new Scene(productentryRoot);
+
+                stage.setScene(productentryScene);
+                stage.show();
+            }catch (IOException e){
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setContentText("Failed to load the Sales screen.");
+                alert.showAndWait();
+            }
+
+
+        }else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("You don't have access for this operation!");
+            alert.showAndWait();
+        }
+
 
     }
     public void goToStockInventoryScreen() {
+
         // Burada sales screen'e gitme işlemini yapabilirsiniz.
     }
     public void goToSalesReportsScreen() {
