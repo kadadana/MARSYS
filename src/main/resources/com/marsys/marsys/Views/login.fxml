@@ -15,6 +15,7 @@
 
     <Label fx:id="lblLogin" text="Log In" style="-fx-font-size: 50px; -fx-text-fill: blue;" />
 
+    <TextField fx:id="storeCodeField" promptText="Store Code" style="-fx-pref-width: 200px; -fx-pref-height: 40px;" />
     <TextField fx:id="idField" promptText="ID" style="-fx-pref-width: 200px; -fx-pref-height: 40px;" />
     <PasswordField fx:id="passwordField" promptText="Password" style="-fx-pref-width: 200px; -fx-pref-height: 40px;" />
     <Button text="Login" onAction="#handleLogin"/>

@@ -20,35 +20,36 @@ public class LoginController {
 
     Repository _repository = new Repository();
 
-
+    @FXML
+    private TextField storeCodeField;
     @FXML
     private TextField idField;
-
     @FXML
     private PasswordField passwordField;
 
     @FXML
     public void handleLogin(ActionEvent event) {
 
+        String enteredStoreCode = storeCodeField.getText();
         String enteredId = idField.getText();
         String enteredPassword = passwordField.getText();
         String password = _repository.getCellById("EMPLOYEE", "PASSWORD", enteredId);
+        String storeCode = _repository.getCellById("EMPLOYEE","STORE_CODE",enteredId);
 
 
-
-        if (enteredPassword.equals(password)) {
+        if (enteredPassword.equals(password) && enteredStoreCode.equals(storeCode)) {
             String id = _repository.getCellById("EMPLOYEE", "ID", enteredId);
             String name = _repository.getCellById("EMPLOYEE", "NAME", enteredId);
             String lastName = _repository.getCellById("EMPLOYEE", "LAST_NAME", enteredId);
             String position = _repository.getCellById("EMPLOYEE", "POSITION", enteredId);
-            Employee loggedInEmployee = new Employee(name, lastName, position,id, password);
+            Employee loggedInEmployee = new Employee(name, lastName, position,id, password, storeCode);
             Session.getInstance().setCurrentUser(loggedInEmployee);
             showNextScene();
         } else {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Log in failed");
-            alert.setHeaderText("Invalid Username or Password!");
-            alert.setContentText("Please check your username and password.");
+            alert.setHeaderText("Invalid Username, Password or Store Code!");
+            alert.setContentText("Please check your username, password and store code.");
             alert.showAndWait();
         }
     }

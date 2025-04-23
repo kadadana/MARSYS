@@ -6,13 +6,15 @@ public class Employee {
     private String position;
     private String id;
     private String password;
+    private String storeCode;
 
-    public Employee(String firstName, String lastName, String position, String id, String password) {
+    public Employee(String firstName, String lastName, String position, String id, String password, String storeCode) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.position = position;
         this.id = id;
         this.password = password;
+        this.storeCode = storeCode;
     }
 
     public String getFirstName() {
@@ -53,5 +55,13 @@ public class Employee {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getStoreCode() {
+        return storeCode;
+    }
+
+    public void setStoreCode(String storeCode) {
+        this.storeCode = storeCode;
     }
 }
