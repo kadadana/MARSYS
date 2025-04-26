@@ -2,6 +2,7 @@ package com.marsys.marsys;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -10,12 +11,20 @@ import java.io.IOException;
 public class MARSYS_Main extends Application {
 
     @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/marsys/marsys/Views/login.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(),300,300);
-        stage.setTitle("MARSYS");
-        stage.setScene(scene);
-        stage.show();
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("/com/marsys/marsys/Views/Layout.fxml"));
+        Scene scene = new Scene(root);
+
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(true); // Ekran boyutu sabit
+        primaryStage.setTitle("MARSYS");
+        primaryStage.show();
+
+        primaryStage.setMinWidth(800);
+        primaryStage.setMinHeight(600);
+
+        primaryStage.setWidth(1000);
+        primaryStage.setHeight(700);
     }
 
     public static void main(String[] args) {
