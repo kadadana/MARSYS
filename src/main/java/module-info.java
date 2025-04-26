@@ -11,6 +11,7 @@ module com.marsys.marsys {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires java.sql;
+    requires org.postgresql.jdbc;
 
     opens com.marsys.marsys to javafx.fxml;
     exports com.marsys.marsys;
