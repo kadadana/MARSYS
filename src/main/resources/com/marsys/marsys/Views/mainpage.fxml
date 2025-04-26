@@ -3,18 +3,38 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12"
+            fx:controller="com.marsys.marsys.Controllers.MainController">
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #2c3e50;">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label fx:id="lblMainPage" text="Main" style="-fx-font-size: 50px; -fx-text-fill: red;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </top>
 
-<VBox alignment="CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="com.marsys.marsys.Controllers.MainController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
+    <center>
+        <VBox alignment="CENTER">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            </padding>
+            <Button fx:id="goToSalesScreen" minHeight="50.0" minWidth="250.0" onAction="#goToSalesScreen" text="Sale" textAlignment="CENTER"/>
+            <Button minHeight="50.0" minWidth="250.0" onAction="#goToProductEntryScreen" text="Product Entry"
+                    textAlignment="CENTER"/>
+            <Button minHeight="50.0" minWidth="250.0" onAction="#goToStockInventoryScreen" text="Stock and Inventory"
+                    textAlignment="CENTER"/>
+            <Button minHeight="50.0" minWidth="250.0" onAction="#goToSalesReportsScreen" text="Reports"
+                    textAlignment="CENTER"/>
+            <Button minHeight="50.0" minWidth="250.0" onAction="#goToProductManagementScreen" text="Product Management"
+                    textAlignment="CENTER"/>
+            <Button minHeight="50.0" minWidth="250.0" onAction="#goToEmployeeManagementScreen"
+                    text="Employee Management" textAlignment="CENTER"/>
+            <Button minHeight="50.0" minWidth="250.0" onAction="#goToDiscountCampaignScreen"
+                    text="Discount and Campaign Management" textAlignment="CENTER"/>
+            <Button fx:id="btnLogout" minHeight="35.0" minWidth="100.0" onAction="#logout" text="Logout" textAlignment="CENTER"/>
+        </VBox>
+    </center>
+</BorderPane>
 
-    <Button minHeight="50.0" minWidth="250.0" onAction="#goToSalesScreen" text="Sale" textAlignment="CENTER" />
-    <Button minHeight="50.0" minWidth="250.0" onAction="#goToProductEntryScreen" text="Product Entry" textAlignment="CENTER" />
-    <Button minHeight="50.0" minWidth="250.0" onAction="#goToStockInventoryScreen" text="Stock and Inventory" textAlignment="CENTER" />
-    <Button minHeight="50.0" minWidth="250.0" onAction="#goToSalesReportsScreen" text="Reports" textAlignment="CENTER" />
-    <Button minHeight="50.0" minWidth="250.0" onAction="#goToProductManagementScreen" text="Product Management" textAlignment="CENTER" />
-    <Button minHeight="50.0" minWidth="250.0" onAction="#goToEmployeeManagementScreen" text="Employee Management" textAlignment="CENTER" />
-    <Button minHeight="50.0" minWidth="250.0" onAction="#goToDiscountCampaignScreen" text="Discount and Campaign Management" textAlignment="CENTER" />
-    <Button minHeight="35.0" minWidth="100.0" onAction="#exitApp" text="Logout" textAlignment="CENTER" />
-</VBox>

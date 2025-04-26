@@ -10,35 +10,29 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class MainController {
+    LayoutController _layoutController = new LayoutController();
+    @FXML
+    private Button btnLogout;
+    @FXML
+    private Button goToSalesScreen;
+
+
     Employee user = Session.getInstance().getCurrentUser();
 
     public void goToSalesScreen(ActionEvent event) {
-        if(user.getPosition().equals("MANAGER")){
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/marsys/marsys/Views/sales.fxml"));
-                Parent salesRoot = loader.load();
+        if (user.getPosition().equals("MANAGER") || user.getPosition().equals("CASHIER")) {
 
-                Stage stage  = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Scene salesScene  = new Scene(salesRoot);
-
-                stage.setScene(salesScene);
-                stage.show();
-            }catch (IOException e){
-                e.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setContentText("Failed to load the Sales screen.");
-                alert.showAndWait();
-            }
+            _layoutController.loadPageByButton("/com/marsys/marsys/Views/sales.fxml", goToSalesScreen);
 
 
-        }else {
+        } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText("You don't have access for this operation!");
@@ -47,26 +41,34 @@ public class MainController {
 
 
     }
+
     public void goToProductEntryScreen() {
 
     }
+
     public void goToStockInventoryScreen() {
         // Burada sales screen'e gitme işlemini yapabilirsiniz.
     }
+
     public void goToSalesReportsScreen() {
         // Burada sales screen'e gitme işlemini yapabilirsiniz.
     }
+
     public void goToProductManagementScreen() {
         // Burada sales screen'e gitme işlemini yapabilirsiniz.
     }
+
     public void goToEmployeeManagementScreen() {
         // Burada sales screen'e gitme işlemini yapabilirsiniz.
     }
+
     public void goToDiscountCampaignScreen() {
         // Burada sales screen'e gitme işlemini yapabilirsiniz.
     }
-    public void exitApp() {
-        // Burada sales screen'e gitme işlemini yapabilirsiniz.
+
+    public void logout(ActionEvent event) {
+        Session.getInstance().setCurrentUser(null);
+        _layoutController.loadPageByButton("/com/marsys/marsys/Views/login.fxml", btnLogout);
     }
 
 }

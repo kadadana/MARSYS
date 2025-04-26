@@ -1,16 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.geometry.Insets?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.marsys.marsys.Controllers.SalesController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
 
-</VBox>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.marsys.marsys.Controllers.SalesController">
+
+    <!-- Üst bar -->
+    <top>
+        <HBox spacing="10" style="-fx-background-color: #2c3e50;">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <VBox alignment="CENTER_RIGHT">
+                <Label fx:id="lblSale" text="Sale" style="-fx-text-fill: red; -fx-font-size: 50px;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <VBox alignment="CENTER_RIGHT">
+                <Label fx:id="lblUserName" style="-fx-text-fill: white; -fx-font-size: 25px;"/>
+                <Label fx:id="lblUserId" style="-fx-text-fill: lightgray; -fx-font-size: 20px;"/>
+            </VBox>
+        </HBox>
+    </top>
+
+    <!-- Ana satış içeriği -->
+    <center>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Label text="Sale" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+            <!-- Barkod Okutma Alanı -->
+            <HBox spacing="10">
+                <Label text="Barcode: "/>
+                <TextField fx:id="barcodeField" promptText="Enter the barcode..."/>
+                <Button fx:id="btnReadBarcode" text="Add" onAction="#onAddProduct"/>
+            </HBox>
+
+            <!-- Satış Listesi Tablosu -->
+            <TableView fx:id="salesTable" prefHeight="300">
+                <columns>
+                    <TableColumn fx:id="colBarcode" text="Barcode"/>
+                    <TableColumn fx:id="colProductName" text="Product Name"/>
+                    <TableColumn fx:id="colQuantity" text="Quantity"/>
+                    <TableColumn fx:id="colTaxRate" text="Tax Rate"/>
+                    <TableColumn fx:id="colDiscount" text="Discount"/>
+                    <TableColumn fx:id="colPrice" text="Price"/>
+                    <TableColumn fx:id="colAction" prefWidth="100"/>
+                </columns>
+            </TableView>
+
+            <!-- Toplam ve Satışı Tamamla -->
+            <HBox spacing="10" alignment="CENTER">
+                <Button fx:id="btnBack" text="Back" onAction="#back"
+                        style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+                <Label text="Total: " style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblTotal" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button fx:id="btn" text="Cancel Process" onAction="#cancelProcess"
+                        style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+                <Button fx:id="btnCashPayment" text="Cash Payment" onAction="#cashPayment"
+                        style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+                <Button fx:id="btnPayment" text="Card Payment" onAction="#cardPayment"
+                        style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>

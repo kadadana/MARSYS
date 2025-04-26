@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.marsys.marsys.Controllers.PaymentModalController">
+    <VBox alignment="CENTER" spacing="20">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="Enter your card information to pay"/>
+        <Label text="Total: " fx:id="lblTotal"/>
+        <TextField fx:id="cardNumber" promptText="Card Number"/>
+        <PasswordField fx:id="cardPassword" promptText="Password"/>
+        <Button text="Complete" fx:id="btnComplete" onAction="#handlePayment"/>
+        <Button text="Cancel" fx:id="btnCancel" onAction="#handleCancel"/>
+    </VBox>
+</AnchorPane>
