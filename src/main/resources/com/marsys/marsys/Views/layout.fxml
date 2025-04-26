@@ -1,0 +1,15 @@
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.marsys.marsys.Controllers.LayoutController"
+            minWidth="800" minHeight="600">
+
+    <center>
+        <AnchorPane fx:id="mainContent"
+                    BorderPane.alignment="CENTER"
+                    AnchorPane.topAnchor="0.0"
+                    AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0"/>
+    </center>
+</BorderPane>
