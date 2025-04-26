@@ -2,18 +2,20 @@ package com.marsys.marsys.Repository;
 
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Product;
+import org.postgresql.util.PSQLException;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Repository {
-    public String url = "jdbc:sqlite:src/main/resources/Repositories/MARSYS_DB.db";
+    String url = "jdbc:postgresql://ep-fragrant-term-a9jwf1gb-pooler.gwc.azure.neon.tech:5432/MARSYS_DB?user=neondb_owner&password=npg_KkUHzrI37loY&sslmode=require";
+
 
     //Bu metodu çağırırken almak istediğin verinin tablo adı, sütun adı ve id sini veriyorsun.
     //Fonksiyon o verilerle bir select sorgusu çalıştırarak sana geri dönüş yapıyor.
     public String getCellById(String tableName, String columnName, String id) {
-        String query = "SELECT [" + columnName + "] FROM [" + tableName + "] WHERE ID = ?";
+        String query = "SELECT \"" + columnName + "\" FROM \"" + tableName + "\" WHERE \"ID\" = ?";
         String cell = null;
         try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, id);
@@ -31,7 +33,7 @@ public class Repository {
 
     //Sütun adını ve barkodu vererek INVENTORY tablosunun o sütunundaki değerini alabilirsin
     public String getCellInventoryByBarcode(String columnName, String barcode) {
-        String query = "SELECT [" + columnName + "] FROM [INVENTORY] WHERE BARCODE = ?";
+        String query = "SELECT \"" + columnName + "\" FROM \"INVENTORY\" WHERE \"BARCODE\" = ?";
         String cell = null;
         try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, barcode);
@@ -49,7 +51,7 @@ public class Repository {
 
     //STOCK_MOVEMENT tablosun yeni kayıt eklemek için olan metod
     public void insertIntoStockMovementTable(Product product, String movementType, String invoiceNumber, String user, String date) {
-        String query = "INSERT INTO STOCK_MOVEMENT VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO \"STOCK_MOVEMENT\" VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, product.getBarcode());
             stmt.setString(2, product.getProductName());
@@ -74,7 +76,7 @@ public class Repository {
     //INVOICE_NUMBER sütununu sürekli artıran metod
     public String getRecentInvoiceNumber() {
         String invoiceNumber;
-        String query = "SELECT INVOICE_NUMBER FROM INVOICES ORDER BY INVOICE_NUMBER DESC LIMIT 1";
+        String query = "SELECT \"INVOICE_NUMBER\" FROM \"INVOICES\" ORDER BY \"INVOICE_NUMBER\" DESC LIMIT 1";
         try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
             ResultSet rs = stmt.executeQuery();
 
@@ -96,7 +98,7 @@ public class Repository {
 
         for (int p = 0; p < product.getQuantity(); p++) {
             int stockQuantity = Integer.parseInt(getCellInventoryByBarcode("QUANTITY", product.getBarcode()));
-            String query = "UPDATE INVENTORY SET [QUANTITY] = " + Integer.toString(stockQuantity - 1) + " WHERE [BARCODE] = ?";
+            String query = "UPDATE \"INVENTORY\" SET \"QUANTITY\" = " + Integer.toString(stockQuantity - 1) + " WHERE \"BARCODE\" = ?";
             try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setString(1, product.getBarcode());
 
@@ -112,7 +114,7 @@ public class Repository {
     //CARD tablosundan bilgi getiren metod
     public String getCardInfo(String column1, String column2, String cell) {
         String returnCell = null;
-        String query = "SELECT [" + column1 + "] FROM CARDS WHERE [" + column2 + "] = ?";
+        String query = "SELECT \"" + column1 + "\" FROM \"CARDS\" WHERE \"" + column2 + "\" = ?";
         try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, cell);
             ResultSet rs = stmt.executeQuery();
@@ -127,12 +129,13 @@ public class Repository {
             return returnCell;
         }
     }
-//Kart bakiyesini düşüren metod
+
+    //Kart bakiyesini düşüren metod
     public void reduceCardBalance(Double paidAmount, String cardNumber) {
         Double firstAmount = Double.parseDouble(getCardInfo("BALANCE", "NUMBER", cardNumber));
         Double lastAmount = firstAmount - paidAmount;
 
-        String query = "UPDATE CARDS SET [BALANCE] = ? WHERE [NUMBER] = ?";
+        String query = "UPDATE \"CARDS\" SET \"BALANCE\" = ? WHERE \"NUMBER\" = ?";
 
         try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, Double.toString(lastAmount));
@@ -152,7 +155,7 @@ public class Repository {
             paymentType = "CARD";
         }
 
-        String query = "INSERT INTO INVOICES VALUES ( ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO \"INVOICES\" VALUES ( ?, ?, ?, ?, ?, ?)";
 
         try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, invoiceNumber);
