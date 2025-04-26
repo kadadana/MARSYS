@@ -4,7 +4,6 @@ import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Product;
 import com.marsys.marsys.Models.Session;
 import com.marsys.marsys.Repository.Repository;
-import javafx.beans.Observable;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -68,7 +67,7 @@ public class SalesController implements Initializable {
         colDiscount.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.1));
         colTaxRate.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.1));
         colPrice.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.1));
-        colAction.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.095));
+        colAction.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.090));
 
         lblUserName.setText(user.getFirstName() + " " + user.getLastName());
         lblUserId.setText("ID: " + user.getId());
@@ -202,7 +201,7 @@ public class SalesController implements Initializable {
                 Parent root = loader.load();
 
                 PaymentModalController paymentModalController = loader.getController();
-                paymentModalController.paymentTotal = total;
+                paymentModalController.setPaymentTotal(total);
 
                 paymentModalController.setPaymentCompleteListener(new PaymentModalController.PaymentCompleteListener() {
                     @Override
