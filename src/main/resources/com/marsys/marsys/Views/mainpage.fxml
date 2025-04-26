@@ -6,12 +6,18 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12"
             fx:controller="com.marsys.marsys.Controllers.MainController">
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #2c3e50;">
+        <HBox spacing="10" style="-fx-background-color: #2c3e50;">
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
-            <Label fx:id="lblMainPage" text="Main" style="-fx-font-size: 50px; -fx-text-fill: red;"/>
+            <VBox alignment="CENTER_RIGHT">
+                <Label fx:id="lblMainPage" text="Main Page" style="-fx-text-fill: red; -fx-font-size: 50px;"/>
+            </VBox>
             <Region HBox.hgrow="ALWAYS"/>
+            <VBox alignment="CENTER_RIGHT">
+                <Label fx:id="lblUserName" style="-fx-text-fill: white; -fx-font-size: 25px;"/>
+                <Label fx:id="lblUserId" style="-fx-text-fill: lightgray; -fx-font-size: 20px;"/>
+            </VBox>
         </HBox>
     </top>
 
