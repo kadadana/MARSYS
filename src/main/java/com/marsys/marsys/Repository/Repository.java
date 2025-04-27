@@ -177,12 +177,12 @@ public class Repository {
 
         try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, campaign.getCampaignId());
-            stmt.setString(4, campaign.getDiscountType());
-            stmt.setString(5, campaign.getDiscountTypeCode());
-            stmt.setString(6, campaign.getDiscountValue());
-            stmt.setString(7, campaign.getStartDate());
-            stmt.setString(8, campaign.getEndDate());
-            stmt.setString(9, campaign.getIsActive());
+            stmt.setString(2, campaign.getDiscountType());
+            stmt.setString(3, campaign.getDiscountTypeCode());
+            stmt.setString(4, campaign.getDiscountValue());
+            stmt.setString(5, campaign.getStartDate());
+            stmt.setString(6, campaign.getEndDate());
+            stmt.setString(7, campaign.getIsActive());
 
             stmt.executeUpdate();
         } catch (SQLException e) {

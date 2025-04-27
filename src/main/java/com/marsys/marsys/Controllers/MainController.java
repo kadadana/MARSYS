@@ -46,24 +46,42 @@ public class MainController implements Initializable {
         }
     }
 
-    public void goToProductEntryScreen() {
-
-    }
 
     public void goToStockInventoryScreen() {
-        // Burada sales screen'e gitme işlemini yapabilirsiniz.
+        if (user.getPosition().equals("MANAGER") || user.getPosition().equals("CASHIER")) {
+
+            _layoutController.loadPageByButton("/com/marsys/marsys/Views/stockandinventory.fxml", btnGoToSalesScreen);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("You don't have access for this operation!");
+            alert.showAndWait();
+        }
     }
 
     public void goToSalesReportsScreen() {
-        // Burada sales screen'e gitme işlemini yapabilirsiniz.
+        if (user.getPosition().equals("MANAGER") || user.getPosition().equals("CASHIER")) {
+
+            _layoutController.loadPageByButton("/com/marsys/marsys/Views/reports.fxml", btnGoToSalesScreen);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("You don't have access for this operation!");
+            alert.showAndWait();
+        }
     }
 
-    public void goToProductManagementScreen() {
-        // Burada sales screen'e gitme işlemini yapabilirsiniz.
-    }
 
     public void goToEmployeeManagementScreen() {
-        // Burada sales screen'e gitme işlemini yapabilirsiniz.
+        if (user.getPosition().equals("MANAGER") || user.getPosition().equals("CASHIER")) {
+
+            _layoutController.loadPageByButton("/com/marsys/marsys/Views/employeemanagement.fxml", btnGoToSalesScreen);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("You don't have access for this operation!");
+            alert.showAndWait();
+        }
     }
 
     public void goToDiscountCampaignScreen() {

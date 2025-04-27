@@ -123,7 +123,7 @@ public class CreateCampaignController implements Initializable {
                 alert.setHeaderText("Saved");
                 alert.setContentText("Campaign added!");
                 alert.showAndWait();
-                layoutController.loadPageByButton("/com/marsys/marsys/Views/discountandcampaign.fxml", btnSave);
+                layoutController.loadPageByButton("/com/marsys/marsys/Views/campaignlist.fxml", btnSave);
             } catch (Exception e) {
                 e.printStackTrace();
             }
