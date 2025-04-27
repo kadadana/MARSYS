@@ -3,15 +3,9 @@ package com.marsys.marsys.Repository;
 import com.marsys.marsys.Models.Campaign;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Product;
-import org.postgresql.util.PSQLException;
-
-import java.lang.reflect.Field;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 public class Repository {
     String url = "jdbc:postgresql://ep-fragrant-term-a9jwf1gb-pooler.gwc.azure.neon.tech:5432/MARSYS_DB?user=neondb_owner&password=npg_KkUHzrI37loY&sslmode=require";
