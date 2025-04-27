@@ -26,7 +26,7 @@
             <padding>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
             </padding>
-            <Button fx:id="goToSalesScreen" minHeight="50.0" minWidth="250.0" onAction="#goToSalesScreen" text="Sale" textAlignment="CENTER"/>
+            <Button fx:id="btnGoToSalesScreen" minHeight="50.0" minWidth="250.0" onAction="#goToSalesScreen" text="Sale" textAlignment="CENTER"/>
             <Button minHeight="50.0" minWidth="250.0" onAction="#goToProductEntryScreen" text="Product Entry"
                     textAlignment="CENTER"/>
             <Button minHeight="50.0" minWidth="250.0" onAction="#goToStockInventoryScreen" text="Stock and Inventory"
@@ -37,7 +37,7 @@
                     textAlignment="CENTER"/>
             <Button minHeight="50.0" minWidth="250.0" onAction="#goToEmployeeManagementScreen"
                     text="Employee Management" textAlignment="CENTER"/>
-            <Button minHeight="50.0" minWidth="250.0" onAction="#goToDiscountCampaignScreen"
+            <Button fx:id="btnGoToDiscountCampaignScreen" minHeight="50.0" minWidth="250.0" onAction="#goToDiscountCampaignScreen"
                     text="Discount and Campaign Management" textAlignment="CENTER"/>
             <Button fx:id="btnLogout" minHeight="35.0" minWidth="100.0" onAction="#logout" text="Logout" textAlignment="CENTER"/>
         </VBox>
