@@ -2,7 +2,6 @@ package com.marsys.marsys.Controllers;
 
 import com.marsys.marsys.Models.Campaign;
 import com.marsys.marsys.Models.Employee;
-import com.marsys.marsys.Models.Product;
 import com.marsys.marsys.Models.Session;
 import com.marsys.marsys.Repository.Repository;
 import javafx.beans.property.SimpleStringProperty;
@@ -41,6 +40,8 @@ public class CampaignListController implements Initializable {
     private TableColumn<Campaign, Void> colEdit;
     @FXML
     private Button btnBack;
+    @FXML
+    private Button btnGoToCreateCampaignScreen;
 
 
     private ObservableList<Campaign> campaignList = FXCollections.observableArrayList();
@@ -101,6 +102,11 @@ public class CampaignListController implements Initializable {
         });
     }
 
+    public void goToCreateCampaignScreen() {
+        layoutController.loadPageByButton("/com/marsys/marsys/Views/createcampaign.fxml", btnGoToCreateCampaignScreen);
+
+    }
+
     private void openEditWindow(Campaign campaign, Button btnEdit) {
         layoutController.loadPageByButton("/com/marsys/marsys/Views/createcampaign.fxml", btnEdit);
     }
@@ -108,4 +114,5 @@ public class CampaignListController implements Initializable {
     public void back() {
         layoutController.loadPageByButton("/com/marsys/marsys/Views/mainpage.fxml", btnBack);
     }
+
 }

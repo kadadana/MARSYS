@@ -135,13 +135,11 @@ public class CreateCampaignController implements Initializable {
             alert.setContentText("All fields must be filled!");
             alert.showAndWait();
         }
-
-
     }
 
     public void back() {
 
-        layoutController.loadPageByButton("/com/marsys/marsys/Views/discountandcampaign.fxml", btnBack);
+        layoutController.loadPageByButton("/com/marsys/marsys/Views/campaignlist.fxml", btnBack);
 
 
     }

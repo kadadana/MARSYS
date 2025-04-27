@@ -73,6 +73,8 @@
                 <!-- Back Button -->
                 <Button fx:id="btnBack" text="Back" onAction="#back"
                         style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+
                 <!-- Submit Button -->
                 <Button text="Save Campaign" fx:id="btnSave" onAction="#save"
                         style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
