@@ -1,12 +1,17 @@
 package com.marsys.marsys.Repository;
 
+import com.marsys.marsys.Models.Campaign;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Product;
 import org.postgresql.util.PSQLException;
 
+import java.lang.reflect.Field;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 public class Repository {
     String url = "jdbc:postgresql://ep-fragrant-term-a9jwf1gb-pooler.gwc.azure.neon.tech:5432/MARSYS_DB?user=neondb_owner&password=npg_KkUHzrI37loY&sslmode=require";
@@ -74,7 +79,7 @@ public class Repository {
     }
 
     //INVOICE_NUMBER sütununu sürekli artıran metod
-    public String getRecentInvoiceNumber() {
+    public String getLatestInvoiceNumber() {
         String invoiceNumber;
         String query = "SELECT \"INVOICE_NUMBER\" FROM \"INVOICES\" ORDER BY \"INVOICE_NUMBER\" DESC LIMIT 1";
         try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -171,5 +176,90 @@ public class Repository {
         }
     }
 
+    //CAMPAIGN tablosuna yeni kampanya ekleme metodu
+    public void insertIntoCampaignTable(Campaign campaign) {
 
+        String query = "INSERT INTO \"CAMPAIGN\" VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, campaign.getCampaignId());
+            stmt.setString(4, campaign.getDiscountType());
+            stmt.setString(5, campaign.getDiscountTypeCode());
+            stmt.setString(6, campaign.getDiscountValue());
+            stmt.setString(7, campaign.getStartDate());
+            stmt.setString(8, campaign.getEndDate());
+            stmt.setString(9, campaign.getIsActive());
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //CAMPAIGN_ID sürekli artıran metod
+    public String getLatestCampaignId() {
+        String campaignId;
+        String query = "SELECT \"CAMPAIGN_ID\" FROM \"CAMPAIGN\" ORDER BY \"CAMPAIGN_ID\" DESC LIMIT 1";
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                campaignId = rs.getString("CAMPAIGN_ID");
+                return String.format("%03d", Integer.parseInt(campaignId) + 1);
+
+            } else {
+                return "001";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "000001";
+        }
+    }
+
+    //CAMPAIGN tablosundan Campaign modeli veren metod
+    public Campaign getCampaignModelById(String id) {
+        Campaign campaign = null;
+
+        String query = "SELECT * FROM \"CAMPAIGN\" WHERE \"CAMPAIGN_ID\" = ?";
+
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                campaign = new Campaign(rs.getString("CAMPAIGN_ID"), rs.getString("DISCOUNT_TYPE"), rs.getString("DISCOUNT_TYPE_CODE"),
+                        rs.getString("DISCOUNT_VALUE"), rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
+                return campaign;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return campaign;
+
+
+    }
+
+    public List<Campaign> getAllCampaigns() {
+        String query = "SELECT * FROM \"CAMPAIGN\"";
+        List<Campaign> campaigns = new ArrayList<>();
+        Campaign campaign = null;
+
+        try (var conn = DriverManager.getConnection(url);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                campaign = new Campaign(rs.getString("CAMPAIGN_ID"), rs.getString("DISCOUNT_TYPE"), rs.getString("DISCOUNT_TYPE_CODE"),
+                        rs.getString("DISCOUNT_VALUE"), rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
+                campaigns.add(campaign);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return campaigns;
+    }
 }
