@@ -29,9 +29,9 @@ public class SalesController implements Initializable {
     double total = 0.00;
 
     @FXML
-    private Label lblUserName;
-    @FXML
     private Label lblUserId;
+    @FXML
+    private Label lblUserName;
     @FXML
     private TableView<Product> salesTable;
     @FXML
@@ -67,7 +67,7 @@ public class SalesController implements Initializable {
         colDiscount.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.1));
         colTaxRate.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.1));
         colPrice.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.1));
-        colAction.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.090));
+        colAction.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.08));
 
         lblUserName.setText(user.getFirstName() + " " + user.getLastName());
         lblUserId.setText("ID: " + user.getId());
@@ -231,7 +231,7 @@ public class SalesController implements Initializable {
         try {
             if (salesTable.getItems() != null && !salesTable.getItems().isEmpty()) {
                 String movementType = "SALE";
-                String invoiceNumber = _repository.getRecentInvoiceNumber();
+                String invoiceNumber = _repository.getLatestInvoiceNumber();
                 SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
                 String date = sdf.format(new Date());
 
