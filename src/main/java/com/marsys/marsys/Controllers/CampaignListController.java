@@ -8,9 +8,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -84,8 +90,7 @@ public class CampaignListController implements Initializable {
 
             {
                 editButton.setOnAction(event -> {
-                    Campaign campaign = getTableView().getItems().get(getIndex());
-
+                    Campaign campaign = _repository.getCampaignModelById(getTableView().getItems().get(getIndex()).getCampaignId());
                     openEditWindow(campaign, editButton);
                 });
             }
@@ -108,11 +113,30 @@ public class CampaignListController implements Initializable {
     }
 
     private void openEditWindow(Campaign campaign, Button btnEdit) {
-        layoutController.loadPageByButton("/com/marsys/marsys/Views/createcampaign.fxml", btnEdit);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/marsys/marsys/Views/editcampaignmodal.fxml"));
+            Parent root = loader.load();
+            EditCampaignModalController controller = loader.getController();
+            controller.setCampaign(campaign);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            refreshCampaignTable();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void back() {
         layoutController.loadPageByButton("/com/marsys/marsys/Views/mainpage.fxml", btnBack);
     }
 
+    private void refreshCampaignTable() {
+        campaignList.clear();
+        campaignList.addAll(_repository.getAllCampaigns());
+        campaignTable.setItems(campaignList);
+    }
 }
