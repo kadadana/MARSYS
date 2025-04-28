@@ -3,6 +3,7 @@ package com.marsys.marsys.Repository;
 import com.marsys.marsys.Models.Campaign;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Product;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -235,9 +236,10 @@ public class Repository {
 
     }
 
+    //CAMPAIGN tablosundaki her satırı List olarak veren metod
     public List<Campaign> getAllCampaigns() {
         String query = "SELECT * FROM \"CAMPAIGN\"";
-        List<Campaign> campaigns = new ArrayList<>();
+        List<Campaign> campaignList = new ArrayList<>();
         Campaign campaign = null;
 
         try (var conn = DriverManager.getConnection(url);
@@ -248,12 +250,50 @@ public class Repository {
             while (rs.next()) {
                 campaign = new Campaign(rs.getString("CAMPAIGN_ID"), rs.getString("DISCOUNT_TYPE"), rs.getString("DISCOUNT_TYPE_CODE"),
                         rs.getString("DISCOUNT_VALUE"), rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
-                campaigns.add(campaign);
+                campaignList.add(campaign);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return campaignList;
+    }
 
-        return campaigns;
+    //CAMPAIGN tablosundaki bir satırı değiştiren metod
+    public void updateCampaignTable(Campaign campaign) {
+        String query = "UPDATE \"CAMPAIGN\" SET " +
+                "\"CAMPAIGN_ID\" = ?, " +
+                "\"DISCOUNT_TYPE\" = ?, " +
+                "\"DISCOUNT_TYPE_CODE\" = ?, " +
+                "\"DISCOUNT_VALUE\" = ?, " +
+                "\"START_DATE\" = ?, " +
+                "\"END_DATE\" = ?, " +
+                "\"IS_ACTIVE\" = ? " +
+                "WHERE \"CAMPAIGN_ID\" = ?";
+
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, campaign.getCampaignId());
+            stmt.setString(2, campaign.getDiscountType());
+            stmt.setString(3, campaign.getDiscountTypeCode());
+            stmt.setString(4, campaign.getDiscountValue());
+            stmt.setString(5, campaign.getStartDate());
+            stmt.setString(6, campaign.getEndDate());
+            stmt.setString(7, campaign.getIsActive());
+            stmt.setString(8, campaign.getCampaignId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //CAMPAIGN tablosundan kayıt silme metodu
+    public void deleteFromCampaignById(String campaignId) {
+        String query = "DELETE FROM \"CAMPAIGN\" WHERE \"CAMPAIGN_ID\" = ?";
+
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, campaignId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
