@@ -42,6 +42,8 @@ public class CreateCampaignController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        lblUserName.setText(user.getFirstName() + " " + user.getLastName());
+        lblUserId.setText("ID: " + user.getId());
         campaignId.setEditable(false);
         campaignId.setText(repository.getLatestCampaignId());
         startDatePicker.getEditor().setDisable(true);
@@ -86,7 +88,6 @@ public class CreateCampaignController implements Initializable {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
             String strIsActive;
             String discountTypeCode = "00";
-            ;
 
             switch (discountTypeComboBox.getSelectionModel().getSelectedItem()) {
                 case "Buy 2 Pay 1":
@@ -125,6 +126,11 @@ public class CreateCampaignController implements Initializable {
                 alert.showAndWait();
                 layoutController.loadPageByButton("/com/marsys/marsys/Views/campaignlist.fxml", btnSave);
             } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error");
+                alert.setHeaderText("Not Saved");
+                alert.setContentText("An error occured while saving this campaign!");
+                alert.showAndWait();
                 e.printStackTrace();
             }
 
