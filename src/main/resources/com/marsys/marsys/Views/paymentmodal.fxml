@@ -3,17 +3,36 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.marsys.marsys.Controllers.PaymentModalController">
-    <VBox alignment="CENTER" spacing="20">
-        <padding>
-            <Insets top="20" right="20" bottom="20" left="20"/>
-        </padding>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.marsys.marsys.Controllers.PaymentModalController">
+    <top>
+        <HBox spacing="10" style="-fx-background-color: #2c3e50;">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <VBox alignment="CENTER_RIGHT">
+                <Label fx:id="lblTitle" text="Card Payment"
+                       style="-fx-text-fill: red; -fx-font-size: 50px;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <VBox alignment="CENTER_RIGHT">
+                <Label fx:id="lblUserName" style="-fx-text-fill: white; -fx-font-size: 25px;"/>
+                <Label fx:id="lblUserId" style="-fx-text-fill: lightgray; -fx-font-size: 20px;"/>
+            </VBox>
+        </HBox>
+    </top>
+    <center>
+        <VBox alignment="CENTER" spacing="20">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
 
-        <Label text="Enter your card information to pay"/>
-        <Label text="Total: " fx:id="lblTotal"/>
-        <TextField fx:id="cardNumber" promptText="Card Number"/>
-        <PasswordField fx:id="cardPassword" promptText="Password"/>
-        <Button text="Complete" fx:id="btnComplete" onAction="#handlePayment"/>
-        <Button text="Cancel" fx:id="btnCancel" onAction="#handleCancel"/>
-    </VBox>
-</AnchorPane>
+            <Label text="Enter your card information to pay"/>
+            <Label text="Total: " fx:id="lblTotal"/>
+            <TextField fx:id="cardNumber" promptText="Card Number"/>
+            <PasswordField fx:id="cardPassword" promptText="Password"/>
+            <Button text="Complete" fx:id="btnComplete" onAction="#handlePayment"/>
+            <Button text="Cancel" fx:id="btnCancel" onAction="#handleCancel"/>
+        </VBox>
+    </center>
+</BorderPane>
