@@ -1,5 +1,7 @@
 package com.marsys.marsys.Controllers;
 
+import com.marsys.marsys.Models.Employee;
+import com.marsys.marsys.Models.Session;
 import com.marsys.marsys.Repository.Repository;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,7 +15,12 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class PaymentModalController implements Initializable {
+    Employee user = Session.getInstance().getCurrentUser();
     Repository _repository = new Repository();
+    @FXML
+    private Label lblUserId;
+    @FXML
+    private Label lblUserName;
     @FXML
     private TextField cardNumber;
     @FXML
@@ -23,10 +30,12 @@ public class PaymentModalController implements Initializable {
     private double paymentTotal;
 
     private PaymentCompleteListener paymentCompleteListener;
+
     public void setPaymentTotal(double total) {
         this.paymentTotal = total;
-        lblTotal.setText(total + " TL"); // burada lblTotalPayment, ekrandaki label ise
+        lblTotal.setText(total + " TL");
     }
+
     public void setPaymentCompleteListener(PaymentCompleteListener listener) {
         this.paymentCompleteListener = listener;
     }
@@ -34,7 +43,10 @@ public class PaymentModalController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setPaymentTotal(paymentTotal);
+        lblUserId.setText(user.getId());
+        lblUserName.setText(user.getFirstName() + " " + user.getLastName());
     }
+
 
     @FXML
     private void handlePayment() {
