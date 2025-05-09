@@ -4,16 +4,16 @@ public class Campaign {
     private String CampaignId;
     private String DiscountType;
     private String DiscountTypeCode;
-    private String DiscountValue;
+    private String DiscountFor;
     private String StartDate;
     private String EndDate;
     private String IsActive;
 
-    public Campaign(String campaignId, String discountType, String discountTypeCode, String discountValue, String startDate, String endDate, String isActive) {
+    public Campaign(String campaignId, String discountType, String discountTypeCode, String discountFor, String startDate, String endDate, String isActive) {
         this.CampaignId = campaignId;
         this.DiscountType = discountType;
         this.DiscountTypeCode = discountTypeCode;
-        this.DiscountValue = discountValue;
+        this.DiscountFor = discountFor;
         this.StartDate = startDate;
         this.EndDate = endDate;
         this.IsActive = isActive;
@@ -43,12 +43,12 @@ public class Campaign {
         this.DiscountTypeCode = discountTypeCode;
     }
 
-    public String getDiscountValue() {
-        return DiscountValue;
+    public String getDiscountFor() {
+        return DiscountFor;
     }
 
-    public void setDiscountValue(String discountValue) {
-        this.DiscountValue = discountValue;
+    public void setDiscountValue(String discountFor) {
+        this.DiscountFor = discountFor;
     }
 
     public String getStartDate() {

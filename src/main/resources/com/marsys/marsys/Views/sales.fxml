@@ -35,7 +35,12 @@
             <HBox spacing="10">
                 <Label text="Barcode: "/>
                 <TextField fx:id="barcodeField" promptText="Enter the barcode..."/>
+                <Label text="Quantity: "/>
+                <TextField fx:id="quantityField" prefWidth="50" prefHeight="25" text="1"/>
                 <Button fx:id="btnReadBarcode" text="Add" onAction="#onAddProduct"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="couponField" promptText="Coupon code"/>
+                <Button fx:id="btnApplyCoupon" text="Apply" onAction="#applyCoupon"/>
             </HBox>
 
             <!-- Satış Listesi Tablosu -->
@@ -45,7 +50,6 @@
                     <TableColumn fx:id="colProductName" text="Product Name"/>
                     <TableColumn fx:id="colQuantity" text="Quantity"/>
                     <TableColumn fx:id="colTaxRate" text="Tax Rate"/>
-                    <TableColumn fx:id="colDiscount" text="Discount"/>
                     <TableColumn fx:id="colPrice" text="Price"/>
                     <TableColumn fx:id="colAction" prefWidth="100"/>
                 </columns>

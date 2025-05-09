@@ -1,9 +1,9 @@
 package com.marsys.marsys.Controllers;
 
-import com.marsys.marsys.Models.Employee;
-import com.marsys.marsys.Models.Product;
-import com.marsys.marsys.Models.Session;
+import com.marsys.marsys.Models.*;
 import com.marsys.marsys.Repository.Repository;
+import eu.hansolo.tilesfx.skins.TestTileSkin;
+import javafx.beans.Observable;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,17 +17,27 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.net.URL;
+import java.security.ProtectionDomain;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
 
 public class SalesController implements Initializable {
+    private Coupon appliedCoupon = null;
+    private double couponDiscount = 0.0;
     Employee user = Session.getInstance().getCurrentUser();
     double total = 0.00;
-
+    @FXML
+    private Button btnApplyCoupon;
+    @FXML
+    private TextField couponField;
     @FXML
     private Label lblUserId;
     @FXML
@@ -39,8 +49,6 @@ public class SalesController implements Initializable {
     @FXML
     private TableColumn<Product, String> colProductName;
     @FXML
-    private TableColumn<Product, String> colDiscount;
-    @FXML
     private TableColumn<Product, String> colTaxRate;
     @FXML
     private TableColumn<Product, Integer> colQuantity;
@@ -50,6 +58,8 @@ public class SalesController implements Initializable {
     private TableColumn<Product, Void> colAction;
     @FXML
     private TextField barcodeField;
+    @FXML
+    private TextField quantityField;
     @FXML
     private Label lblTotal;
     @FXML
@@ -61,10 +71,22 @@ public class SalesController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        barcodeField.setOnAction(event -> onAddProduct());
+        quantityField.setOnAction(event -> onAddProduct());
+
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("\\d{0,2}")) {
+                return change;
+            }
+            return null;
+        };
+        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+        quantityField.setTextFormatter(textFormatter);
+
         colBarcode.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.2));
-        colProductName.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.3));
+        colProductName.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.4));
         colQuantity.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.1));
-        colDiscount.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.1));
         colTaxRate.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.1));
         colPrice.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.1));
         colAction.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.08));
@@ -77,9 +99,7 @@ public class SalesController implements Initializable {
 
         colProductName.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getProductName()));
-
-        colDiscount.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getDiscountRate()));
+        ;
 
         colTaxRate.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getTaxRate()));
@@ -98,56 +118,62 @@ public class SalesController implements Initializable {
 
     @FXML
     public void onAddProduct() {
-        String barcode = barcodeField.getText();
-        if (_repository.getCellInventoryByBarcode("BARCODE", barcode) == null) {
+        Product scannedProduct;
+        String scannedBarcode = barcodeField.getText();
+        if (!barcodeField.getText().isBlank() && !quantityField.getText().isBlank()) {
+            if (_repository.getInventoryCellByBarcode("BARCODE", scannedBarcode) == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Alert");
+                alert.setHeaderText("Failed");
+                alert.setContentText("There is no product assigned to this barcode!");
+                alert.showAndWait();
+            } else {
+                scannedProduct = _repository.getProductModelByBarcode(scannedBarcode);
+                scannedProduct.setQuantity(Integer.parseInt(quantityField.getText()));
+                boolean found = false;
+
+                for (Product p : productList) {
+
+                    if (p.getBarcode().equals(scannedProduct.getBarcode())) {
+                        if (p.getQuantity() < Integer.parseInt(_repository.getInventoryCellByBarcode("QUANTITY", scannedProduct.getBarcode()))) {
+                            p.setQuantity(p.getQuantity() + Integer.parseInt(quantityField.getText()));
+                            total += scannedProduct.getPrice() * Integer.parseInt(quantityField.getText());
+                            found = true;
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.WARNING);
+                            alert.setTitle("Alert");
+                            alert.setHeaderText("Failed");
+                            alert.setContentText("Not enough stock for this product!");
+                            alert.showAndWait();
+                            return;
+                        }
+                        barcodeField.clear();
+                        break;
+                    }
+                }
+                if (!found) {
+                    Product newProduct = _repository.getProductModelByBarcode(scannedBarcode);
+                    newProduct.setQuantity(Integer.parseInt(quantityField.getText()));
+                    productList.add(newProduct);
+                    total += newProduct.getPrice();
+                }
+
+
+                lblTotal.setText(total + " TL");
+
+                barcodeField.clear();
+                quantityField.setText("1");
+                barcodeField.requestFocus();
+                campaignChecker();
+            }
+
+        } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Alert");
             alert.setHeaderText("Failed");
-            alert.setContentText("There is no product assigned to this barcode!");
+            alert.setContentText("Fill the fields, please!");
             alert.showAndWait();
-            return;
         }
-
-        String productName = _repository.getCellInventoryByBarcode("NAME", barcode);
-        double price = Double.parseDouble(_repository.getCellInventoryByBarcode("SALE_PRICE", barcode));
-        String category = _repository.getCellInventoryByBarcode("CATEGORY", barcode);
-        String brand = _repository.getCellInventoryByBarcode("BRAND", barcode);
-        double buyingPrice = Double.parseDouble(_repository.getCellInventoryByBarcode("BUYING_PRICE", barcode));
-        String expirationDate = _repository.getCellInventoryByBarcode("EXPIRATION", barcode);
-
-        boolean found = false;
-
-        for (Product p : productList) {
-
-            if (p.getBarcode().equals(barcode)) {
-                if (p.getQuantity() < Integer.parseInt(_repository.getCellInventoryByBarcode("QUANTITY", barcode))) {
-                    p.setQuantity(p.getQuantity() + 1);
-                    total += price;
-                    found = true;
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Alert");
-                    alert.setHeaderText("Failed");
-                    alert.setContentText("Not enough stock for this product!");
-                    alert.showAndWait();
-                    return;
-                }
-                barcodeField.clear();
-                break;
-            }
-        }
-        if (!found) {
-            Product newProduct = new Product(barcode, productName, 1, price, category, brand, buyingPrice, expirationDate, "18%", "%0");
-            productList.add(newProduct);
-            total += price;
-        }
-
-
-        lblTotal.setText(total + " TL");
-
-        barcodeField.clear();
-
-        salesTable.refresh();
 
     }
 
@@ -172,9 +198,7 @@ public class SalesController implements Initializable {
                     alert.showAndWait().ifPresent(response -> {
                         if (response == yes) {
                             productList.remove(product);
-
-                            total -= product.getQuantity() * product.getPrice();
-                            lblTotal.setText(total + " TL");
+                            campaignChecker();
                         }
                     });
                 });
@@ -291,6 +315,7 @@ public class SalesController implements Initializable {
                 if (response == buttonYes) {
                     productList.clear();
                     total = 0;
+                    campaignChecker();
                     salesTable.refresh();
                 }
             });
@@ -309,4 +334,92 @@ public class SalesController implements Initializable {
         LayoutController _layoutController = new LayoutController();
         _layoutController.loadPageByButton("/com/marsys/marsys/Views/mainpage.fxml", btnBack);
     }
+
+    private void campaignChecker() {
+        double newTotal = 0.0;
+
+        for (Product p : productList) {
+            Product original = _repository.getProductModelByBarcode(p.getBarcode());
+            p.setPrice(original.getPrice());
+            p.setDiscounted(false);
+            p.setDiscountedPrice(0.0);
+        }
+
+        for (Product p : productList) {
+            int quantity = p.getQuantity();
+            double price = p.getPrice();
+
+            Campaign buy2Get1 = _repository.getBuy2Get1CampaignByBarcode(p.getBarcode());
+            if (buy2Get1 != null) {
+                int paidItems = quantity - (quantity / 2);
+                double total = paidItems * price;
+                p.setDiscountedPrice(total);
+                p.setDiscounted(true);
+                continue;
+            }
+
+            Campaign halfOff = _repository.get50CampaignForProduct(p.getBarcode());
+            if (halfOff != null && quantity >= 2) {
+                int fullPriceItems = quantity - 1;
+                double total = (fullPriceItems * price) + (price * 0.5);
+                p.setDiscountedPrice(total);
+                p.setDiscounted(true);
+                continue;
+            }
+
+            p.setDiscountedPrice(quantity * price);
+        }
+
+        for (Product p : productList) {
+            newTotal += p.getDiscountedPrice();
+        }
+
+        newTotal -= couponDiscount;
+        if (newTotal < 0) newTotal = 0;
+
+        total = newTotal;
+        lblTotal.setText(String.format("%.2f TL", total));
+        salesTable.refresh();
+    }
+
+    @FXML
+    private void applyCoupon() {
+        Button applyButton = btnApplyCoupon;
+        String couponCode = couponField.getText().trim();
+
+        if (applyButton.getText().equals("Apply")) {
+            if (couponCode.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Please enter a coupon code!!");
+                alert.showAndWait();
+            } else {
+                Coupon coupon = _repository.getValidCoupon(couponCode);
+                if (coupon != null) {
+                    appliedCoupon = coupon;
+                    couponDiscount = Double.parseDouble(coupon.getDiscountAmount());
+                    campaignChecker();
+                    btnApplyCoupon.setText("Remove Coupon");
+                    couponField.setEditable(false);
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Invalid Coupon");
+                    alert.setHeaderText(null);
+                    alert.setContentText("This coupon code is not valid!!");
+                    alert.showAndWait();
+                }
+            }
+
+
+        } else if (applyButton.getText().equals("Remove Coupon")) {
+            appliedCoupon = null;
+            couponDiscount = 0.0;
+            campaignChecker();
+            btnApplyCoupon.setText("Apply");
+            couponField.setEditable(true);
+            couponField.clear();
+        }
+    }
+
 }

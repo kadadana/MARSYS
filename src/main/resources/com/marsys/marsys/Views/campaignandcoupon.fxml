@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12"
+            fx:controller="com.marsys.marsys.Controllers.CampaignAndCouponController">
+    <top>
+        <HBox spacing="10" style="-fx-background-color: #2c3e50;">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <VBox alignment="CENTER_RIGHT">
+                <Label fx:id="lblTitle" text="Campaign and Coupons" style="-fx-text-fill: red; -fx-font-size: 50px;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <VBox alignment="CENTER_RIGHT">
+                <Label fx:id="lblUserName" style="-fx-text-fill: white; -fx-font-size: 25px;"/>
+                <Label fx:id="lblUserId" style="-fx-text-fill: lightgray; -fx-font-size: 20px;"/>
+            </VBox>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox alignment="CENTER">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            </padding>
+            <Button fx:id="btnGoToCampaignScreen" minHeight="50.0" minWidth="250.0" onAction="#goToCampaignScreen"
+                    text="Campaigns"
+                    textAlignment="CENTER"/>
+            <Button fx:id="btnGoToCouponScreen" minHeight="50.0" minWidth="250.0" onAction="#goToCouponScreen"
+                    text="Coupons"
+                    textAlignment="CENTER"/>
+            <Button fx:id="btnBack" text="Back" onAction="#back"
+                    style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+        </VBox>
+    </center>
+</BorderPane>
+

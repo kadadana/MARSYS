@@ -38,6 +38,7 @@
                     onAction="#goToDiscountCampaignScreen"
                     text="Discount and Campaign Management" textAlignment="CENTER"/>
             <Button fx:id="btnLogout" minHeight="35.0" minWidth="100.0" onAction="#logout" text="Logout"
+                    style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"
                     textAlignment="CENTER"/>
         </VBox>
     </center>

@@ -12,11 +12,11 @@ public class Product {
     private double BuyingPrice;
     private String ExpirationDate;
     private String TaxRate;
-    private String DiscountRate;
-
+    private boolean discounted = false;
+    private double discountedPrice = getPrice();
 
     public Product(String barcode, String productName, int quantity, double price, String category,
-                   String brand, double buyingPrice, String expirationDate, String taxRate, String discountRate) {
+                   String brand, double buyingPrice, String expirationDate, String taxRate) {
         this.Barcode = barcode;
         this.ProductName = productName;
         this.Quantity = quantity;
@@ -26,7 +26,6 @@ public class Product {
         this.BuyingPrice = buyingPrice;
         this.ExpirationDate = expirationDate;
         this.TaxRate = taxRate;
-        this.DiscountRate = discountRate;
     }
 
     public String getBarcode() {
@@ -101,11 +100,20 @@ public class Product {
         TaxRate = taxRate;
     }
 
-    public String getDiscountRate() {
-        return DiscountRate;
+    public boolean isDiscounted() {
+        return discounted;
     }
 
-    public void setDiscountRate(String discountRate) {
-        DiscountRate = discountRate;
+    public void setDiscounted(boolean discounted) {
+        this.discounted = discounted;
     }
+
+    public double getDiscountedPrice() {
+        return discountedPrice;
+    }
+
+    public void setDiscountedPrice(double discountedPrice) {
+        this.discountedPrice = discountedPrice;
+    }
+
 }

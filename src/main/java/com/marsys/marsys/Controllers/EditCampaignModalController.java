@@ -29,7 +29,7 @@ public class EditCampaignModalController implements Initializable {
     @FXML
     private ComboBox<String> discountTypeComboBox;
     @FXML
-    private TextField discountValueField;
+    private TextField discountForField;
     @FXML
     private DatePicker startDatePicker;
     @FXML
@@ -42,6 +42,8 @@ public class EditCampaignModalController implements Initializable {
     private Button btnSave;
     @FXML
     private TextField campaignId;
+    @FXML
+    private Label lblDiscountFor;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -50,7 +52,7 @@ public class EditCampaignModalController implements Initializable {
         campaignId.setEditable(false);
         discountTypeComboBox.setDisable(true);
         discountTypeComboBox.setEditable(false);
-        discountValueField.setEditable(false);
+        discountForField.setEditable(false);
 
     }
 
@@ -66,7 +68,7 @@ public class EditCampaignModalController implements Initializable {
 
             campaignId.setText(String.valueOf(campaign.getCampaignId()));
             discountTypeComboBox.setValue(campaign.getDiscountType());
-            discountValueField.setText(String.valueOf(campaign.getDiscountValue()));
+            discountForField.setText(String.valueOf(campaign.getDiscountFor()));
             startDatePicker.setValue(startDate);
             endDatePicker.setValue(endDate);
             isActiveCheckBox.setSelected(isActive);
@@ -82,7 +84,7 @@ public class EditCampaignModalController implements Initializable {
     private void save() {
         try {
             if (discountTypeComboBox.getValue() != null &&
-                    !discountValueField.getText().isEmpty() &&
+                    !discountForField.getText().isEmpty() &&
                     startDatePicker.getValue() != null &&
                     endDatePicker.getValue() != null) {
                 LocalDate selectedStartDate = startDatePicker.getValue();
@@ -104,9 +106,6 @@ public class EditCampaignModalController implements Initializable {
                     case "%25 Discount for Cash Payment":
                         discountTypeCode = "04";
                         break;
-                    case "Coupon Code":
-                        discountTypeCode = "05";
-                        break;
                     default:
                         break;
                 }
@@ -118,7 +117,7 @@ public class EditCampaignModalController implements Initializable {
                 }
                 Campaign campaign = new Campaign(
                         campaignId.getText(), discountTypeComboBox.getSelectionModel().getSelectedItem(), discountTypeCode,
-                        discountValueField.getText(), selectedStartDate.format(formatter), selectedEndDate.format(formatter), strIsActive);
+                        discountForField.getText(), selectedStartDate.format(formatter), selectedEndDate.format(formatter), strIsActive);
                 try {
                     _repository.updateCampaignTable(campaign);
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -148,22 +147,31 @@ public class EditCampaignModalController implements Initializable {
 
     @FXML
     private void delete() {
-        try {
-            _repository.deleteFromCampaignById(campaignId.getText());
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Completed");
-            alert.setHeaderText("Deleted");
-            alert.setContentText("Campaign deleted!");
-            alert.showAndWait();
-            closeModal();
-        } catch (Exception e) {
+        if(!discountTypeComboBox.getValue().equals("%25 Discount for Cash Payment")){
+            try {
+                _repository.deleteFromCampaignById(campaignId.getText());
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Completed");
+                alert.setHeaderText("Deleted");
+                alert.setContentText("Campaign deleted!");
+                alert.showAndWait();
+                closeModal();
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error");
+                alert.setHeaderText("Not Deleted");
+                alert.setContentText("An error occured while deleting this campaign!");
+                alert.showAndWait();
+                e.printStackTrace();
+            }
+        }else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Error");
             alert.setHeaderText("Not Deleted");
-            alert.setContentText("An error occured while deleting this campaign!");
+            alert.setContentText("You can't delete this campaign. You can only change it's activity!");
             alert.showAndWait();
-            e.printStackTrace();
         }
+
     }
 
 

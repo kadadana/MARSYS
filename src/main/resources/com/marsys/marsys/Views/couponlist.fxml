@@ -10,7 +10,7 @@
 
 <?import javafx.util.Callback?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.marsys.marsys.Controllers.CampaignListController">
+            fx:controller="com.marsys.marsys.Controllers.CouponListController">
 
     <!-- Üst bar -->
     <top>
@@ -19,7 +19,7 @@
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <VBox alignment="CENTER_RIGHT">
-                <Label fx:id="lblDiscount" text="Campaign List"
+                <Label fx:id="lblDiscount" text="Coupon List"
                        style="-fx-text-fill: red; -fx-font-size: 50px;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
@@ -37,14 +37,13 @@
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
 
-            <Label text="Campaigns" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label text="Coupons" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 
-            <!-- Campaign List Table -->
-            <TableView fx:id="campaignTable" prefHeight="300">
+            <!-- Coupon List Table -->
+            <TableView fx:id="couponTable" prefHeight="300">
                 <columns>
-                    <TableColumn fx:id="colCampaignId" text="Campaign ID"/>
-                    <TableColumn fx:id="colDiscountType" text="Discount Type"/>
-                    <TableColumn fx:id="colDiscountForField" text="Discount For"/>
+                    <TableColumn fx:id="colCouponCode" text="Coupon Code"/>
+                    <TableColumn fx:id="colDiscountAmount" text="Discount Amount"/>
                     <TableColumn fx:id="colStartDate" text="Start Date"/>
                     <TableColumn fx:id="colEndDate" text="End Date"/>
                     <TableColumn fx:id="colIsActive" text="Is Active"/>
@@ -59,7 +58,7 @@
 
                 <Region HBox.hgrow="ALWAYS"/>
 
-                <Button fx:id="btnGoToCreateCampaignScreen" text="Create Campaign" onAction="#goToCreateCampaignScreen"
+                <Button fx:id="btnGoToCreateCouponScreen" text="Create Coupon" onAction="#goToCreateCouponScreen"
                         style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
             </HBox>
         </VBox>

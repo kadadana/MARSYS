@@ -87,7 +87,7 @@ public class MainController implements Initializable {
     public void goToDiscountCampaignScreen() {
         if (user.getPosition().equals("MANAGER")) {
 
-            _layoutController.loadPageByButton("/com/marsys/marsys/Views/campaignlist.fxml", btnGoToDiscountCampaignScreen);
+            _layoutController.loadPageByButton("/com/marsys/marsys/Views/campaignandcoupon.fxml", btnGoToDiscountCampaignScreen);
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");

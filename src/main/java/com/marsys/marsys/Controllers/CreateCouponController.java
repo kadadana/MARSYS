@@ -1,11 +1,9 @@
 package com.marsys.marsys.Controllers;
 
-import com.almasb.fxgl.entity.action.Action;
-import com.marsys.marsys.Models.Campaign;
+import com.marsys.marsys.Models.Coupon;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Session;
 import com.marsys.marsys.Repository.Repository;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -15,7 +13,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
-public class CreateCampaignController implements Initializable {
+public class CreateCouponController implements Initializable {
     LayoutController layoutController = new LayoutController();
     Employee user = Session.getInstance().getCurrentUser();
     Repository repository = new Repository();
@@ -24,9 +22,7 @@ public class CreateCampaignController implements Initializable {
     @FXML
     private Label lblUserId;
     @FXML
-    private ComboBox<String> discountTypeComboBox;
-    @FXML
-    private TextField discountForField;
+    private TextField discountAmountField;
     @FXML
     private DatePicker startDatePicker;
     @FXML
@@ -38,16 +34,14 @@ public class CreateCampaignController implements Initializable {
     @FXML
     private Button btnSave;
     @FXML
-    private TextField campaignId;
-    @FXML
-    private Label lblDiscountFor;
+    private TextField couponCodeField;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         lblUserName.setText(user.getFirstName() + " " + user.getLastName());
         lblUserId.setText("ID: " + user.getId());
-        campaignId.setEditable(false);
-        campaignId.setText(repository.getLatestCampaignId());
+        couponCodeField.setEditable(false);
+        couponCodeField.setText(repository.getLatestCouponCode());
         startDatePicker.getEditor().setDisable(true);
         endDatePicker.getEditor().setDisable(true);
         startDatePicker.setOnAction(event -> {
@@ -81,54 +75,34 @@ public class CreateCampaignController implements Initializable {
 
     public void save() {
 
-        if (discountTypeComboBox.getValue() != null &&
-                !discountForField.getText().isEmpty() &&
+        if (!discountAmountField.getText().isEmpty() &&
                 startDatePicker.getValue() != null &&
                 endDatePicker.getValue() != null) {
             LocalDate selectedStartDate = startDatePicker.getValue();
             LocalDate selectedEndDate = endDatePicker.getValue();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
             String strIsActive;
-            String discountTypeCode = "00";
-
-            switch (discountTypeComboBox.getSelectionModel().getSelectedItem()) {
-                case "Buy 2 Pay 1":
-                    discountTypeCode = "01";
-                    break;
-                case "50% Discount for 2nd from the same product":
-                    discountTypeCode = "02";
-                    break;
-                case "50% Discount for 2nd from the same category":
-                    discountTypeCode = "03";
-                    break;
-                case "%25 Discount for Cash Payment":
-                    discountTypeCode = "04";
-                    break;
-                default:
-                    break;
-            }
 
             if (isActiveCheckBox.isSelected()) {
                 strIsActive = "ACTIVE";
             } else {
                 strIsActive = "INACTIVE";
             }
-            Campaign campaign = new Campaign(
-                    repository.getLatestCampaignId(), discountTypeComboBox.getSelectionModel().getSelectedItem(), discountTypeCode,
-                    discountForField.getText(), selectedStartDate.format(formatter), selectedEndDate.format(formatter), strIsActive);
+            Coupon coupon = new Coupon(
+                    repository.getLatestCouponCode(), discountAmountField.getText(), selectedStartDate.format(formatter), selectedEndDate.format(formatter), strIsActive);
             try {
-                repository.insertIntoCampaignTable(campaign);
+                repository.insertIntoCouponTable(coupon);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Completed");
                 alert.setHeaderText("Saved");
-                alert.setContentText("Campaign added!");
+                alert.setContentText("Coupon added!");
                 alert.showAndWait();
-                layoutController.loadPageByButton("/com/marsys/marsys/Views/campaignlist.fxml", btnSave);
+                layoutController.loadPageByButton("/com/marsys/marsys/Views/couponlist.fxml", btnSave);
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Error");
                 alert.setHeaderText("Not Saved");
-                alert.setContentText("An error occured while saving this campaign!");
+                alert.setContentText("An error occured while saving this coupon!");
                 alert.showAndWait();
                 e.printStackTrace();
             }
@@ -144,7 +118,7 @@ public class CreateCampaignController implements Initializable {
 
     public void back() {
 
-        layoutController.loadPageByButton("/com/marsys/marsys/Views/campaignlist.fxml", btnBack);
+        layoutController.loadPageByButton("/com/marsys/marsys/Views/couponlist.fxml", btnBack);
 
 
     }

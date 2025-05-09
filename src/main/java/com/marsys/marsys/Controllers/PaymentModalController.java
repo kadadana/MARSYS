@@ -42,6 +42,8 @@ public class PaymentModalController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        cardNumber.setOnAction(event -> handlePayment());
+        cardPassword.setOnAction(event -> handlePayment());
         setPaymentTotal(paymentTotal);
         lblUserId.setText(user.getId());
         lblUserName.setText(user.getFirstName() + " " + user.getLastName());
@@ -50,40 +52,50 @@ public class PaymentModalController implements Initializable {
 
     @FXML
     private void handlePayment() {
-        try {
-            if (cardNumber.getText().equals(_repository.getCardInfo("NUMBER", "NUMBER", cardNumber.getText())) &&
-                    cardPassword.getText().equals(_repository.getCardInfo("PASSWORD", "PASSWORD", cardPassword.getText())) &&
-                    (_repository.getCardInfo("BALANCE", "NUMBER", cardNumber.getText())) != null) {
-                if (paymentTotal <= Double.parseDouble(_repository.getCardInfo("BALANCE", "NUMBER", cardNumber.getText()))) {
-                    if (paymentCompleteListener != null) {
-                        paymentCompleteListener.onPaymentComplete(cardNumber.getText());
+        if(!cardNumber.getText().isBlank()){
+            try {
+                if (cardNumber.getText().equals(_repository.getCardInfo("NUMBER", "NUMBER", cardNumber.getText())) &&
+                        cardPassword.getText().equals(_repository.getCardInfo("PASSWORD", "PASSWORD", cardPassword.getText())) &&
+                        (_repository.getCardInfo("BALANCE", "NUMBER", cardNumber.getText())) != null) {
+                    if (paymentTotal <= Double.parseDouble(_repository.getCardInfo("BALANCE", "NUMBER", cardNumber.getText()))) {
+                        if (paymentCompleteListener != null) {
+                            paymentCompleteListener.onPaymentComplete(cardNumber.getText());
+                        }
+                        _repository.reduceCardBalance(paymentTotal, cardNumber.getText());
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Information");
+                        alert.setHeaderText("Completed");
+                        alert.setContentText("Sale is completed!");
+                        alert.showAndWait();
+                        closeModal();
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Warning");
+                        alert.setHeaderText("Not Completed");
+                        alert.setContentText("The card entered has not enough balance for this transaction!");
+                        alert.showAndWait();
                     }
-                    _repository.reduceCardBalance(paymentTotal, cardNumber.getText());
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information");
-                    alert.setHeaderText("Completed");
-                    alert.setContentText("Sale is completed!");
-                    alert.showAndWait();
-                    closeModal();
+
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("Not Completed");
-                    alert.setContentText("The card entered has not enough balance for this transaction!");
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Invalid card");
+                    alert.setContentText("Card number or password is incorrect.");
                     alert.showAndWait();
+
                 }
-
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Invalid card");
-                alert.setContentText("Card number or password is incorrect.");
-                alert.showAndWait();
-
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Information");
+            alert.setHeaderText("Cancelled");
+            alert.setContentText("Fill the fields, please!");
+            alert.showAndWait();
+
         }
+
 
 
     }

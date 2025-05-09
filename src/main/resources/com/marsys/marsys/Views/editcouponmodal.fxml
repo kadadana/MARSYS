@@ -8,9 +8,8 @@
 <?import java.lang.String?>
 
 
-<?import javafx.util.Callback?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.marsys.marsys.Controllers.CampaignListController">
+            fx:controller="com.marsys.marsys.Controllers.EditCouponModalController" minWidth="800" minHeight="600">
 
     <!-- Üst bar -->
     <top>
@@ -19,7 +18,7 @@
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <VBox alignment="CENTER_RIGHT">
-                <Label fx:id="lblDiscount" text="Campaign List"
+                <Label fx:id="lbltTitle" text="Edit Coupon"
                        style="-fx-text-fill: red; -fx-font-size: 50px;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
@@ -32,37 +31,50 @@
 
     <center>
 
-        <VBox spacing="20">
+        <VBox spacing="10" alignment="TOP_LEFT" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
             <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
+                <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
 
-            <Label text="Campaigns" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label text="Id: "/>
+            <TextField fx:id="couponCodeField"/>
 
-            <!-- Campaign List Table -->
-            <TableView fx:id="campaignTable" prefHeight="300">
-                <columns>
-                    <TableColumn fx:id="colCampaignId" text="Campaign ID"/>
-                    <TableColumn fx:id="colDiscountType" text="Discount Type"/>
-                    <TableColumn fx:id="colDiscountForField" text="Discount For"/>
-                    <TableColumn fx:id="colStartDate" text="Start Date"/>
-                    <TableColumn fx:id="colEndDate" text="End Date"/>
-                    <TableColumn fx:id="colIsActive" text="Is Active"/>
-                    <TableColumn fx:id="colEdit" text="Edit" prefWidth="100"/>
 
-                </columns>
-            </TableView>
+            <!-- Discount Value -->
+            <Label fx:id="lblDiscountFor" text="Discount Amount:"/>
+            <TextField fx:id="discountAmountField"/>
+
+            <!-- Start Date -->
+            <Label text="Start Date:"/>
+            <DatePicker fx:id="startDatePicker"/>
+
+            <!-- End Date -->
+            <Label text="End Date:"/>
+            <DatePicker fx:id="endDatePicker"/>
+
+            <!-- Is Active -->
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Label text="Is Active:"/>
+                <CheckBox fx:id="isActiveCheckBox"/>
+            </HBox>
 
             <HBox spacing="5" alignment="CENTER_LEFT">
+                <!-- Back Button -->
                 <Button fx:id="btnBack" text="Back" onAction="#back"
                         style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
-
                 <Region HBox.hgrow="ALWAYS"/>
 
-                <Button fx:id="btnGoToCreateCampaignScreen" text="Create Campaign" onAction="#goToCreateCampaignScreen"
+                <!-- Submit Button -->
+                <Button text="Delete Coupon" fx:id="btnDelete" onAction="#delete"
+                        style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+                <Button text="Save Coupon" fx:id="btnSave" onAction="#save"
                         style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+
             </HBox>
+
         </VBox>
     </center>
 
 </BorderPane>
+
+

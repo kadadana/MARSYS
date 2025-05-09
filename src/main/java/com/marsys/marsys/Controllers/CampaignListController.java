@@ -35,7 +35,7 @@ public class CampaignListController implements Initializable {
     @FXML
     private TableColumn<Campaign, String> colDiscountType;
     @FXML
-    private TableColumn<Campaign, String> colDiscountValue;
+    private TableColumn<Campaign, String> colDiscountForField;
     @FXML
     private TableColumn<Campaign, String> colStartDate;
     @FXML
@@ -57,11 +57,11 @@ public class CampaignListController implements Initializable {
         lblUserName.setText(user.getFirstName() + " " + user.getLastName());
         lblUserId.setText("ID: " + user.getId());
 
-        campaignList.addAll(_repository.getAllCampaigns());
+        campaignList.addAll(_repository.getCampaignList());
 
         colCampaignId.prefWidthProperty().bind(campaignTable.widthProperty().multiply(0.1));
         colDiscountType.prefWidthProperty().bind(campaignTable.widthProperty().multiply(0.3));
-        colDiscountValue.prefWidthProperty().bind(campaignTable.widthProperty().multiply(0.2));
+        colDiscountForField.prefWidthProperty().bind(campaignTable.widthProperty().multiply(0.2));
         colStartDate.prefWidthProperty().bind(campaignTable.widthProperty().multiply(0.1));
         colEndDate.prefWidthProperty().bind(campaignTable.widthProperty().multiply(0.1));
         colIsActive.prefWidthProperty().bind(campaignTable.widthProperty().multiply(0.13));
@@ -71,8 +71,8 @@ public class CampaignListController implements Initializable {
                 new SimpleStringProperty(cellData.getValue().getCampaignId()));
         colDiscountType.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getDiscountType()));
-        colDiscountValue.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getDiscountValue()));
+        colDiscountForField.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getDiscountFor()));
         colStartDate.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getStartDate()));
         colEndDate.setCellValueFactory(cellData ->
@@ -131,12 +131,12 @@ public class CampaignListController implements Initializable {
     }
 
     public void back() {
-        layoutController.loadPageByButton("/com/marsys/marsys/Views/mainpage.fxml", btnBack);
+        layoutController.loadPageByButton("/com/marsys/marsys/Views/campaignandcoupon.fxml", btnBack);
     }
 
     private void refreshCampaignTable() {
         campaignList.clear();
-        campaignList.addAll(_repository.getAllCampaigns());
+        campaignList.addAll(_repository.getCampaignList());
         campaignTable.setItems(campaignList);
     }
 }

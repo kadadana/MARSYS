@@ -45,15 +45,13 @@
                         <String fx:id="01" fx:value="Buy 2 Pay 1"/>
                         <String fx:id="02" fx:value="50% Discount for 2nd from same product"/>
                         <String fx:id="03" fx:value="50% Discount for 2nd from same category"/>
-                        <String fx:id="04" fx:value="%25 Discount for Cash Payment"/>
-                        <String fx:id="05" fx:value="Coupon Code"/>
                     </FXCollections>
                 </items>
             </ComboBox>
 
             <!-- Discount Value -->
-            <Label text="Discount Value:"/>
-            <TextField fx:id="discountValueField"/>
+            <Label fx:id="lblDiscountFor" text="Discount For:"/>
+            <TextField fx:id="discountForField"/>
 
             <!-- Start Date -->
             <Label text="Start Date:"/>

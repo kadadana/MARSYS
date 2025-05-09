@@ -18,7 +18,7 @@
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <VBox alignment="CENTER_RIGHT">
-                <Label fx:id="lblDiscount" text="Create Campaign"
+                <Label fx:id="lblTitle" text="Create Campaign"
                        style="-fx-text-fill: red; -fx-font-size: 50px;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
@@ -43,17 +43,15 @@
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:id="01" fx:value="Buy 2 Pay 1"/>
-                        <String fx:id="02" fx:value="50% Discount for 2nd from same product"/>
-                        <String fx:id="03" fx:value="50% Discount for 2nd from same category"/>
-                        <String fx:id="04" fx:value="%25 Discount for Cash Payment"/>
-                        <String fx:id="05" fx:value="Coupon Code"/>
+                        <String fx:id="02" fx:value="50% Discount for 2nd from the same product"/>
+                        <String fx:id="03" fx:value="50% Discount for 2nd from the same category"/>
                     </FXCollections>
                 </items>
             </ComboBox>
 
             <!-- Discount Value -->
-            <Label text="Discount Value:"/>
-            <TextField fx:id="discountValueField"/>
+            <Label fx:id="lblDiscountFor" text="Discount For:"/>
+            <TextField fx:id="discountForField"/>
 
             <!-- Start Date -->
             <Label text="Start Date:"/>

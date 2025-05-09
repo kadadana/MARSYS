@@ -1,6 +1,7 @@
 package com.marsys.marsys.Repository;
 
 import com.marsys.marsys.Models.Campaign;
+import com.marsys.marsys.Models.Coupon;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Product;
 
@@ -31,8 +32,27 @@ public class Repository {
         }
     }
 
-    //Sütun adını ve barkodu vererek INVENTORY tablosunun o sütunundaki değerini alabilirsin
-    public String getCellInventoryByBarcode(String columnName, String barcode) {
+    public Employee getEmployeeModelById(String id) {
+        Employee employee = null;
+        String query = "SELECT * FROM \"EMPLOYEE\" WHERE \"ID\" = ?";
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                employee = new Employee(rs.getString("NAME"), rs.getString("LAST_NAME"), rs.getString("POSITION"),
+                        rs.getString("ID"), rs.getString("PASSWORD"), rs.getString("STORE_CODE"));
+                return employee;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return employee;
+    }
+
+    //INVENTORY tablosundan belirli sütun ve barcode numarasına göre hücre veren metod
+    public String getInventoryCellByBarcode(String columnName, String barcode) {
         String query = "SELECT \"" + columnName + "\" FROM \"INVENTORY\" WHERE \"BARCODE\" = ?";
         String cell = null;
         try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -47,6 +67,31 @@ public class Repository {
             e.printStackTrace();  // Hata mesajını konsola yazdır
             return null;
         }
+    }
+
+    //INVENTORY tablosundan Product modeli veren metod
+    public Product getProductModelByBarcode(String barcode) {
+        Product product = null;
+
+        String query = "SELECT * FROM \"INVENTORY\" WHERE \"BARCODE\" = ?";
+
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, barcode);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                product = new Product(rs.getString("BARCODE"), rs.getString("NAME"), Integer.parseInt(rs.getString("QUANTITY")),
+                        Double.parseDouble(rs.getString("SALE_PRICE")), rs.getString("CATEGORY"), rs.getString("BRAND"),
+                        Double.parseDouble(rs.getString("BUYING_PRICE")), rs.getString("EXPIRATION"), rs.getString("TAX_RATE"));
+                return product;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return product;
+
     }
 
     //STOCK_MOVEMENT tablosun yeni kayıt eklemek için olan metod
@@ -97,7 +142,7 @@ public class Repository {
     public void reduceStockQuantity(Product product) {
 
         for (int p = 0; p < product.getQuantity(); p++) {
-            int stockQuantity = Integer.parseInt(getCellInventoryByBarcode("QUANTITY", product.getBarcode()));
+            int stockQuantity = Integer.parseInt(getInventoryCellByBarcode("QUANTITY", product.getBarcode()));
             String query = "UPDATE \"INVENTORY\" SET \"QUANTITY\" = " + Integer.toString(stockQuantity - 1) + " WHERE \"BARCODE\" = ?";
             try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setString(1, product.getBarcode());
@@ -180,7 +225,7 @@ public class Repository {
             stmt.setString(1, campaign.getCampaignId());
             stmt.setString(2, campaign.getDiscountType());
             stmt.setString(3, campaign.getDiscountTypeCode());
-            stmt.setString(4, campaign.getDiscountValue());
+            stmt.setString(4, campaign.getDiscountFor());
             stmt.setString(5, campaign.getStartDate());
             stmt.setString(6, campaign.getEndDate());
             stmt.setString(7, campaign.getIsActive());
@@ -224,7 +269,7 @@ public class Repository {
 
             if (rs.next()) {
                 campaign = new Campaign(rs.getString("CAMPAIGN_ID"), rs.getString("DISCOUNT_TYPE"), rs.getString("DISCOUNT_TYPE_CODE"),
-                        rs.getString("DISCOUNT_VALUE"), rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
+                        rs.getString("DISCOUNT_FOR"), rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
                 return campaign;
             }
 
@@ -237,10 +282,10 @@ public class Repository {
     }
 
     //CAMPAIGN tablosundaki her satırı List olarak veren metod
-    public List<Campaign> getAllCampaigns() {
+    public List<Campaign> getCampaignList() {
         String query = "SELECT * FROM \"CAMPAIGN\"";
         List<Campaign> campaignList = new ArrayList<>();
-        Campaign campaign = null;
+        Campaign campaign;
 
         try (var conn = DriverManager.getConnection(url);
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -249,7 +294,7 @@ public class Repository {
 
             while (rs.next()) {
                 campaign = new Campaign(rs.getString("CAMPAIGN_ID"), rs.getString("DISCOUNT_TYPE"), rs.getString("DISCOUNT_TYPE_CODE"),
-                        rs.getString("DISCOUNT_VALUE"), rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
+                        rs.getString("DISCOUNT_FOR"), rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
                 campaignList.add(campaign);
             }
         } catch (SQLException e) {
@@ -264,7 +309,7 @@ public class Repository {
                 "\"CAMPAIGN_ID\" = ?, " +
                 "\"DISCOUNT_TYPE\" = ?, " +
                 "\"DISCOUNT_TYPE_CODE\" = ?, " +
-                "\"DISCOUNT_VALUE\" = ?, " +
+                "\"DISCOUNT_FOR\" = ?, " +
                 "\"START_DATE\" = ?, " +
                 "\"END_DATE\" = ?, " +
                 "\"IS_ACTIVE\" = ? " +
@@ -274,7 +319,7 @@ public class Repository {
             stmt.setString(1, campaign.getCampaignId());
             stmt.setString(2, campaign.getDiscountType());
             stmt.setString(3, campaign.getDiscountTypeCode());
-            stmt.setString(4, campaign.getDiscountValue());
+            stmt.setString(4, campaign.getDiscountFor());
             stmt.setString(5, campaign.getStartDate());
             stmt.setString(6, campaign.getEndDate());
             stmt.setString(7, campaign.getIsActive());
@@ -295,5 +340,259 @@ public class Repository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Campaign> getActiveCampaigns() {
+        String query = "SELECT * FROM \"CAMPAIGN\" " +
+                "WHERE \"IS_ACTIVE\" = 'ACTIVE'" +
+                "  AND CURRENT_DATE BETWEEN TO_DATE(\"START_DATE\", 'MM-DD-YYYY')\n" +
+                "                      AND TO_DATE(\"END_DATE\", 'MM-DD-YYYY') ";
+        List<Campaign> campaignList = new ArrayList<>();
+        Campaign campaign;
+
+        try (var conn = DriverManager.getConnection(url);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                campaign = new Campaign(rs.getString("CAMPAIGN_ID"), rs.getString("DISCOUNT_TYPE"), rs.getString("DISCOUNT_TYPE_CODE"),
+                        rs.getString("DISCOUNT_FOR"), rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
+                campaignList.add(campaign);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return campaignList;
+    }
+
+    public Campaign getCampaignModelByDiscountFor(String discountFor) {
+        Campaign campaign = null;
+
+        String query = "SELECT * FROM \"CAMPAIGN\" WHERE \"DISCOUNT_FOR\" = ?";
+
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, discountFor);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                campaign = new Campaign(rs.getString("CAMPAIGN_ID"), rs.getString("DISCOUNT_TYPE"), rs.getString("DISCOUNT_TYPE_CODE"),
+                        rs.getString("DISCOUNT_FOR"), rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
+                return campaign;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return campaign;
+    }
+
+    public Campaign getBuy2Get1CampaignByBarcode(String barcode) {
+        Campaign campaign = null;
+
+        String query = "SELECT * FROM \"CAMPAIGN\" WHERE \"DISCOUNT_FOR\" = ? AND \"DISCOUNT_TYPE_CODE\" = '01' AND \"IS_ACTIVE\" = 'ACTIVE' AND " +
+                " CURRENT_DATE BETWEEN TO_DATE(\"START_DATE\", 'MM-DD-YYYY')" +
+                " AND TO_DATE(\"END_DATE\", 'MM-DD-YYYY')";
+
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, barcode);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                campaign = new Campaign(rs.getString("CAMPAIGN_ID"), rs.getString("DISCOUNT_TYPE"), rs.getString("DISCOUNT_TYPE_CODE"),
+                        rs.getString("DISCOUNT_FOR"), rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
+                return campaign;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return campaign;
+    }
+
+    public Campaign get50CampaignForCategory(String category) {
+        Campaign campaign = null;
+
+        String query = "SELECT * FROM \"CAMPAIGN\" WHERE \"DISCOUNT_FOR\" = ? AND \"DISCOUNT_TYPE_CODE\" = '03' AND \"IS_ACTIVE\" = 'ACTIVE' AND " +
+                " CURRENT_DATE BETWEEN TO_DATE(\"START_DATE\", 'MM-DD-YYYY')" +
+                " AND TO_DATE(\"END_DATE\", 'MM-DD-YYYY')";
+
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, category);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                campaign = new Campaign(rs.getString("CAMPAIGN_ID"), rs.getString("DISCOUNT_TYPE"), rs.getString("DISCOUNT_TYPE_CODE"),
+                        rs.getString("DISCOUNT_FOR"), rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
+                return campaign;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return campaign;
+    }
+
+    public Campaign get50CampaignForProduct(String barcode) {
+        Campaign campaign = null;
+
+        String query = "SELECT * FROM \"CAMPAIGN\" WHERE \"DISCOUNT_FOR\" = ? AND \"DISCOUNT_TYPE_CODE\" = '02' AND \"IS_ACTIVE\" = 'ACTIVE' AND " +
+                " CURRENT_DATE BETWEEN TO_DATE(\"START_DATE\", 'MM-DD-YYYY')" +
+                " AND TO_DATE(\"END_DATE\", 'MM-DD-YYYY')";
+
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, barcode);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                campaign = new Campaign(rs.getString("CAMPAIGN_ID"), rs.getString("DISCOUNT_TYPE"), rs.getString("DISCOUNT_TYPE_CODE"),
+                        rs.getString("DISCOUNT_FOR"), rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
+                return campaign;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return campaign;
+    }
+
+    public Coupon getCouponModelByCode(String code) {
+        Coupon coupon = null;
+
+        String query = "SELECT * FROM \"COUPON\" WHERE \"COUPON_CODE\" = ?";
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, code);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                coupon = new Coupon(rs.getString("COUPON_CODE"), rs.getString("DISCOUNT_AMOUNT"),
+                        rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
+                return coupon;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return coupon;
+    }
+
+    public List<Coupon> getCouponList() {
+        String query = "SELECT * FROM \"COUPON\"";
+        List<Coupon> couponList = new ArrayList<>();
+        Coupon coupon;
+
+        try (var conn = DriverManager.getConnection(url);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                coupon = new Coupon(rs.getString("COUPON_CODE"), rs.getString("DISCOUNT_AMOUNT"),
+                        rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
+                couponList.add(coupon);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return couponList;
+    }
+
+    public void updateCouponTable(Coupon coupon) {
+        String query = "UPDATE \"COUPON\" SET " +
+                "\"COUPON_CODE\" = ?, " +
+                "\"DISCOUNT_AMOUNT\" = ?, " +
+                "\"START_DATE\" = ?, " +
+                "\"END_DATE\" = ?, " +
+                "\"IS_ACTIVE\" = ? " +
+                "WHERE \"COUPON_CODE\" = ?";
+
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, coupon.getCouponCode());
+            stmt.setString(2, coupon.getDiscountAmount());
+            stmt.setString(3, coupon.getStartDate());
+            stmt.setString(4, coupon.getEndDate());
+            stmt.setString(5, coupon.getIsActive());
+            stmt.setString(6, coupon.getCouponCode());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteFromCouponbyCode(String couponCode) {
+        String query = "DELETE FROM \"COUPON\" WHERE \"COUPON_CODE\" = ?";
+
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, couponCode);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void insertIntoCouponTable(Coupon coupon) {
+        String query = "INSERT INTO \"COUPON\" VALUES (?, ?, ?, ?, ?)";
+
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, coupon.getCouponCode());
+            stmt.setString(2, coupon.getDiscountAmount());
+            stmt.setString(3, coupon.getStartDate());
+            stmt.setString(4, coupon.getEndDate());
+            stmt.setString(5, coupon.getIsActive());
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getLatestCouponCode() {
+        String couponCode;
+        String query = "SELECT \"COUPON_CODE\" FROM \"COUPON\" ORDER BY \"COUPON_CODE\" DESC LIMIT 1";
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                couponCode = rs.getString("COUPON_CODE");
+                return String.format("%03d", Integer.parseInt(couponCode) + 1);
+
+            } else {
+                return "001";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "001";
+        }
+    }
+
+    public Coupon getValidCoupon(String couponCode) {
+        Coupon coupon = null;
+        String query = "SELECT * FROM \"COUPON\" " +
+                "WHERE \"COUPON_CODE\" = ? AND \"IS_ACTIVE\" = 'ACTIVE' AND" +
+                " CURRENT_DATE BETWEEN TO_DATE(\"START_DATE\", 'MM-DD-YYYY')" +
+                " AND TO_DATE(\"END_DATE\", 'MM-DD-YYYY')";
+
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, couponCode);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                coupon = new Coupon(rs.getString("COUPON_CODE"),
+                        rs.getString("DISCOUNT_AMOUNT"),
+                        rs.getString("START_DATE"),
+                        rs.getString("END_DATE"),
+                        rs.getString("IS_ACTIVE"));
+                return coupon;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return coupon;
+
     }
 }
