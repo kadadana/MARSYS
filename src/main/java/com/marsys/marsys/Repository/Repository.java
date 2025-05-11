@@ -537,7 +537,7 @@ public class Repository {
     }
 
     public void insertIntoCouponTable(Coupon coupon) {
-        String query = "INSERT INTO \"COUPON\" VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO \"COUPON\" VALUES (?, ?, ?, ?, ?, ?)";
 
         try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, coupon.getCouponCode());
@@ -545,6 +545,7 @@ public class Repository {
             stmt.setString(3, coupon.getStartDate());
             stmt.setString(4, coupon.getEndDate());
             stmt.setString(5, coupon.getIsActive());
+            stmt.setString(6, "0");
 
             stmt.executeUpdate();
         } catch (SQLException e) {
