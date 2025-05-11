@@ -78,6 +78,7 @@ public class EditCouponModalController implements Initializable {
     @FXML
     private void save() {
         try {
+            String used = _repository.getCouponUsed(couponCodeField.getText());
             if (!discountAmountField.getText().isEmpty() &&
                     startDatePicker.getValue() != null &&
                     endDatePicker.getValue() != null) {
@@ -91,7 +92,7 @@ public class EditCouponModalController implements Initializable {
                     strIsActive = "INACTIVE";
                 }
                 Coupon coupon = new Coupon(
-                        couponCodeField.getText(), discountAmountField.getText(), selectedStartDate.format(formatter), selectedEndDate.format(formatter), strIsActive);
+                        couponCodeField.getText(), discountAmountField.getText(), selectedStartDate.format(formatter), selectedEndDate.format(formatter), strIsActive, used);
                 try {
                     _repository.updateCouponTable(coupon);
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);

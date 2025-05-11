@@ -89,7 +89,7 @@ public class CreateCouponController implements Initializable {
                 strIsActive = "INACTIVE";
             }
             Coupon coupon = new Coupon(
-                    repository.getLatestCouponCode(), discountAmountField.getText(), selectedStartDate.format(formatter), selectedEndDate.format(formatter), strIsActive);
+                    repository.getLatestCouponCode(), discountAmountField.getText(), selectedStartDate.format(formatter), selectedEndDate.format(formatter), strIsActive, "0");
             try {
                 repository.insertIntoCouponTable(coupon);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

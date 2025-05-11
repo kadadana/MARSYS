@@ -6,13 +6,16 @@ public class Coupon {
     private String StartDate;
     private String EndDate;
     private String IsActive;
+    private String Used;
 
-    public Coupon(String couponCode, String discountAmount, String startDate, String endDate, String isActive) {
+    public Coupon(String couponCode, String discountAmount, String startDate, String endDate, String isActive, String used) {
         this.CouponCode = couponCode;
         this.DiscountAmount = discountAmount;
         this.StartDate = startDate;
         this.EndDate = endDate;
         this.IsActive = isActive;
+        this.Used = used;
+
     }
 
     public String getCouponCode() {
@@ -54,6 +57,14 @@ public class Coupon {
 
     public void setIsActive(String isActive) {
         this.IsActive = isActive;
+    }
+
+    public String getUsed() {
+        return Used;
+    }
+
+    public void setUsed(String used) {
+        this.Used = used;
     }
 }
 

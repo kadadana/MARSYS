@@ -23,10 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.ProtectionDomain;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.UnaryOperator;
 
 public class SalesController implements Initializable {
@@ -230,7 +227,7 @@ public class SalesController implements Initializable {
                 paymentModalController.setPaymentCompleteListener(new PaymentModalController.PaymentCompleteListener() {
                     @Override
                     public void onPaymentComplete(String cardNumber) {
-                        completeSale(cardNumber);
+                        completeSale(cardNumber, total);
                     }
                 });
                 Stage stage = new Stage();
@@ -251,7 +248,7 @@ public class SalesController implements Initializable {
 
     }
 
-    public void completeSale(String cardNumber) {
+    public void completeSale(String cardNumber, Double newTotal) {
         try {
             if (salesTable.getItems() != null && !salesTable.getItems().isEmpty()) {
                 String movementType = "SALE";
@@ -263,8 +260,11 @@ public class SalesController implements Initializable {
                     _repository.insertIntoStockMovementTable(p, movementType, invoiceNumber, user.getId(), date);
                     _repository.reduceStockQuantity(p);
                 }
+                if (couponField.getText() != null) {
+                    _repository.updateCouponUsed(couponField.getText());
+                }
+                _repository.insertIntoInvoicesTable(invoiceNumber, user, cardNumber, cardNumber, Double.toString(newTotal), date);
 
-                _repository.insertIntoInvoicesTable(invoiceNumber, user, cardNumber, cardNumber, Double.toString(total), date);
                 total = 0.00;
                 lblTotal.setText(total + " TL");
 
@@ -288,7 +288,28 @@ public class SalesController implements Initializable {
     @FXML
     private void cashPayment() {
         if (salesTable.getItems() != null && !salesTable.getItems().isEmpty()) {
-            completeSale("000000");
+            double originalTotal = total;
+            double discountedTotal = originalTotal * 0.75;
+            if (_repository.getCampaignModelById("005").getIsActive().equals("ACTIVE")) {
+                Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmation.setTitle("Discount Confirmation");
+                confirmation.setHeaderText("Apply 15% Discount?");
+                confirmation.setContentText("A 15% discount will be applied.\n" +
+                        "Original Total: " + String.format("%.2f", originalTotal) + "\n" +
+                        "Discounted Total: " + String.format("%.2f", discountedTotal));
+
+                Optional<ButtonType> result = confirmation.showAndWait();
+
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    completeSale("000000", discountedTotal);
+                } else {
+                    completeSale("000000", originalTotal);
+                }
+            } else {
+                completeSale("000000", originalTotal);
+            }
+
+
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");

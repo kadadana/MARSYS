@@ -471,7 +471,8 @@ public class Repository {
 
             if (rs.next()) {
                 coupon = new Coupon(rs.getString("COUPON_CODE"), rs.getString("DISCOUNT_AMOUNT"),
-                        rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
+                        rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"),
+                        rs.getString("USED"));
                 return coupon;
             }
         } catch (SQLException e) {
@@ -492,7 +493,8 @@ public class Repository {
 
             while (rs.next()) {
                 coupon = new Coupon(rs.getString("COUPON_CODE"), rs.getString("DISCOUNT_AMOUNT"),
-                        rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"));
+                        rs.getString("START_DATE"), rs.getString("END_DATE"), rs.getString("IS_ACTIVE"),
+                        rs.getString("USED"));
                 couponList.add(coupon);
             }
         } catch (SQLException e) {
@@ -586,7 +588,8 @@ public class Repository {
                         rs.getString("DISCOUNT_AMOUNT"),
                         rs.getString("START_DATE"),
                         rs.getString("END_DATE"),
-                        rs.getString("IS_ACTIVE"));
+                        rs.getString("IS_ACTIVE"),
+                        rs.getString("USED"));
                 return coupon;
             }
         } catch (Exception e) {
@@ -594,5 +597,43 @@ public class Repository {
         }
         return coupon;
 
+    }
+
+    public void updateCouponUsed(String couponCode) {
+        String _query = "SELECT \"USED\" FROM \"COUPON\" WHERE \"COUPON_CODE\" = ?";
+
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(_query)) {
+            stmt.setString(1, couponCode);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int preUsed = Integer.parseInt(rs.getString("USED"));
+                int newUsed = preUsed + 1;
+                String query = "UPDATE \"COUPON\" SET \"USED\" = ? WHERE \"COUPON_CODE\" = ?";
+                PreparedStatement stmt2 = conn.prepareStatement(query);
+                stmt2.setString(1, Integer.toString(newUsed));
+                stmt2.setString(2, couponCode);
+                stmt2.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getCouponUsed(String couponCode) {
+        String used = "";
+        String query = "SELECT \"USED\" FROM \"COUPON\" WHERE \"COUPON_CODE\" = ?";
+
+        try (var conn = DriverManager.getConnection(url); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, couponCode);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                used = rs.getString("USED");
+                return used;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return used;
     }
 }
