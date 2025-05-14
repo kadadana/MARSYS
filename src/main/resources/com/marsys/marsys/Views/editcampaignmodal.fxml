@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.marsys.marsys.Controllers.EditCampaignModalController" minWidth="800" minHeight="600">
+
+    <!-- Üst bar -->
+    <top>
+        <HBox spacing="10" style="-fx-background-color: #2c3e50;">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <VBox alignment="CENTER_RIGHT">
+                <Label fx:id="lbltTitle" text="Edit Campaign"
+                       style="-fx-text-fill: red; -fx-font-size: 50px;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <VBox alignment="CENTER_RIGHT">
+                <Label fx:id="lblUserName" style="-fx-text-fill: white; -fx-font-size: 25px;"/>
+                <Label fx:id="lblUserId" style="-fx-text-fill: lightgray; -fx-font-size: 20px;"/>
+            </VBox>
+        </HBox>
+    </top>
+
+    <center>
+
+        <VBox spacing="10" alignment="TOP_LEFT" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Id: "/>
+            <TextField fx:id="campaignId"/>
+            <!-- Discount Type -->
+            <ComboBox fx:id="discountTypeComboBox">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:id="01" fx:value="Buy 2 Pay 1"/>
+                        <String fx:id="02" fx:value="50% Discount for 2nd from same product"/>
+                        <String fx:id="03" fx:value="50% Discount for 2nd from same category"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <!-- Discount Value -->
+            <Label fx:id="lblDiscountFor" text="Discount For:"/>
+            <TextField fx:id="discountForField"/>
+
+            <!-- Start Date -->
+            <Label text="Start Date:"/>
+            <DatePicker fx:id="startDatePicker"/>
+
+            <!-- End Date -->
+            <Label text="End Date:"/>
+            <DatePicker fx:id="endDatePicker"/>
+
+            <!-- Is Active -->
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Label text="Is Active:"/>
+                <CheckBox fx:id="isActiveCheckBox"/>
+            </HBox>
+
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <!-- Back Button -->
+                <Button fx:id="btnBack" text="Back" onAction="#back"
+                        style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Submit Button -->
+                <Button text="Delete Campaign" fx:id="btnDelete" onAction="#delete"
+                        style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+                <Button text="Save Campaign" fx:id="btnSave" onAction="#save"
+                        style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>
+
+
