@@ -9,8 +9,9 @@
 
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.marsys.marsys.Controllers.EditCouponModalController" minWidth="800" minHeight="600">
-
+            fx:controller="com.marsys.marsys.Controllers.CreateEmployeeController"
+            prefWidth="1200" prefHeight="800"
+            maxWidth="Infinity" maxHeight="Infinity">
     <!-- Üst bar -->
     <top>
         <HBox spacing="10" style="-fx-background-color: #2c3e50;">
@@ -18,7 +19,7 @@
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <VBox alignment="CENTER_RIGHT">
-                <Label fx:id="lbltTitle" text="Edit Coupon"
+                <Label fx:id="lbltTitle" text="Create Employee"
                        style="-fx-text-fill: red; -fx-font-size: 50px;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
@@ -37,42 +38,57 @@
             </padding>
 
             <Label text="Id: "/>
-            <TextField fx:id="couponCodeField"/>
+            <TextField fx:id="employeeId"/>
+
+            <Label text="Name: "/>
+            <TextField fx:id="employeeFirstName"/>
+            <Label text="Last Name: "/>
+            <TextField fx:id="employeeLastName"/>
+
+            <Label text="Birth Date:"/>
+            <DatePicker fx:id="birthDatePicker"/>
+
+            <Label text="Position :"/>
+            <ComboBox fx:id="positionComboBox">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="MANAGER"/>
+                        <String fx:value="CASHIER"/>
+                        <String fx:value="WAREHOUSE"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
 
 
-            <!-- Discount Value -->
-            <Label fx:id="lblDiscountFor" text="Discount Amount:"/>
-            <TextField fx:id="discountAmountField"/>
-
-            <!-- Start Date -->
             <Label text="Start Date:"/>
             <DatePicker fx:id="startDatePicker"/>
 
-            <!-- End Date -->
-            <Label text="End Date:"/>
-            <DatePicker fx:id="endDatePicker"/>
+            <Label text="Password: "/>
+            <TextField fx:id="passwordField"/>
 
-            <!-- Is Active -->
-            <HBox spacing="5" alignment="CENTER_LEFT">
-                <Label text="Is Active:"/>
-                <CheckBox fx:id="isActiveCheckBox"/>
-            </HBox>
+            <Label text="Store Code:"/>
+            <ComboBox fx:id="storeCodeComboBox">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="001"/>
+                        <String fx:value="002"/>
+                        <String fx:value="003"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
 
 
 
         </VBox>
     </center>
     <bottom>
+
         <HBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15 10 15 10;">
-            <!-- Back Button -->
             <Button fx:id="btnBack" text="Back" onAction="#back"
                     style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
             <Region HBox.hgrow="ALWAYS"/>
 
-            <!-- Submit Button -->
-            <Button text="Delete Coupon" fx:id="btnDelete" onAction="#delete"
-                    style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
-            <Button text="Save Coupon" fx:id="btnSave" onAction="#save"
+            <Button text="Save Employee" fx:id="btnSave" onAction="#save"
                     style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
 
         </HBox>

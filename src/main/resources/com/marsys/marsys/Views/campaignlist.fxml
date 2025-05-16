@@ -53,16 +53,19 @@
                 </columns>
             </TableView>
 
-            <HBox spacing="5" alignment="CENTER_LEFT">
-                <Button fx:id="btnBack" text="Back" onAction="#back"
-                        style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
 
-                <Region HBox.hgrow="ALWAYS"/>
-
-                <Button fx:id="btnGoToCreateCampaignScreen" text="Create Campaign" onAction="#goToCreateCampaignScreen"
-                        style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
-            </HBox>
         </VBox>
     </center>
+    <bottom>
+        <HBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15 10 15 10;">
+            <Button fx:id="btnBack" text="Back" onAction="#back"
+                    style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button fx:id="btnGoToCreateCampaignScreen" text="Create Campaign" onAction="#goToCreateCampaignScreen"
+                    style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+        </HBox>
+    </bottom>
 
 </BorderPane>

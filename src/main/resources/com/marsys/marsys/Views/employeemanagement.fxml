@@ -12,9 +12,22 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.marsys.marsys.Controllers.EmployeeManagementController">
 
-
+    <!-- Üst bar -->
     <top>
-        <!-- Üst bar -->
+        <HBox spacing="10" style="-fx-background-color: #2c3e50;">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <VBox alignment="CENTER_RIGHT">
+                <Label fx:id="lblTitle" text="Employee List"
+                       style="-fx-text-fill: red; -fx-font-size: 50px;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <VBox alignment="CENTER_RIGHT">
+                <Label fx:id="lblUserName" style="-fx-text-fill: white; -fx-font-size: 25px;"/>
+                <Label fx:id="lblUserId" style="-fx-text-fill: lightgray; -fx-font-size: 20px;"/>
+            </VBox>
+        </HBox>
     </top>
 
     <center>
@@ -24,8 +37,38 @@
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
 
+            <Label text="Employee List" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+            <!-- Campaign List Table -->
+            <TableView fx:id="employeeTable" prefHeight="300">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID"/>
+                    <TableColumn fx:id="colName" text="Name"/>
+                    <TableColumn fx:id="colLastName" text="Last Name"/>
+                    <TableColumn fx:id="colBirthDate" text="Birth Date"/>
+                    <TableColumn fx:id="colPosition" text="Position"/>
+                    <TableColumn fx:id="colPassword" text="Password"/>
+                    <TableColumn fx:id="colStoreCode" text="Store Code"/>
+                    <TableColumn fx:id="colStartDate" text="Start Date"/>
+                    <TableColumn fx:id="colEndDate" text="End Date"/>
+                    <TableColumn fx:id="colEdit" text="Edit" prefWidth="100"/>
+
+                </columns>
+            </TableView>
+
 
         </VBox>
     </center>
+    <bottom>
+        <HBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15 10 15 10;">
+            <Button fx:id="btnBack" text="Back" onAction="#back"
+                    style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button fx:id="btnGoToAddEmployeeScreen" text="Add Employee" onAction="#goToAddEmployeeScreen"
+                    style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+        </HBox>
+    </bottom>
 
 </BorderPane>

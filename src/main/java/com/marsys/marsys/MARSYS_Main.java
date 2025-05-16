@@ -16,15 +16,15 @@ public class MARSYS_Main extends Application {
         Scene scene = new Scene(root);
 
         primaryStage.setScene(scene);
-        primaryStage.setResizable(true); // Ekran boyutu sabit
+        primaryStage.setResizable(true);
         primaryStage.setTitle("MARSYS");
         primaryStage.show();
 
-        primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(1200);
+        primaryStage.setMinHeight(800);
 
-        primaryStage.setWidth(1000);
-        primaryStage.setHeight(700);
+        primaryStage.setWidth(1200);
+        primaryStage.setHeight(800);
     }
 
     public static void main(String[] args) {
