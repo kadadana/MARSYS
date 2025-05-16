@@ -28,14 +28,23 @@
                     <Insets top="20" bottom="20" left="20" right="20"/>
                 </padding>
 
-                <TextField fx:id="storeCodeField" promptText="Store Code"
-                           maxWidth="300" prefHeight="40"/>
-                <TextField fx:id="idField" promptText="ID"
-                           maxWidth="300" prefHeight="40"/>
-                <PasswordField fx:id="passwordField" promptText="Password"
-                               maxWidth="300" prefHeight="40"/>
+                <HBox spacing="10" alignment="CENTER">
+                    <Label text="Store Code:" minWidth="100" alignment="CENTER_LEFT"/>
+                    <TextField fx:id="storeCodeField" prefWidth="300" prefHeight="40"/>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER">
+                    <Label text="ID:" minWidth="100" alignment="CENTER_LEFT"/>
+                    <TextField fx:id="idField" prefWidth="300" prefHeight="40"/>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER">
+                    <Label text="Password:" minWidth="100" alignment="CENTER_LEFT"/>
+                    <PasswordField fx:id="passwordField" prefWidth="300" prefHeight="40"/>
+                </HBox>
+
                 <Button fx:id="btnLogin" text="Login" onAction="#handleLogin"
-                        maxWidth="300" prefHeight="40"/>
+                        maxWidth="420" prefHeight="40"/>
             </VBox>
         </StackPane>
     </center>

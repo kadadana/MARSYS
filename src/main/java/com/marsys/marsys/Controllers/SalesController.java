@@ -1,5 +1,6 @@
 package com.marsys.marsys.Controllers;
 
+import com.marsys.marsys.Helpers.TableViewHelper;
 import com.marsys.marsys.Models.*;
 import com.marsys.marsys.Repository.Repository;
 import eu.hansolo.tilesfx.skins.TestTileSkin;
@@ -109,6 +110,7 @@ public class SalesController implements Initializable {
 
 
         salesTable.setItems(productList);
+        TableViewHelper.adjustTableHeight(salesTable);
         addDeleteButtonToTable();
 
     }
@@ -127,32 +129,41 @@ public class SalesController implements Initializable {
             } else {
                 scannedProduct = _repository.getProductModelByBarcode(scannedBarcode);
                 scannedProduct.setQuantity(Integer.parseInt(quantityField.getText()));
-                boolean found = false;
 
-                for (Product p : productList) {
+                if (scannedProduct.getQuantity() <= _repository.getProductModelByBarcode(scannedBarcode).getQuantity()) {
+                    boolean found = false;
 
-                    if (p.getBarcode().equals(scannedProduct.getBarcode())) {
-                        if (p.getQuantity() < Integer.parseInt(_repository.getInventoryCellByBarcode("QUANTITY", scannedProduct.getBarcode()))) {
-                            p.setQuantity(p.getQuantity() + Integer.parseInt(quantityField.getText()));
-                            total += scannedProduct.getPrice() * Integer.parseInt(quantityField.getText());
-                            found = true;
-                        } else {
-                            Alert alert = new Alert(Alert.AlertType.WARNING);
-                            alert.setTitle("Alert");
-                            alert.setHeaderText("Failed");
-                            alert.setContentText("Not enough stock for this product!");
-                            alert.showAndWait();
-                            return;
+                    for (Product p : productList) {
+
+                        if (p.getBarcode().equals(scannedProduct.getBarcode())) {
+                            if (p.getQuantity() + scannedProduct.getQuantity() <= Integer.parseInt(_repository.getInventoryCellByBarcode("QUANTITY", scannedProduct.getBarcode()))) {
+                                p.setQuantity(p.getQuantity() + Integer.parseInt(quantityField.getText()));
+                                total += scannedProduct.getPrice() * Integer.parseInt(quantityField.getText());
+                                found = true;
+                            } else {
+                                Alert alert = new Alert(Alert.AlertType.WARNING);
+                                alert.setTitle("Alert");
+                                alert.setHeaderText("Failed");
+                                alert.setContentText("Not enough stock for this product!");
+                                alert.showAndWait();
+                                return;
+                            }
+                            barcodeField.clear();
+                            break;
                         }
-                        barcodeField.clear();
-                        break;
                     }
-                }
-                if (!found) {
-                    Product newProduct = _repository.getProductModelByBarcode(scannedBarcode);
-                    newProduct.setQuantity(Integer.parseInt(quantityField.getText()));
-                    productList.add(newProduct);
-                    total += newProduct.getPrice();
+                    if (!found) {
+                        Product newProduct = _repository.getProductModelByBarcode(scannedBarcode);
+                        newProduct.setQuantity(Integer.parseInt(quantityField.getText()));
+                        productList.add(newProduct);
+                        total += newProduct.getPrice();
+                    }
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Alert");
+                    alert.setHeaderText("Failed");
+                    alert.setContentText("Not enough stock for this product!");
+                    alert.showAndWait();
                 }
 
 
@@ -161,6 +172,7 @@ public class SalesController implements Initializable {
                 barcodeField.clear();
                 quantityField.setText("1");
                 barcodeField.requestFocus();
+                TableViewHelper.adjustTableHeight(salesTable);
                 campaignChecker();
             }
 
@@ -195,6 +207,7 @@ public class SalesController implements Initializable {
                     alert.showAndWait().ifPresent(response -> {
                         if (response == yes) {
                             productList.remove(product);
+                            TableViewHelper.adjustTableHeight(salesTable);
                             campaignChecker();
                         }
                     });
@@ -245,6 +258,7 @@ public class SalesController implements Initializable {
             alert.setContentText("You haven't added a product to sale!");
             alert.showAndWait();
         }
+        TableViewHelper.adjustTableHeight(salesTable);
 
     }
 
@@ -272,6 +286,10 @@ public class SalesController implements Initializable {
                 productList.removeAll();
                 salesTable.getItems().clear();
                 salesTable.refresh();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Completed");
+                alert.setHeaderText("Sale is completed");
+                alert.showAndWait();
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
@@ -282,6 +300,7 @@ public class SalesController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        TableViewHelper.adjustTableHeight(salesTable);
 
     }
 

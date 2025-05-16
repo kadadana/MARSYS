@@ -1,5 +1,6 @@
 package com.marsys.marsys.Controllers;
 
+import com.marsys.marsys.Helpers.TableViewHelper;
 import com.marsys.marsys.Models.Campaign;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Session;
@@ -81,6 +82,8 @@ public class CampaignListController implements Initializable {
                 new SimpleStringProperty(cellData.getValue().getIsActive()));
 
         campaignTable.setItems(campaignList);
+        TableViewHelper.adjustTableHeight(campaignTable);
+
         addEditButtonToTable();
     }
 
@@ -125,6 +128,7 @@ public class CampaignListController implements Initializable {
 
             refreshCampaignTable();
 
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -138,5 +142,7 @@ public class CampaignListController implements Initializable {
         campaignList.clear();
         campaignList.addAll(_repository.getCampaignList());
         campaignTable.setItems(campaignList);
+        TableViewHelper.adjustTableHeight(campaignTable);
+
     }
 }

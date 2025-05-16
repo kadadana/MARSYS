@@ -10,7 +10,7 @@
 
 <?import javafx.util.Callback?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.marsys.marsys.Controllers.StockAndInventoryController">
+            fx:controller="com.marsys.marsys.Controllers.StockMovementTableController">
 
     <!-- Üst bar -->
     <top>
@@ -19,7 +19,7 @@
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <VBox alignment="CENTER_RIGHT">
-                <Label fx:id="lblTitle" text="Stock and Inventory"
+                <Label fx:id="lblTitle" text="Stock Movement Table"
                        style="-fx-text-fill: red; -fx-font-size: 50px;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
@@ -37,14 +37,36 @@
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
 
-            <Label text="Stock List" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label text="Stock Movements" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <HBox spacing="10">
+                <Label text="Tarih Aralığı Seç (İsteğe Bağlı)" />
+                <HBox spacing="10">
+                    <DatePicker fx:id="firstDatePicker" promptText="Başlangıç" />
+                    <DatePicker fx:id="lastDatePicker" promptText="Bitiş" />
+                </HBox>
 
+                <Label text="Barkod (İsteğe Bağlı)" />
+                <TextField fx:id="barcodeField" promptText="Barkod girin..." />
+
+                <Button fx:id="btnSearch" text="Ara" onAction="#search"/>
+                <Button fx:id="btnClear" text="Sıfırla" onAction="#clearSearch"
+                        style="-fx-text-fill: red;"/>
+            </HBox>
             <!-- Campaign List Table -->
-            <TableView fx:id="stockTable" prefHeight="300">
+            <TableView fx:id="stockMovementTable" prefHeight="300">
                 <columns>
                     <TableColumn fx:id="colBarcode" text="Barcode"/>
                     <TableColumn fx:id="colProductName" text="Product Name"/>
                     <TableColumn fx:id="colQuantity" text="Quantity"/>
+                    <TableColumn fx:id="colSalePrice" text="Sale Price"/>
+                    <TableColumn fx:id="colCategory" text="Category"/>
+                    <TableColumn fx:id="colBrand" text="Brand"/>
+                    <TableColumn fx:id="colBuyingPrice" text="Buying Price"/>
+                    <TableColumn fx:id="colExpiration" text="Expiration"/>
+                    <TableColumn fx:id="colMovementType" text="Movement Type"/>
+                    <TableColumn fx:id="colInvoiceNumber" text="Invoice Number"/>
+                    <TableColumn fx:id="colUser" text="User"/>
+                    <TableColumn fx:id="colDate" text="Date"/>
                 </columns>
             </TableView>
 
@@ -57,10 +79,7 @@
                     style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
 
             <Region HBox.hgrow="ALWAYS"/>
-            <Button fx:id="btnGoToStockMovementTable" text="Stock Movement Table" onAction="#goToStockMovementTable"
-                    style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
-            <Button fx:id="btnProductEntry" text="Product Entry" onAction="#goToProductEntry"
-                    style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+
         </HBox>
     </bottom>
 
