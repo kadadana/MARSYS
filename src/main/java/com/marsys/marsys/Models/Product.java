@@ -1,7 +1,5 @@
 package com.marsys.marsys.Models;
 
-import javafx.beans.property.SimpleStringProperty;
-
 public class Product {
     private String Barcode;
     private String ProductName;
@@ -11,12 +9,11 @@ public class Product {
     private String Brand;
     private double BuyingPrice;
     private String ExpirationDate;
-    private String TaxRate;
     private boolean discounted = false;
     private double discountedPrice = getPrice();
 
     public Product(String barcode, String productName, int quantity, double price, String category,
-                   String brand, double buyingPrice, String expirationDate, String taxRate) {
+                   String brand, double buyingPrice, String expirationDate) {
         this.Barcode = barcode;
         this.ProductName = productName;
         this.Quantity = quantity;
@@ -25,7 +22,6 @@ public class Product {
         this.Brand = brand;
         this.BuyingPrice = buyingPrice;
         this.ExpirationDate = expirationDate;
-        this.TaxRate = taxRate;
     }
 
     public String getBarcode() {
@@ -90,14 +86,6 @@ public class Product {
 
     public void setExpirationDate(String expirationDate) {
         ExpirationDate = expirationDate;
-    }
-
-    public String getTaxRate() {
-        return TaxRate;
-    }
-
-    public void setTaxRate(String taxRate) {
-        TaxRate = taxRate;
     }
 
     public boolean isDiscounted() {

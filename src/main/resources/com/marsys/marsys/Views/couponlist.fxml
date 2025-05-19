@@ -4,11 +4,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
-
-
-<?import javafx.util.Callback?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.marsys.marsys.Controllers.CouponListController">
 
@@ -19,7 +14,7 @@
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <VBox alignment="CENTER_RIGHT">
-                <Label fx:id="lblDiscount" text="Coupon List"
+                <Label text="Coupon List"
                        style="-fx-text-fill: red; -fx-font-size: 50px;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
@@ -47,6 +42,7 @@
                     <TableColumn fx:id="colStartDate" text="Start Date"/>
                     <TableColumn fx:id="colEndDate" text="End Date"/>
                     <TableColumn fx:id="colIsActive" text="Is Active"/>
+                    <TableColumn fx:id="colUsed" text="Used"/>
                     <TableColumn fx:id="colEdit" text="Edit" prefWidth="100"/>
 
                 </columns>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.marsys.marsys.Controllers.ProductDetailsController" prefWidth="300" prefHeight="400" >
+
+    <!-- Üst bar -->
+    <top>
+        <HBox spacing="10" style="-fx-background-color: #2c3e50;">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <VBox alignment="CENTER_RIGHT">
+                <Label text="Product Details"
+                       style="-fx-text-fill: red; -fx-font-size: 30px;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+
+        </HBox>
+    </top>
+    <center>
+        <HBox>
+            <VBox alignment="CENTER_LEFT">
+                <padding>
+                    <Insets right="5" left="5"/>
+                </padding>
+                <Label text="Barcode: " style="-fx-font-size: 18px; -fx-text-fill: gray;"/>
+                <Label text="Name: " style="-fx-font-size: 18px; -fx-text-fill: gray;"/>
+                <Label text="Quantity: " style="-fx-font-size: 18px; -fx-text-fill: gray;"/>
+                <Label text="Price: " style="-fx-font-size: 18px; -fx-text-fill: gray;"/>
+                <Label text="Category: " style="-fx-font-size: 18px; -fx-text-fill: gray;"/>
+                <Label text="Brand: " style="-fx-font-size: 18px; -fx-text-fill: gray;"/>
+                <Label text="Buying Price: " style="-fx-font-size: 18px; -fx-text-fill: gray;"/>
+                <Label text="Expiration Date: " style="-fx-font-size: 18px; -fx-text-fill: gray;"/>
+
+            </VBox>
+            <VBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                <padding>
+                    <Insets right="5" left="5"/>
+                </padding>
+                <Label fx:id="lblBarcode" style="-fx-font-size: 18px;"/>
+                <Label fx:id="lblProductName" style="-fx-font-size: 18px;"/>
+                <Label fx:id="lblQuantity" style="-fx-font-size: 18px;"/>
+                <Label fx:id="lblPrice" style="-fx-font-size: 18px;"/>
+                <Label fx:id="lblCategory" style="-fx-font-size: 18px;"/>
+                <Label fx:id="lblBrand" style="-fx-font-size: 18px;"/>
+                <Label fx:id="lblBuyingPrice" style="-fx-font-size: 18px;"/>
+                <Label fx:id="lblExpirationDate" style="-fx-font-size: 18px;"/>
+            </VBox>
+        </HBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15 10 15 10;">
+            <Button text="Close" onAction="#closeWindow"
+                    style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+        </HBox>
+    </bottom>
+
+
+</BorderPane>
+

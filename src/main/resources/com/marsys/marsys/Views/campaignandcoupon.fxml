@@ -11,7 +11,7 @@
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <VBox alignment="CENTER_RIGHT">
-                <Label fx:id="lblTitle" text="Campaign and Coupons" style="-fx-text-fill: red; -fx-font-size: 50px;"/>
+                <Label text="Campaign and Coupons" style="-fx-text-fill: red; -fx-font-size: 50px;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
             <VBox alignment="CENTER_RIGHT">
@@ -22,7 +22,7 @@
     </top>
 
     <center>
-        <VBox alignment="CENTER">
+        <VBox alignment="CENTER" spacing="15">
             <padding>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
             </padding>

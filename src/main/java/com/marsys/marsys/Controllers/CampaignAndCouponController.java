@@ -3,7 +3,6 @@ package com.marsys.marsys.Controllers;
 
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Session;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -13,8 +12,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class CampaignAndCouponController implements Initializable {
-    @FXML
-    private Label lblTitle;
     LayoutController _layoutController = new LayoutController();
     @FXML
     private Button btnBack;
@@ -48,7 +45,8 @@ public class CampaignAndCouponController implements Initializable {
 
     }
 
-    public void back(ActionEvent event) {
+    @FXML
+    public void back() {
         _layoutController.loadPageByButton("/com/marsys/marsys/Views/mainpage.fxml", btnBack);
     }
 

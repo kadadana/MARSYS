@@ -1,11 +1,9 @@
 package com.marsys.marsys.Controllers;
 
-import com.almasb.fxgl.entity.action.Action;
 import com.marsys.marsys.Models.Campaign;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Session;
 import com.marsys.marsys.Repository.Repository;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -26,7 +24,9 @@ public class CreateCampaignController implements Initializable {
     @FXML
     private ComboBox<String> discountTypeComboBox;
     @FXML
-    private TextField discountForField;
+    private ComboBox<String> categoryComboBox;
+    @FXML
+    private TextField barcodeField;
     @FXML
     private DatePicker startDatePicker;
     @FXML
@@ -76,13 +76,30 @@ public class CreateCampaignController implements Initializable {
             }
         });
 
+        discountTypeComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if ("50% Discount for 2nd from the same category".equals(newVal)) {
+                lblDiscountFor.setText("Category: ");
+                barcodeField.setVisible(false);
+                barcodeField.setManaged(false);
+                categoryComboBox.setVisible(true);
+                categoryComboBox.setManaged(true);
+
+            } else {
+                lblDiscountFor.setText("Barcode: ");
+                barcodeField.setVisible(true);
+                barcodeField.setManaged(true);
+                categoryComboBox.setVisible(false);
+                categoryComboBox.setManaged(false);
+            }
+        });
+
 
     }
 
     public void save() {
 
         if (discountTypeComboBox.getValue() != null &&
-                !discountForField.getText().isEmpty() &&
+                (!barcodeField.getText().isEmpty() || categoryComboBox.getValue() != null) &&
                 startDatePicker.getValue() != null &&
                 endDatePicker.getValue() != null) {
             LocalDate selectedStartDate = startDatePicker.getValue();
@@ -113,9 +130,27 @@ public class CreateCampaignController implements Initializable {
             } else {
                 strIsActive = "INACTIVE";
             }
-            Campaign campaign = new Campaign(
-                    repository.getLatestCampaignId(), discountTypeComboBox.getSelectionModel().getSelectedItem(), discountTypeCode,
-                    discountForField.getText(), selectedStartDate.format(formatter), selectedEndDate.format(formatter), strIsActive);
+            Campaign campaign;
+            if (discountTypeCode.equals("03")) {
+                campaign = new Campaign(
+                        repository.getLatestCampaignId(),
+                        discountTypeComboBox.getSelectionModel().getSelectedItem(),
+                        discountTypeCode,
+                        categoryComboBox.getSelectionModel().getSelectedItem(),
+                        selectedStartDate.format(formatter),
+                        selectedEndDate.format(formatter),
+                        strIsActive);
+            } else {
+                campaign = new Campaign(
+                        repository.getLatestCampaignId(),
+                        discountTypeComboBox.getSelectionModel().getSelectedItem(),
+                        discountTypeCode,
+                        barcodeField.getText(),
+                        selectedStartDate.format(formatter),
+                        selectedEndDate.format(formatter),
+                        strIsActive);
+            }
+
             try {
                 repository.insertIntoCampaignTable(campaign);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -125,12 +160,11 @@ public class CreateCampaignController implements Initializable {
                 alert.showAndWait();
                 layoutController.loadPageByButton("/com/marsys/marsys/Views/campaignlist.fxml", btnSave);
             } catch (Exception e) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Error");
-                alert.setHeaderText("Not Saved");
-                alert.setContentText("An error occured while saving this campaign!");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Program Error");
+                alert.setHeaderText("An error occured in this operation.");
+                alert.setContentText(e.toString());
                 alert.showAndWait();
-                e.printStackTrace();
             }
 
         } else {

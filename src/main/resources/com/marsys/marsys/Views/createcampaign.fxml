@@ -18,7 +18,7 @@
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <VBox alignment="CENTER_RIGHT">
-                <Label fx:id="lblTitle" text="Create Campaign"
+                <Label text="Create Campaign"
                        style="-fx-text-fill: red; -fx-font-size: 50px;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
@@ -31,7 +31,7 @@
 
     <center>
 
-        <VBox spacing="10" alignment="TOP_LEFT" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+        <VBox spacing="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
@@ -42,16 +42,34 @@
             <ComboBox fx:id="discountTypeComboBox">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
-                        <String fx:id="01" fx:value="Buy 2 Pay 1"/>
-                        <String fx:id="02" fx:value="50% Discount for 2nd from the same product"/>
-                        <String fx:id="03" fx:value="50% Discount for 2nd from the same category"/>
+                        <String fx:value="Buy 2 Pay 1"/>
+                        <String fx:value="50% Discount for 2nd from the same product"/>
+                        <String fx:value="50% Discount for 2nd from the same category"/>
                     </FXCollections>
                 </items>
             </ComboBox>
 
-            <!-- Discount Value -->
-            <Label fx:id="lblDiscountFor" text="Discount For:"/>
-            <TextField fx:id="discountForField"/>
+            <!-- Discount For Field -->
+            <Label fx:id="lblDiscountFor" text="Barcode: "/>
+            <TextField fx:id="barcodeField"/>
+            <ComboBox fx:id="categoryComboBox" visible="false" managed="false">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Atıştırmalık"/>
+                        <String fx:value="Süt Ürünleri"/>
+                        <String fx:value="İçecek"/>
+                        <String fx:value="Temizlik"/>
+                        <String fx:value="Unlu Mamuller"/>
+                        <String fx:value="Kahvaltılık"/>
+                        <String fx:value="Kişisel Bakım"/>
+                        <String fx:value="Tatlı"/>
+                        <String fx:value="Şekerleme"/>
+                        <String fx:value="Çay &amp; Kahve"/>
+                        <String fx:value="Gıda"/>
+
+                    </FXCollections>
+                </items>
+            </ComboBox>
 
             <!-- Start Date -->
             <Label text="Start Date:"/>

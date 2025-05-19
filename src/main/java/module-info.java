@@ -12,10 +12,13 @@ module com.marsys.marsys {
     requires com.almasb.fxgl.all;
     requires java.sql;
     requires org.postgresql.jdbc;
+    requires com.zaxxer.hikari;
+    requires annotations;
 
     opens com.marsys.marsys to javafx.fxml;
     exports com.marsys.marsys;
     exports com.marsys.marsys.Controllers;
+    exports com.marsys.marsys.Models;
     opens com.marsys.marsys.Controllers to javafx.fxml;
 
 

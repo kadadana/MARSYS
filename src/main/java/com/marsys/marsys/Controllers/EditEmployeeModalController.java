@@ -1,13 +1,14 @@
 package com.marsys.marsys.Controllers;
 
+import com.marsys.marsys.Models.Coupon;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Repository.BeratRepo;
+import com.marsys.marsys.Repository.Repository;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import com.marsys.marsys.Models.Session;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 
 import java.time.format.DateTimeFormatter;
 
@@ -18,9 +19,8 @@ import java.util.ResourceBundle;
 public class EditEmployeeModalController implements Initializable {
 
     BeratRepo _repository = new BeratRepo();
-    LayoutController layoutController = new LayoutController();
+    Repository repository = new Repository();
     Employee user = Session.getInstance().getCurrentUser();
-    private Employee employee;
 
 
     @FXML
@@ -45,7 +45,7 @@ public class EditEmployeeModalController implements Initializable {
     private ComboBox<String> storeCodeComboBox;
     @FXML
     private ComboBox<String> positionComboBox;
-
+    String couponCode;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -81,7 +81,6 @@ public class EditEmployeeModalController implements Initializable {
 
     public void setEmployee(Employee employee) {
         if (employee != null) {
-            this.employee = employee;
             LocalDate startDate = LocalDate.parse(employee.getStartDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
             if (employee.getEndDate() != null && !employee.getEndDate().equals("-")) {
                 LocalDate endDate = LocalDate.parse(employee.getEndDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
@@ -97,6 +96,8 @@ public class EditEmployeeModalController implements Initializable {
             storeCodeComboBox.setValue(employee.getStoreCode());
             startDatePicker.setValue(startDate);
             birthDatePicker.setValue(birthDate);
+            couponCode = employee.getCouponCode();
+
         }
     }
 
@@ -104,6 +105,7 @@ public class EditEmployeeModalController implements Initializable {
     private void delete() {
         try {
             _repository.deleteFromEmployeeById(employeeId.getText());
+            repository.deleteFromCouponbyCode(couponCode);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Completed");
             alert.setHeaderText("Deleted");
@@ -111,12 +113,11 @@ public class EditEmployeeModalController implements Initializable {
             alert.showAndWait();
             closeModal();
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Error");
-            alert.setHeaderText("Not Deleted");
-            alert.setContentText("An error occured while deleting this Employee!");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Program Error");
+            alert.setHeaderText("An error occured in this operation.");
+            alert.setContentText(e.toString());
             alert.showAndWait();
-            e.printStackTrace();
         }
     }
 
@@ -138,8 +139,6 @@ public class EditEmployeeModalController implements Initializable {
                     formattedDate = selectedEndDate.format(DateTimeFormatter.ofPattern("MM-dd-yyyy"));
                 }
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-
-
                 Employee employee = new Employee(
                         employeeFirstName.getText(),
                         employeeLastName.getText(),
@@ -149,9 +148,18 @@ public class EditEmployeeModalController implements Initializable {
                         storeCodeComboBox.getValue(),
                         selectedStartDate.format(formatter),
                         formattedDate,
-                        selectedBirthDate.format(formatter));
+                        selectedBirthDate.format(formatter),
+                        couponCode
+                );
                 try {
                     _repository.updateEmployeeTable(employee);
+                    Coupon employeeCoupon = repository.getCouponModelByCode(couponCode);
+                    if (endDatePicker.getValue() == null) {
+                        employeeCoupon.setEndDate("12-31-9999");
+                    } else {
+                        employeeCoupon.setEndDate(endDatePicker.getValue().format(formatter));
+                    }
+                    repository.updateCouponTable(employeeCoupon);
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Completed");
                     alert.setHeaderText("Saved");
@@ -159,16 +167,19 @@ public class EditEmployeeModalController implements Initializable {
                     alert.showAndWait();
                     closeModal();
                 } catch (Exception e) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Not Saved");
-                    alert.setContentText("An error occured while saving this employee!");
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Program Error");
+                    alert.setHeaderText("An error occured in this operation.");
+                    alert.setContentText(e.toString());
                     alert.showAndWait();
-                    e.printStackTrace();
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Program Error");
+            alert.setHeaderText("An error occured in this operation.");
+            alert.setContentText(e.toString());
+            alert.showAndWait();
         }
     }
 }

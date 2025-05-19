@@ -51,7 +51,7 @@ public class CampaignListController implements Initializable {
     private Button btnGoToCreateCampaignScreen;
 
 
-    private ObservableList<Campaign> campaignList = FXCollections.observableArrayList();
+    private final ObservableList<Campaign> campaignList = FXCollections.observableArrayList();
     Repository _repository = new Repository();
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -94,7 +94,7 @@ public class CampaignListController implements Initializable {
             {
                 editButton.setOnAction(event -> {
                     Campaign campaign = _repository.getCampaignModelById(getTableView().getItems().get(getIndex()).getCampaignId());
-                    openEditWindow(campaign, editButton);
+                    openEditWindow(campaign);
                 });
             }
 
@@ -115,7 +115,7 @@ public class CampaignListController implements Initializable {
 
     }
 
-    private void openEditWindow(Campaign campaign, Button btnEdit) {
+    private void openEditWindow(Campaign campaign) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/marsys/marsys/Views/editcampaignmodal.fxml"));
             Parent root = loader.load();
@@ -123,15 +123,18 @@ public class CampaignListController implements Initializable {
             controller.setCampaign(campaign);
 
             Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
             stage.showAndWait();
 
             refreshCampaignTable();
 
-
         } catch (IOException e) {
-            e.printStackTrace();
-        }
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Program Error");
+            alert.setHeaderText("An error occured while opening edit window.");
+            alert.setContentText(e.toString());
+            alert.showAndWait();        }
     }
 
     public void back() {

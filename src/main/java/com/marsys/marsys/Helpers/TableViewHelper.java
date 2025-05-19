@@ -7,12 +7,15 @@ public class TableViewHelper {
     public static void adjustTableHeight(TableView<?> tableView) {
         int rows = tableView.getItems().size();
         double rowHeight = tableView.getFixedCellSize();
-        if (rowHeight <= 0) {
-            rowHeight = 31;
-        }
-        double headerHeight = 28;
+        tableView.setFixedCellSize(30);
 
-        double newHeight = headerHeight + (rows * rowHeight);
+        if (rowHeight <= 0) {
+            rowHeight = 30;
+        }
+
+        double headerHeight = 30;
+
+        double newHeight = headerHeight + ((rows) * rowHeight);
 
         double maxHeight = 1200;
         if (newHeight > maxHeight) {

@@ -6,14 +6,13 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.marsys.marsys.Controllers.ProductEntryController">
 
-    <!-- Üst bar -->
     <top>
         <HBox spacing="10" style="-fx-background-color: #2c3e50;">
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <VBox alignment="CENTER_RIGHT">
-                <Label fx:id="lblTitle" text="Product Entry" style="-fx-text-fill: red; -fx-font-size: 50px;"/>
+                <Label text="Product Entry" style="-fx-text-fill: red; -fx-font-size: 50px;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
             <VBox alignment="CENTER_RIGHT">
@@ -28,15 +27,13 @@
             <padding>
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
-            <Label text="Sale" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 
-            <!-- Barkod Okutma Alanı -->
             <HBox spacing="10">
                 <Label text="Barcode: "/>
                 <TextField fx:id="barcodeField" promptText="Enter the barcode..."/>
                 <Label text="Quantity: "/>
                 <TextField fx:id="quantityField" prefWidth="50" prefHeight="25" text="1"/>
-                <Button fx:id="btnReadBarcode" text="Add" onAction="#onAddProduct"/>
+                <Button text="Add" onAction="#onAddProduct"/>
             </HBox>
 
             <TableView fx:id="productEntryTable" prefHeight="300">
@@ -59,9 +56,9 @@
             <Label fx:id="lblTotal" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
 
-            <Button fx:id="btnCancel" text="Cancel Process" onAction="#cancelProcess"
+            <Button text="Cancel Process" onAction="#cancelProcess"
                     style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
-            <Button fx:id="btnAddToInventory" text="Add to Inventory" onAction="#addToInventory"
+            <Button text="Add to Inventory" onAction="#addToInventory"
                     style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
         </HBox>
     </bottom>

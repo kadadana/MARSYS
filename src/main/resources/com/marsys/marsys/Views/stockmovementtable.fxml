@@ -4,11 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
 
-
-<?import javafx.util.Callback?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.marsys.marsys.Controllers.StockMovementTableController">
 
@@ -19,7 +15,7 @@
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <VBox alignment="CENTER_RIGHT">
-                <Label fx:id="lblTitle" text="Stock Movement Table"
+                <Label text="Stock Movement Table"
                        style="-fx-text-fill: red; -fx-font-size: 50px;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
@@ -39,34 +35,34 @@
 
             <Label text="Stock Movements" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
             <HBox spacing="10">
-                <Label text="Tarih Aralığı Seç (İsteğe Bağlı)" />
+                <Label text="Date Range: "/>
                 <HBox spacing="10">
-                    <DatePicker fx:id="firstDatePicker" promptText="Başlangıç" />
-                    <DatePicker fx:id="lastDatePicker" promptText="Bitiş" />
+                    <DatePicker fx:id="firstDatePicker" promptText="Start"/>
+                    <DatePicker fx:id="lastDatePicker" promptText="End"/>
                 </HBox>
 
-                <Label text="Barkod (İsteğe Bağlı)" />
-                <TextField fx:id="barcodeField" promptText="Barkod girin..." />
+                <Label text="Barcode: "/>
+                <TextField fx:id="barcodeField"/>
 
-                <Button fx:id="btnSearch" text="Ara" onAction="#search"/>
-                <Button fx:id="btnClear" text="Sıfırla" onAction="#clearSearch"
+                <Label text="Invoice Number: "/>
+                <TextField fx:id="invoiceNumberField"/>
+
+
+                <Button text="Search" onAction="#search"/>
+                <Button fx:id="btnClear" text="Clear" onAction="#clearSearch"
                         style="-fx-text-fill: red;"/>
             </HBox>
             <!-- Campaign List Table -->
             <TableView fx:id="stockMovementTable" prefHeight="300">
                 <columns>
-                    <TableColumn fx:id="colBarcode" text="Barcode"/>
-                    <TableColumn fx:id="colProductName" text="Product Name"/>
-                    <TableColumn fx:id="colQuantity" text="Quantity"/>
-                    <TableColumn fx:id="colSalePrice" text="Sale Price"/>
-                    <TableColumn fx:id="colCategory" text="Category"/>
-                    <TableColumn fx:id="colBrand" text="Brand"/>
-                    <TableColumn fx:id="colBuyingPrice" text="Buying Price"/>
-                    <TableColumn fx:id="colExpiration" text="Expiration"/>
+                    <TableColumn fx:id="colMovementId" text="Id"/>
                     <TableColumn fx:id="colMovementType" text="Movement Type"/>
+                    <TableColumn fx:id="colBarcode" text="Barcode"/>
                     <TableColumn fx:id="colInvoiceNumber" text="Invoice Number"/>
                     <TableColumn fx:id="colUser" text="User"/>
                     <TableColumn fx:id="colDate" text="Date"/>
+                    <TableColumn fx:id="colProductInfo" text="Product Info"/>
+                    <TableColumn fx:id="colInvoiceInfo" text="Invoice Info"/>
                 </columns>
             </TableView>
 
