@@ -10,10 +10,11 @@ public class Employee {
     private String startDate;
     private String endDate;
     private String birthDate;
+    private String couponCode;
 
     public Employee(String firstName, String lastName, String position,
                     String id, String password, String storeCode, String startDate,
-                    String endDate, String birthDate) {
+                    String endDate, String birthDate, String couponCode) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.position = position;
@@ -23,6 +24,7 @@ public class Employee {
         this.startDate = startDate;
         this.endDate = endDate;
         this.birthDate = birthDate;
+        this.couponCode = couponCode;
     }
 
     public String getFirstName() {
@@ -77,7 +79,7 @@ public class Employee {
         return startDate;
     }
 
-    public void setStartDate() {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
@@ -95,5 +97,12 @@ public class Employee {
 
     public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
+    }
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
     }
 }

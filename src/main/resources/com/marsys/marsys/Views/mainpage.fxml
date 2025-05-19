@@ -11,7 +11,7 @@
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <VBox alignment="CENTER_RIGHT">
-                <Label fx:id="lblMainPage" text="Main Page" style="-fx-text-fill: red; -fx-font-size: 50px;"/>
+                <Label text="Main Page" style="-fx-text-fill: red; -fx-font-size: 50px;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
             <VBox alignment="CENTER_RIGHT">
@@ -22,24 +22,26 @@
     </top>
 
     <center>
-        <VBox alignment="CENTER">
+        <VBox alignment="CENTER" spacing="15" style="-fx-font-size: 18px;">
             <padding>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
             </padding>
-            <Button fx:id="btnGoToSalesScreen" minHeight="50.0" minWidth="250.0" onAction="#goToSalesScreen" text="Sale"
-                    textAlignment="CENTER"/>
-            <Button minHeight="50.0" minWidth="250.0" onAction="#goToStockInventoryScreen" text="Stock and Inventory"
-                    textAlignment="CENTER"/>
-            <Button minHeight="50.0" minWidth="250.0" onAction="#goToSalesReportsScreen" text="Reports"
-                    textAlignment="CENTER"/>
-            <Button minHeight="50.0" minWidth="250.0" onAction="#goToEmployeeManagementScreen"
-                    text="Employee Management" textAlignment="CENTER"/>
-            <Button fx:id="btnGoToDiscountCampaignScreen" minHeight="50.0" minWidth="250.0"
+            <Button fx:id="btnGoToSalesScreen" minHeight="60.0" minWidth="350.0" onAction="#goToSalesScreen"
+                    text="Sale"/>
+            <Button fx:id="btnGoToStockInventoryScreen" minHeight="60.0" minWidth="350.0"
+                    onAction="#goToStockInventoryScreen"
+                    text="Stock and Inventory"/>
+            <Button fx:id="btnGoToSalesReportsScreen" minHeight="60.0" minWidth="350.0"
+                    onAction="#goToSalesReportsScreen"
+                    text="Reports"/>
+            <Button fx:id="btnGoToEmployeeManagementScreen" minHeight="60.0" minWidth="350.0"
+                    onAction="#goToEmployeeManagementScreen"
+                    text="Employee Management"/>
+            <Button fx:id="btnGoToDiscountCampaignScreen" minHeight="60.0" minWidth="350.0"
                     onAction="#goToDiscountCampaignScreen"
-                    text="Discount and Campaign Management" textAlignment="CENTER"/>
-            <Button fx:id="btnLogout" minHeight="35.0" minWidth="100.0" onAction="#logout" text="Logout"
-                    style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"
-                    textAlignment="CENTER"/>
+                    text="Discount and Campaign Management"/>
+            <Button fx:id="btnLogout" minHeight="60.0" minWidth="250.0" onAction="#logout" text="Logout"
+                    style="-fx-text-fill: red; -fx-font-weight: bold;"/>
         </VBox>
     </center>
 </BorderPane>

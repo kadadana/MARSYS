@@ -1,10 +1,11 @@
 package com.marsys.marsys.Controllers;
 
 import com.marsys.marsys.Models.Employee;
-import com.marsys.marsys.Models.Product;
 import com.marsys.marsys.Models.Session;
 import com.marsys.marsys.Models.StockMovement;
+import com.marsys.marsys.Repository.Repository;
 import com.marsys.marsys.Repository.RepositoryMete;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -20,19 +21,23 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.List;
+import java.util.Date;
 import java.util.ResourceBundle;
-import com.marsys.marsys.Helpers.TableViewHelper;
+import java.util.function.UnaryOperator;
 
-import java.util.stream.Collectors;
+import com.marsys.marsys.Helpers.TableViewHelper;
+import org.jetbrains.annotations.NotNull;
 
 public class StockMovementTableController implements Initializable {
     Employee user = Session.getInstance().getCurrentUser();
     LayoutController layoutController = new LayoutController();
     RepositoryMete repositoryMete = new RepositoryMete();
+    Repository repository = new Repository();
 
     @FXML
     private Label lblUserId;
@@ -41,23 +46,15 @@ public class StockMovementTableController implements Initializable {
     @FXML
     private Button btnClear;
     @FXML
+    private TableColumn<StockMovement, Void> colProductInfo;
+    @FXML
+    private TableColumn<StockMovement, Void> colInvoiceInfo;
+    @FXML
     private TableView<StockMovement> stockMovementTable;
     @FXML
     private TableColumn<StockMovement, String> colBarcode;
     @FXML
-    private TableColumn<StockMovement, String> colProductName;
-    @FXML
-    private TableColumn<StockMovement, String> colQuantity;
-    @FXML
-    private TableColumn<StockMovement, String> colSalePrice;
-    @FXML
-    private TableColumn<StockMovement, String> colCategory;
-    @FXML
-    private TableColumn<StockMovement, String> colBrand;
-    @FXML
-    private TableColumn<StockMovement, String> colBuyingPrice;
-    @FXML
-    private TableColumn<StockMovement, String> colExpiration;
+    private TableColumn<StockMovement, String> colMovementId;
     @FXML
     private TableColumn<StockMovement, String> colMovementType;
     @FXML
@@ -65,74 +62,108 @@ public class StockMovementTableController implements Initializable {
     @FXML
     private TableColumn<StockMovement, String> colUser;
     @FXML
-    private TableColumn<StockMovement, String> colDate;
+    private TableColumn<StockMovement, Date> colDate;
     @FXML
     private Button btnBack;
     @FXML
-    private Button btnSearch;
-    @FXML
     private TextField barcodeField;
+    @FXML
+    private TextField invoiceNumberField;
     @FXML
     private DatePicker firstDatePicker;
     @FXML
     private DatePicker lastDatePicker;
 
 
-    private ObservableList<StockMovement> stockMovementList = FXCollections.observableArrayList();
+    private final ObservableList<StockMovement> stockMovementList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        barcodeField.setOnAction(event -> search());
+        invoiceNumberField.setOnAction(event -> search());
+
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("\\d{0,6}")) {
+                return change;
+            }
+            return null;
+        };
+        UnaryOperator<TextFormatter.Change> filter2 = change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("\\d{0,3}")) {
+                return change;
+            }
+            return null;
+        };
+        TextFormatter<String> textFormatter2 = new TextFormatter<>(filter2);
+        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+
+        invoiceNumberField.setTextFormatter(textFormatter);
+        barcodeField.setTextFormatter(textFormatter2);
         btnClear.setVisible(false);
         lblUserName.setText(user.getFirstName() + " " + user.getLastName());
         lblUserId.setText("ID: " + user.getId());
         stockMovementList.addAll(repositoryMete.getStockMovementList());
         firstDatePicker.getEditor().setDisable(true);
         lastDatePicker.getEditor().setDisable(true);
-        colBarcode.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.06));
-        colProductName.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.12));
-        colQuantity.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.05));
-        colSalePrice.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.08));
-        colCategory.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.08));
-        colBrand.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.06));
-        colBuyingPrice.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.08));
-        colExpiration.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.08));
-        colMovementType.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.11));
-        colInvoiceNumber.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.10));
-        colUser.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.04));
-        colDate.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.12));
+        colMovementId.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.1));
+        colBarcode.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.1));
+        colMovementType.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.1));
+        colInvoiceNumber.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.2));
+        colUser.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.1));
+        colDate.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.18));
+        colProductInfo.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.1));
+        colInvoiceInfo.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.1));
 
-        colBarcode.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getBarcode()));
-        colProductName.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getProductName()));
-        colQuantity.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getQuantity()));
-        colSalePrice.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getPrice()));
-        colCategory.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getCategory()));
-        colBrand.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getBrand()));
-        colBuyingPrice.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getBuyingPrice()));
-        colExpiration.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getExpirationDate()));
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
+        SimpleDateFormat displayFormatter = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+
+        colMovementId.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getMovementId()));
         colMovementType.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getMovementType()));
+        colBarcode.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getBarcode()));
         colInvoiceNumber.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getInvoiceNumber()));
         colUser.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getUser()));
-        colDate.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getDate()));
+        colDate.setCellValueFactory(cellData -> {
+            try {
+                String dateStr = cellData.getValue().getDate();
+                LocalDateTime ldt = LocalDateTime.parse(dateStr, inputFormatter);
+                Date date = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
 
-        stockMovementTable.setItems(stockMovementList);
-        stockMovementTable.getItems().addListener(new ListChangeListener<StockMovement>() {
-            @Override
-            public void onChanged(Change<? extends StockMovement> c) {
-                TableViewHelper.adjustTableHeight(stockMovementTable);
+                return new SimpleObjectProperty<>(date);
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Program Error");
+                alert.setHeaderText("An error occured in this operation.");
+                alert.setContentText(e.toString());
+                alert.showAndWait();
+                return new SimpleObjectProperty<>(null);
             }
         });
+        colDate.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(Date item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(displayFormatter.format(item));
+                }
+            }
+        });
+
+
+        stockMovementTable.setItems(stockMovementList);
+        stockMovementTable.getItems().addListener((ListChangeListener<StockMovement>) c -> TableViewHelper.adjustTableHeight(stockMovementTable));
+        addProductInfoButtonsToTable();
+        addInvoiceInfoButtonsToTable();
 
         TableViewHelper.adjustTableHeight(stockMovementTable);
     }
@@ -148,6 +179,10 @@ public class StockMovementTableController implements Initializable {
         if (barcodeText == null) {
             barcodeText = "";
         }
+        String invoiceNumberText = invoiceNumberField.getText();
+        if (invoiceNumberText == null) {
+            invoiceNumberText = "";
+        }
         LocalDate firstDate = firstDatePicker.getValue();
         LocalDate lastDate = lastDatePicker.getValue();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
@@ -158,16 +193,20 @@ public class StockMovementTableController implements Initializable {
             strFirstDate = firstDate.format(formatter);
             strLastDate = lastDate.format(formatter);
         }
+        boolean datePicked = firstDatePicker.getValue() != null && lastDatePicker.getValue() != null;
         stockMovementList.clear();
-        if (firstDatePicker.getValue() != null && lastDatePicker.getValue() != null && (barcodeField.getText() == null || barcodeField.getText().isBlank())) {
-            stockMovementList.addAll(repositoryMete.getStockMovementListBySearch("DATE", strFirstDate, strLastDate, null));
-        } else if (!barcodeField.getText().isBlank()) {
-            stockMovementList.addAll(repositoryMete.getStockMovementListBySearch("BARCODE", null, null, barcodeField.getText()));
-        } else if (firstDatePicker.getValue() != null && lastDatePicker.getValue() != null && !barcodeField.getText().isBlank()) {
-            stockMovementList.addAll(repositoryMete.getStockMovementListBySearch("BOTH", strFirstDate, strLastDate, barcodeField.getText()));
-        } else {
-            stockMovementList.addAll(repositoryMete.getStockMovementList());
-        }
+
+        String code = getSearchingCode(datePicked, barcodeText, invoiceNumberText);
+
+        stockMovementList.addAll(repositoryMete.getStockMovementListBySearching(
+                code,
+                strFirstDate,
+                strLastDate,
+                barcodeText,
+                invoiceNumberText
+        ));
+
+
         btnClear.setVisible(true);
         stockMovementTable.refresh();
 
@@ -175,11 +214,29 @@ public class StockMovementTableController implements Initializable {
 
     }
 
+    @NotNull
+    private static String getSearchingCode(boolean datePicked, String barcodeText, String invoiceNumberText) {
+        String code;
+        if (datePicked) {
+            if (!barcodeText.isBlank() && !invoiceNumberText.isBlank()) code = "01";
+            else if (!barcodeText.isBlank() && invoiceNumberText.isBlank()) code = "02";
+            else if (barcodeText.isBlank() && !invoiceNumberText.isBlank()) code = "03";
+            else code = "04";
+        } else {
+            if (!barcodeText.isBlank() && !invoiceNumberText.isBlank()) code = "05";
+            else if (!barcodeText.isBlank() && invoiceNumberText.isBlank()) code = "06";
+            else if (barcodeText.isBlank() && !invoiceNumberText.isBlank()) code = "07";
+            else code = "08";
+        }
+        return code;
+    }
+
     @FXML
     private void clearSearch() {
         firstDatePicker.setValue(null);
         lastDatePicker.setValue(null);
         barcodeField.setText(null);
+        invoiceNumberField.setText(null);
         btnClear.setVisible(false);
         stockMovementList.clear();
         stockMovementList.addAll(repositoryMete.getStockMovementList());
@@ -188,5 +245,106 @@ public class StockMovementTableController implements Initializable {
         TableViewHelper.adjustTableHeight(stockMovementTable);
 
     }
+
+    private void addProductInfoButtonsToTable() {
+        colProductInfo.setCellFactory(param -> new TableCell<>() {
+            private final Button btn = new Button("Product Details");
+
+            {
+                btn.setOnAction(event -> {
+                    StockMovement movement = getTableView().getItems().get(getIndex());
+                    openProductInfoModal(movement.getBarcode());
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btn);
+                }
+            }
+        });
+    }
+
+    private void addInvoiceInfoButtonsToTable() {
+        colInvoiceInfo.setCellFactory(param -> new TableCell<>() {
+            private final Button btn = new Button("Invoice Details");
+
+            {
+                btn.setOnAction(event -> {
+                    StockMovement movement = getTableView().getItems().get(getIndex());
+                    openInvoiceInfoModal(movement.getInvoiceNumber());
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btn);
+                }
+            }
+        });
+    }
+
+    private void openProductInfoModal(String barcode) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/marsys/marsys/Views/productdetails.fxml"));
+            Parent root = loader.load();
+
+
+            ProductDetailsController controller = loader.getController();
+            controller.setProduct(repository.getProductModelByBarcode(barcode));
+
+            Stage stage = new Stage();
+            stage.setWidth(400);
+            stage.setHeight(400);
+            stage.setResizable(false);
+
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Product Detail");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Program Error");
+            alert.setHeaderText("An error occured in this operation.");
+            alert.setContentText(e.toString());
+            alert.showAndWait();
+        }
+    }
+
+    private void openInvoiceInfoModal(String invoiceNumber) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/marsys/marsys/Views/invoicedetails.fxml"));
+            Parent root = loader.load();
+
+
+            InvoiceDetailsController controller = loader.getController();
+            controller.setInvoice(repository.getInvoiceModelByInvoiceNumber(invoiceNumber), repository.getProductListInvoiceNumber(invoiceNumber));
+
+            Stage stage = new Stage();
+            stage.setWidth(900);
+            stage.setHeight(600);
+            stage.setResizable(false);
+
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Product Detail");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Program Error");
+            alert.setHeaderText("An error occured in this operation.");
+            alert.setContentText(e.toString());
+            alert.showAndWait();
+        }
+    }
+
 
 }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.marsys.marsys.Controllers.InvoiceDetailsController" prefWidth="900" prefHeight="600">
+
+    <!-- Üst bar -->
+    <top>
+        <HBox spacing="10" style="-fx-background-color: #2c3e50;">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <VBox alignment="CENTER_RIGHT">
+                <Label text="Product Details"
+                       style="-fx-text-fill: red; -fx-font-size: 30px;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+
+        </HBox>
+    </top>
+    <center>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <HBox spacing="25">
+                <Label text="Invoice Number: " style="-fx-text-fill: gray; -fx-font-size: 16px;"/>
+                <Label fx:id="lblInvoiceNumber" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+
+                <Label text="Actual Cart Total: " style="-fx-text-fill: gray; -fx-font-size: 16px;"/>
+                <Label fx:id="lblTotal" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+
+                <Label text="Discount Total: " style="-fx-text-fill: gray; -fx-font-size: 16px;"/>
+                <Label fx:id="lblDiscountTotal" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+
+                <Label text="Paid Amount: " style="-fx-text-fill: gray; -fx-font-size: 16px;"/>
+                <Label fx:id="lblLastTotal" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+
+            </HBox>
+
+            <TableView fx:id="productTable" prefHeight="300">
+                <columns>
+                    <TableColumn fx:id="colBarcode" text="Barcode"/>
+                    <TableColumn fx:id="colProductName" text="Product Name"/>
+                    <TableColumn fx:id="colQuantity" text="Quantity"/>
+                    <TableColumn fx:id="colPrice" text="Price"/>
+                    <TableColumn fx:id="colCategory" text="Category"/>
+                    <TableColumn fx:id="colBrand" text="Brand"/>
+                    <TableColumn fx:id="colBuyingPrice" text="Buying Price"/>
+                    <TableColumn fx:id="colExpiration" text="Expiration"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15 10 15 10;">
+            <Button text="Close" onAction="#closeWindow"
+                    style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+        </HBox>
+    </bottom>
+
+
+</BorderPane>
+

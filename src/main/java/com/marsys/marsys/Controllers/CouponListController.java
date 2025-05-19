@@ -5,6 +5,7 @@ import com.marsys.marsys.Models.Coupon;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Session;
 import com.marsys.marsys.Repository.Repository;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -41,6 +43,8 @@ public class CouponListController implements Initializable {
     @FXML
     private TableColumn<Coupon, String> colIsActive;
     @FXML
+    private TableColumn<Coupon, Integer> colUsed;
+    @FXML
     private TableColumn<Coupon, Void> colEdit;
     @FXML
     private Button btnBack;
@@ -48,7 +52,7 @@ public class CouponListController implements Initializable {
     private Button btnGoToCreateCouponScreen;
 
 
-    private ObservableList<Coupon> couponList = FXCollections.observableArrayList();
+    private final ObservableList<Coupon> couponList = FXCollections.observableArrayList();
     Repository _repository = new Repository();
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -61,8 +65,9 @@ public class CouponListController implements Initializable {
         colDiscountAmount.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.2));
         colStartDate.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.2));
         colEndDate.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.2));
-        colIsActive.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.13));
-        colEdit.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.05));
+        colIsActive.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.07));
+        colIsActive.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.1));
+        colEdit.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.04));
 
         colCouponCode.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getCouponCode()));
@@ -74,6 +79,8 @@ public class CouponListController implements Initializable {
                 new SimpleStringProperty(cellData.getValue().getEndDate()));
         colIsActive.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getIsActive()));
+        colUsed.setCellValueFactory(cellData ->
+                new SimpleIntegerProperty(Integer.parseInt(cellData.getValue().getUsed())).asObject());
 
         couponTable.setItems(couponList);
         TableViewHelper.adjustTableHeight(couponTable);
@@ -88,7 +95,7 @@ public class CouponListController implements Initializable {
             {
                 editButton.setOnAction(event -> {
                     Coupon coupon = _repository.getCouponModelByCode(getTableView().getItems().get(getIndex()).getCouponCode());
-                    openEditWindow(coupon, editButton);
+                    openEditWindow(coupon);
                 });
             }
 
@@ -109,7 +116,7 @@ public class CouponListController implements Initializable {
 
     }
 
-    private void openEditWindow(Coupon coupon, Button btnEdit) {
+    private void openEditWindow(Coupon coupon) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/marsys/marsys/Views/editcouponmodal.fxml"));
             Parent root = loader.load();
@@ -117,6 +124,8 @@ public class CouponListController implements Initializable {
             controller.setCoupon(coupon);
 
             Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+
             stage.setScene(new Scene(root));
             stage.showAndWait();
 
@@ -124,7 +133,11 @@ public class CouponListController implements Initializable {
 
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Program Error");
+            alert.setHeaderText("An error occured in this operation.");
+            alert.setContentText(e.toString());
+            alert.showAndWait();
         }
     }
 

@@ -3,21 +3,13 @@ package com.marsys.marsys.Controllers;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Session;
 import com.marsys.marsys.Repository.Repository;
-import eu.hansolo.toolbox.unit.Converter;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 
 public class LoginController {
     Repository _repository = new Repository();

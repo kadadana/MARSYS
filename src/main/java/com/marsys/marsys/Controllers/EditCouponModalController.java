@@ -9,7 +9,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -17,15 +16,12 @@ import java.util.ResourceBundle;
 
 public class EditCouponModalController implements Initializable {
     Repository _repository = new Repository();
-    LayoutController layoutController = new LayoutController();
     Employee user = Session.getInstance().getCurrentUser();
-    @FXML
-    private Button btnDelete;
+
     @FXML
     private Label lblUserId;
     @FXML
     private Label lblUserName;
-    private Coupon coupon;
     @FXML
     private TextField discountAmountField;
     @FXML
@@ -35,13 +31,7 @@ public class EditCouponModalController implements Initializable {
     @FXML
     private CheckBox isActiveCheckBox;
     @FXML
-    private Button btnBack;
-    @FXML
-    private Button btnSave;
-    @FXML
     private TextField couponCodeField;
-    @FXML
-    private Label lblDiscountFor;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -54,12 +44,9 @@ public class EditCouponModalController implements Initializable {
 
     public void setCoupon(Coupon coupon) {
         if (coupon != null) {
-            this.coupon = coupon;
             LocalDate startDate = LocalDate.parse(coupon.getStartDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
             LocalDate endDate = LocalDate.parse(coupon.getEndDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
-            Boolean isActive = false;
-
-            isActive = coupon.getIsActive().equals("ACTIVE");
+            boolean isActive = coupon.getIsActive().equals("ACTIVE");
 
 
             couponCodeField.setText(String.valueOf(coupon.getCouponCode()));
@@ -102,16 +89,19 @@ public class EditCouponModalController implements Initializable {
                     alert.showAndWait();
                     closeModal();
                 } catch (Exception e) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Not Saved");
-                    alert.setContentText("An error occured while saving this coupon!");
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Program Error");
+                    alert.setHeaderText("An error occured in this operation.");
+                    alert.setContentText(e.toString());
                     alert.showAndWait();
-                    e.printStackTrace();
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Program Error");
+            alert.setHeaderText("An error occured in this operation.");
+            alert.setContentText(e.toString());
+            alert.showAndWait();
         }
     }
 
@@ -131,12 +121,11 @@ public class EditCouponModalController implements Initializable {
             alert.showAndWait();
             closeModal();
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Error");
-            alert.setHeaderText("Not Deleted");
-            alert.setContentText("An error occured while deleting this Coupon!");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Program Error");
+            alert.setHeaderText("An error occured in this operation.");
+            alert.setContentText(e.toString());
             alert.showAndWait();
-            e.printStackTrace();
         }
     }
 

@@ -9,7 +9,13 @@ public class Campaign {
     private String EndDate;
     private String IsActive;
 
-    public Campaign(String campaignId, String discountType, String discountTypeCode, String discountFor, String startDate, String endDate, String isActive) {
+    public Campaign(String campaignId,
+                    String discountType,
+                    String discountTypeCode,
+                    String discountFor,
+                    String startDate,
+                    String endDate,
+                    String isActive) {
         this.CampaignId = campaignId;
         this.DiscountType = discountType;
         this.DiscountTypeCode = discountTypeCode;

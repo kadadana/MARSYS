@@ -9,7 +9,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -17,29 +16,23 @@ import java.util.ResourceBundle;
 
 public class EditCampaignModalController implements Initializable {
     Repository _repository = new Repository();
-    LayoutController layoutController = new LayoutController();
     Employee user = Session.getInstance().getCurrentUser();
-    @FXML
-    private Button btnDelete;
     @FXML
     private Label lblUserId;
     @FXML
     private Label lblUserName;
-    private Campaign campaign;
     @FXML
     private ComboBox<String> discountTypeComboBox;
     @FXML
-    private TextField discountForField;
+    private ComboBox<String> categoryComboBox;
+    @FXML
+    private TextField barcodeField;
     @FXML
     private DatePicker startDatePicker;
     @FXML
     private DatePicker endDatePicker;
     @FXML
     private CheckBox isActiveCheckBox;
-    @FXML
-    private Button btnBack;
-    @FXML
-    private Button btnSave;
     @FXML
     private TextField campaignId;
     @FXML
@@ -52,26 +45,42 @@ public class EditCampaignModalController implements Initializable {
         campaignId.setEditable(false);
         discountTypeComboBox.setDisable(true);
         discountTypeComboBox.setEditable(false);
-        discountForField.setEditable(false);
+
 
     }
 
     public void setCampaign(Campaign campaign) {
         if (campaign != null) {
-            this.campaign = campaign;
             LocalDate startDate = LocalDate.parse(campaign.getStartDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
             LocalDate endDate = LocalDate.parse(campaign.getEndDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
-            Boolean isActive = false;
-
-            isActive = campaign.getIsActive().equals("ACTIVE");
+            boolean isActive = campaign.getIsActive().equals("ACTIVE");
 
 
             campaignId.setText(String.valueOf(campaign.getCampaignId()));
             discountTypeComboBox.setValue(campaign.getDiscountType());
-            discountForField.setText(String.valueOf(campaign.getDiscountFor()));
+            barcodeField.setText(String.valueOf(campaign.getDiscountFor()));
             startDatePicker.setValue(startDate);
             endDatePicker.setValue(endDate);
             isActiveCheckBox.setSelected(isActive);
+            categoryComboBox.setValue(campaign.getDiscountFor());
+            if (discountTypeComboBox.getValue().equals("50% Discount for 2nd from the same category")) {
+                lblDiscountFor.setText("Category: ");
+                barcodeField.setVisible(false);
+                barcodeField.setManaged(false);
+                categoryComboBox.setVisible(true);
+                categoryComboBox.setManaged(true);
+                categoryComboBox.setDisable(true);
+                categoryComboBox.setEditable(false);
+            } else {
+                lblDiscountFor.setText("Barcode: ");
+                barcodeField.setVisible(true);
+                barcodeField.setManaged(true);
+                categoryComboBox.setVisible(false);
+                categoryComboBox.setManaged(false);
+                barcodeField.setEditable(false);
+
+
+            }
         }
     }
 
@@ -84,7 +93,7 @@ public class EditCampaignModalController implements Initializable {
     private void save() {
         try {
             if (discountTypeComboBox.getValue() != null &&
-                    !discountForField.getText().isEmpty() &&
+                    (!barcodeField.getText().isEmpty() || categoryComboBox.getValue() != null) &&
                     startDatePicker.getValue() != null &&
                     endDatePicker.getValue() != null) {
                 LocalDate selectedStartDate = startDatePicker.getValue();
@@ -115,9 +124,29 @@ public class EditCampaignModalController implements Initializable {
                 } else {
                     strIsActive = "INACTIVE";
                 }
-                Campaign campaign = new Campaign(
-                        campaignId.getText(), discountTypeComboBox.getSelectionModel().getSelectedItem(), discountTypeCode,
-                        discountForField.getText(), selectedStartDate.format(formatter), selectedEndDate.format(formatter), strIsActive);
+
+                Campaign campaign;
+                if (discountTypeCode.equals("03")) {
+                    campaign = new Campaign(
+                            _repository.getLatestCampaignId(),
+                            discountTypeComboBox.getSelectionModel().getSelectedItem(),
+                            discountTypeCode,
+                            categoryComboBox.getSelectionModel().getSelectedItem(),
+                            selectedStartDate.format(formatter),
+                            selectedEndDate.format(formatter),
+                            strIsActive);
+                } else {
+                    campaign = new Campaign(
+                            _repository.getLatestCampaignId(),
+                            discountTypeComboBox.getSelectionModel().getSelectedItem(),
+                            discountTypeCode,
+                            barcodeField.getText(),
+                            selectedStartDate.format(formatter),
+                            selectedEndDate.format(formatter),
+                            strIsActive);
+                }
+
+
                 try {
                     _repository.updateCampaignTable(campaign);
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -127,16 +156,19 @@ public class EditCampaignModalController implements Initializable {
                     alert.showAndWait();
                     closeModal();
                 } catch (Exception e) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Not Saved");
-                    alert.setContentText("An error occured while saving this campaign!");
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Program Error");
+                    alert.setHeaderText("An error occured in this operation.");
+                    alert.setContentText(e.toString());
                     alert.showAndWait();
-                    e.printStackTrace();
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Program Error");
+            alert.setHeaderText("An error occured in this operation.");
+            alert.setContentText(e.toString());
+            alert.showAndWait();
         }
     }
 
@@ -147,7 +179,7 @@ public class EditCampaignModalController implements Initializable {
 
     @FXML
     private void delete() {
-        if(!discountTypeComboBox.getValue().equals("%25 Discount for Cash Payment")){
+        if (!discountTypeComboBox.getValue().equals("%25 Discount for Cash Payment")) {
             try {
                 _repository.deleteFromCampaignById(campaignId.getText());
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -157,14 +189,13 @@ public class EditCampaignModalController implements Initializable {
                 alert.showAndWait();
                 closeModal();
             } catch (Exception e) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Error");
-                alert.setHeaderText("Not Deleted");
-                alert.setContentText("An error occured while deleting this campaign!");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Program Error");
+                alert.setHeaderText("An error occured in this operation.");
+                alert.setContentText(e.toString());
                 alert.showAndWait();
-                e.printStackTrace();
             }
-        }else {
+        } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Error");
             alert.setHeaderText("Not Deleted");

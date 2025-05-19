@@ -1,7 +1,5 @@
 package com.marsys.marsys.Controllers;
 
-import com.marsys.marsys.Models.Session;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -21,12 +19,12 @@ public class LayoutController {
     private AnchorPane mainContent;
 
     public void initialize() {
-        loadPage("/com/marsys/marsys/Views/login.fxml", mainContent);
+        loadPage(mainContent);
     }
 
-    private void loadPage(String fxmlPath, AnchorPane content) {
+    private void loadPage(AnchorPane content) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/marsys/marsys/Views/login.fxml"));
             Node page = loader.load();
 
             AnchorPane.setTopAnchor(page, 0.0);
@@ -34,8 +32,7 @@ public class LayoutController {
             AnchorPane.setLeftAnchor(page, 0.0);
             AnchorPane.setRightAnchor(page, 0.0);
 
-            if (page instanceof Region) {
-                Region region = (Region) page;
+            if (page instanceof Region region) {
                 region.prefWidthProperty().bind(content.widthProperty());
                 region.prefHeightProperty().bind(content.heightProperty());
                 region.maxWidthProperty().bind(content.widthProperty());
@@ -44,7 +41,11 @@ public class LayoutController {
 
             content.getChildren().setAll(page);
         } catch (IOException e) {
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Program Error");
+            alert.setHeaderText("An error occured in this operation.");
+            alert.setContentText(e.toString());
+            alert.showAndWait();
         }
     }
 
@@ -58,7 +59,11 @@ public class LayoutController {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Program Error");
+            alert.setHeaderText("An error occured in this operation.");
+            alert.setContentText(e.toString());
+            alert.showAndWait();
         }
     }
 

@@ -1,8 +1,10 @@
 package com.marsys.marsys.Controllers;
 
+import com.marsys.marsys.Models.Coupon;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Session;
 import com.marsys.marsys.Repository.BeratRepo;
+import com.marsys.marsys.Repository.Repository;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -14,10 +16,9 @@ import java.util.ResourceBundle;
 
 public class CreateEmployeeController implements Initializable {
     BeratRepo _repository = new BeratRepo();
+    Repository repository = new Repository();
     LayoutController layoutController = new LayoutController();
     Employee user = Session.getInstance().getCurrentUser();
-    private Employee employee;
-
 
     @FXML
     public Label lblUserId;
@@ -41,8 +42,6 @@ public class CreateEmployeeController implements Initializable {
     private ComboBox<String> positionComboBox;
     @FXML
     private Button btnBack;
-    @FXML
-    private Button btnSave;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -52,18 +51,9 @@ public class CreateEmployeeController implements Initializable {
         employeeId.setText(_repository.getLatestEmployeeId());
         birthDatePicker.getEditor().setDisable(true);
         startDatePicker.getEditor().setDisable(true);
-        startDatePicker.setOnAction(event -> {
-            if (startDatePicker.getValue() != null) {
-                if (startDatePicker.getValue().isBefore(LocalDate.now().minusMonths(2))) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("Date Error");
-                    alert.setContentText("You can not choose start date earlier than 2 months ago!");
-                    alert.showAndWait();
-                    startDatePicker.setValue(null);
-                }
-            }
-        });
+        startDatePicker.setEditable(false);
+        startDatePicker.setDisable(true);
+        startDatePicker.setValue(LocalDate.now().plusDays(1));
         birthDatePicker.setOnAction(event -> {
             if (birthDatePicker.getValue() != null) {
                 if (birthDatePicker.getValue().isAfter(LocalDate.now().minusYears(15))) {
@@ -110,25 +100,31 @@ public class CreateEmployeeController implements Initializable {
                         storeCodeComboBox.getValue(),
                         selectedStartDate.format(formatter),
                         formattedDate,
-                        selectedBirthDate.format(formatter));
+                        selectedBirthDate.format(formatter),
+                        repository.getLatestCouponCode());
+                Coupon employeeCoupon = new Coupon(repository.getLatestCouponCode(),
+                        "1000",
+                        selectedStartDate.format(formatter),
+                        "12-31-9999",
+                        "ACTIVE",
+                        "0");
                 try {
                     _repository.insertIntoEmployeeTable(employee);
+                    repository.insertIntoCouponTable(employeeCoupon);
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Completed");
                     alert.setHeaderText("Saved");
                     alert.setContentText("Employee created!");
                     alert.showAndWait();
                 } catch (Exception e) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Not Saved");
-                    alert.setContentText("An error occured while creating this employee!");
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Program Error");
+                    alert.setHeaderText("An error occured in this operation.");
+                    alert.setContentText(e.toString());
                     alert.showAndWait();
-                    e.printStackTrace();
                 }
                 layoutController.loadPageByButton("/com/marsys/marsys/Views/employeemanagement.fxml", btnBack);
-            }
-            else{
+            } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Error");
                 alert.setHeaderText("Empty field");
@@ -136,12 +132,11 @@ public class CreateEmployeeController implements Initializable {
                 alert.showAndWait();
             }
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Error");
-            alert.setHeaderText("Not Saved");
-            alert.setContentText("An error occured while creating this employee!");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Program Error");
+            alert.setHeaderText("An error occured in this operation.");
+            alert.setContentText(e.toString());
             alert.showAndWait();
-            e.printStackTrace();
         }
     }
 }

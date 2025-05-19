@@ -99,12 +99,11 @@ public class CreateCouponController implements Initializable {
                 alert.showAndWait();
                 layoutController.loadPageByButton("/com/marsys/marsys/Views/couponlist.fxml", btnSave);
             } catch (Exception e) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Error");
-                alert.setHeaderText("Not Saved");
-                alert.setContentText("An error occured while saving this coupon!");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Program Error");
+                alert.setHeaderText("An error occured in this operation.");
+                alert.setContentText(e.toString());
                 alert.showAndWait();
-                e.printStackTrace();
             }
 
         } else {

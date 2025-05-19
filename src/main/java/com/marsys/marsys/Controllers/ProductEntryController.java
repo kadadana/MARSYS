@@ -50,7 +50,7 @@ public class ProductEntryController implements Initializable {
     @FXML
     private Label lblTotal;
 
-    private ObservableList<Product> productList = FXCollections.observableArrayList();
+    private final ObservableList<Product> productList = FXCollections.observableArrayList();
 
 
     @Override
@@ -70,9 +70,17 @@ public class ProductEntryController implements Initializable {
             }
             return null;
         };
-        quantityField.setTextFormatter(new TextFormatter<>(inputFilter));
+        UnaryOperator<TextFormatter.Change> filter2 = change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("\\d{0,3}")) {
+                return change;
+            }
+            return null;
+        };
 
-        // Sütun genişlikleri
+        quantityField.setTextFormatter(new TextFormatter<>(inputFilter));
+        barcodeField.setTextFormatter(new TextFormatter<>(filter2));
+
         colBarcode.prefWidthProperty().bind(productEntryTable.widthProperty().multiply(0.30));
         colProductName.prefWidthProperty().bind(productEntryTable.widthProperty().multiply(0.40));
         colQuantity.prefWidthProperty().bind(productEntryTable.widthProperty().multiply(0.20));
@@ -86,23 +94,22 @@ public class ProductEntryController implements Initializable {
         colQuantity.setCellValueFactory(cellData ->
                 new SimpleIntegerProperty(cellData.getValue().getQuantity()).asObject());
 
-        colQuantity.setCellFactory(column -> {
-            TextFieldTableCell<Product, Integer> cell = new TextFieldTableCell<>(new IntegerStringConverter()) {
-                @Override
-                public void startEdit() {
-                    super.startEdit();
-                    TextField textField = (TextField) getGraphic();
-                    if (textField != null) {
-                        UnaryOperator<TextFormatter.Change> filter = change -> {
-                            String newText = change.getControlNewText();
-                            return newText.matches("([1-9][0-9]?)?") ? change : null;
-                        };
-                        textField.setTextFormatter(new TextFormatter<>(filter));
+        colQuantity.setCellFactory(column ->
+                new TextFieldTableCell<>(new IntegerStringConverter()) {
+                    @Override
+                    public void startEdit() {
+                        super.startEdit();
+                        TextField textField = (TextField) getGraphic();
+                        if (textField != null) {
+                            UnaryOperator<TextFormatter.Change> filter = change -> {
+                                String newText = change.getControlNewText();
+                                return newText.matches("([1-9][0-9]?)?") ? change : null;
+                            };
+                            textField.setTextFormatter(new TextFormatter<>(filter));
+                        }
                     }
-                }
-            };
-            return cell;
-        });
+                });
+
 
         colQuantity.setOnEditCommit(event -> {
             Product product = event.getRowValue();
@@ -226,7 +233,7 @@ public class ProductEntryController implements Initializable {
     }
 
     @FXML
-    private void back() {
+    public void back() {
         layoutController.loadPageByButton("/com/marsys/marsys/Views/stockandinventory.fxml", btnBack);
     }
 
@@ -270,7 +277,9 @@ public class ProductEntryController implements Initializable {
             try {
                 for (Product p : productList) {
                     _repository.updateStockQuantity(p);
-                    _repository.insertIntoStockMovementTable(p, "ENTRY", "000000", user.getId(), date);
+                    for (int i = 1; i <= p.getQuantity(); i++) {
+                        _repository.insertIntoStockMovementTable(_repository.getLatestMovementId(), "ENTRY", p, "000000", user.getId(), date);
+                    }
                 }
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Completed");
@@ -284,11 +293,11 @@ public class ProductEntryController implements Initializable {
                 productEntryTable.getItems().clear();
                 productEntryTable.refresh();
             } catch (Exception e) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Error");
-                alert.setHeaderText("An error occured");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Program Error");
+                alert.setHeaderText("An error occured in this operation.");
+                alert.setContentText(e.toString());
                 alert.showAndWait();
-                e.printStackTrace();
             }
 
         } else {

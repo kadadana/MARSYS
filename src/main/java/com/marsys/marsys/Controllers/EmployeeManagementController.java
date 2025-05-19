@@ -13,11 +13,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import com.marsys.marsys.Repository.BeratRepo;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
 public class EmployeeManagementController implements Initializable {
     Employee user = Session.getInstance().getCurrentUser();
 
@@ -49,11 +51,13 @@ public class EmployeeManagementController implements Initializable {
     @FXML
     public TableColumn<Employee, String> colBirthDate;
     @FXML
+    public TableColumn<Employee, String> colCouponCode;
+    @FXML
     public TableColumn<Employee, Void> colEdit;
     @FXML
     public Button btnGoToAddEmployeeScreen;
 
-    private ObservableList<Employee> employeeList = FXCollections.observableArrayList();
+    private final ObservableList<Employee> employeeList = FXCollections.observableArrayList();
     BeratRepo _repository = new BeratRepo();
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -68,11 +72,12 @@ public class EmployeeManagementController implements Initializable {
         colLastName.prefWidthProperty().bind(employeeTable.widthProperty().multiply(0.10));
         colBirthDate.prefWidthProperty().bind(employeeTable.widthProperty().multiply(0.10));
         colPosition.prefWidthProperty().bind(employeeTable.widthProperty().multiply(0.10));
-        colPassword.prefWidthProperty().bind(employeeTable.widthProperty().multiply(0.10));
-        colStoreCode.prefWidthProperty().bind(employeeTable.widthProperty().multiply(0.10));
+        colPassword.prefWidthProperty().bind(employeeTable.widthProperty().multiply(0.08));
+        colStoreCode.prefWidthProperty().bind(employeeTable.widthProperty().multiply(0.07));
         colStartDate.prefWidthProperty().bind(employeeTable.widthProperty().multiply(0.10));
         colEndDate.prefWidthProperty().bind(employeeTable.widthProperty().multiply(0.10));
         colEdit.prefWidthProperty().bind(employeeTable.widthProperty().multiply(0.05));
+        colCouponCode.prefWidthProperty().bind(employeeTable.widthProperty().multiply(0.05));
 
         colId.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getId()));
@@ -92,6 +97,8 @@ public class EmployeeManagementController implements Initializable {
                 new SimpleStringProperty(cellData.getValue().getStartDate()));
         colEndDate.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getEndDate()));
+        colCouponCode.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getCouponCode()));
 
         employeeTable.setItems(employeeList);
         TableViewHelper.adjustTableHeight(employeeTable);
@@ -106,7 +113,7 @@ public class EmployeeManagementController implements Initializable {
             {
                 editButton.setOnAction(event -> {
                     Employee employee = _repository.getEmployeeModelById(getTableView().getItems().get(getIndex()).getId());
-                    openEditWindow(employee, editButton);
+                    openEditWindow(employee);
                 });
             }
 
@@ -122,7 +129,7 @@ public class EmployeeManagementController implements Initializable {
         });
     }
 
-    private void openEditWindow(Employee employee, Button btnEdit) {
+    private void openEditWindow(Employee employee) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/marsys/marsys/Views/editemployeemodal.fxml"));
             Parent root = loader.load();
@@ -130,13 +137,18 @@ public class EmployeeManagementController implements Initializable {
             controller.setEmployee(employee);
 
             Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
             stage.showAndWait();
 
             refreshEmployeeTable();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Program Error");
+            alert.setHeaderText("An error occured in this operation.");
+            alert.setContentText(e.toString());
+            alert.showAndWait();
         }
     }
 

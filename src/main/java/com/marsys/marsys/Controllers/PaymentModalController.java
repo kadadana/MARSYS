@@ -65,7 +65,7 @@ public class PaymentModalController implements Initializable {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Information");
                         alert.setHeaderText("Completed");
-                        alert.setContentText("Sale is completed!");
+                        alert.setContentText("Payment completed!");
                         alert.showAndWait();
                         closeModal();
                     } else {
@@ -85,7 +85,11 @@ public class PaymentModalController implements Initializable {
 
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Program Error");
+                alert.setHeaderText("An error occured in this operation.");
+                alert.setContentText(e.toString());
+                alert.showAndWait();
             }
         }else {
             Alert alert = new Alert(Alert.AlertType.WARNING);

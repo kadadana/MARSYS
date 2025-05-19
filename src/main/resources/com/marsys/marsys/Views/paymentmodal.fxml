@@ -11,7 +11,7 @@
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <VBox alignment="CENTER_RIGHT">
-                <Label fx:id="lblTitle" text="Card Payment"
+                <Label text="Card Payment"
                        style="-fx-text-fill: red; -fx-font-size: 50px;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
@@ -31,8 +31,8 @@
             <Label text="Total: " fx:id="lblTotal"/>
             <TextField fx:id="cardNumber" promptText="Card Number"/>
             <PasswordField fx:id="cardPassword" promptText="Password"/>
-            <Button text="Complete" fx:id="btnComplete" onAction="#handlePayment"/>
-            <Button text="Cancel" fx:id="btnCancel" onAction="#handleCancel"/>
+            <Button text="Complete" onAction="#handlePayment"/>
+            <Button text="Cancel" onAction="#handleCancel"/>
         </VBox>
     </center>
 </BorderPane>
