@@ -43,6 +43,7 @@
                     <TableColumn fx:id="colEndDate" text="End Date"/>
                     <TableColumn fx:id="colIsActive" text="Is Active"/>
                     <TableColumn fx:id="colUsed" text="Used"/>
+                    <TableColumn fx:id="colUsingLimit" text="Using Limit"/>
                     <TableColumn fx:id="colEdit" text="Edit" prefWidth="100"/>
 
                 </columns>

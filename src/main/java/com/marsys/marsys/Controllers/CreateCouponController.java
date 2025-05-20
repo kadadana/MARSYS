@@ -12,6 +12,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
 
 public class CreateCouponController implements Initializable {
     LayoutController layoutController = new LayoutController();
@@ -23,6 +24,8 @@ public class CreateCouponController implements Initializable {
     private Label lblUserId;
     @FXML
     private TextField discountAmountField;
+    @FXML
+    private TextField usingLimitField;
     @FXML
     private DatePicker startDatePicker;
     @FXML
@@ -44,6 +47,17 @@ public class CreateCouponController implements Initializable {
         couponCodeField.setText(repository.getLatestCouponCode());
         startDatePicker.getEditor().setDisable(true);
         endDatePicker.getEditor().setDisable(true);
+
+        UnaryOperator<TextFormatter.Change> filter2 = change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("\\d{0,3}")) {
+                return change;
+            }
+            return null;
+        };
+        TextFormatter<String> textFormatter2 = new TextFormatter<>(filter2);
+        usingLimitField.setTextFormatter(textFormatter2);
+
         startDatePicker.setOnAction(event -> {
             if (startDatePicker.getValue() != null && endDatePicker.getValue() != null) {
                 if (startDatePicker.getValue().isAfter(endDatePicker.getValue())) {
@@ -77,7 +91,8 @@ public class CreateCouponController implements Initializable {
 
         if (!discountAmountField.getText().isEmpty() &&
                 startDatePicker.getValue() != null &&
-                endDatePicker.getValue() != null) {
+                endDatePicker.getValue() != null &&
+                usingLimitField.getText() != null) {
             LocalDate selectedStartDate = startDatePicker.getValue();
             LocalDate selectedEndDate = endDatePicker.getValue();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
@@ -89,7 +104,14 @@ public class CreateCouponController implements Initializable {
                 strIsActive = "INACTIVE";
             }
             Coupon coupon = new Coupon(
-                    repository.getLatestCouponCode(), discountAmountField.getText(), selectedStartDate.format(formatter), selectedEndDate.format(formatter), strIsActive, "0");
+                    repository.getLatestCouponCode(),
+                    discountAmountField.getText(),
+                    selectedStartDate.format(formatter),
+                    selectedEndDate.format(formatter),
+                    strIsActive,
+                    "0",
+                    usingLimitField.getText()
+            );
             try {
                 repository.insertIntoCouponTable(coupon);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

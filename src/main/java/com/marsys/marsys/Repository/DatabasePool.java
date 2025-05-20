@@ -20,7 +20,7 @@ public class DatabasePool {
             String password = System.getenv("MARSYS_DB_PASSWORD");
 
             if (host == null || database == null || user == null || password == null) {
-                throw new IllegalStateException("Veritabanı ortam değişkenleri eksik!");
+                throw new IllegalStateException("Database environment variables are missing!");
             }
 
             String jdbcUrl = String.format(
@@ -49,7 +49,7 @@ public class DatabasePool {
 
     public static Connection getConnection() throws SQLException {
         if (dataSource == null) {
-            throw new SQLException("Veritabanı bağlantı havuzu başlatılamadı!");
+            throw new SQLException("Database connection pool couldn't started!");
         }
         return dataSource.getConnection();
     }

@@ -586,7 +586,8 @@ public class Repository {
                         rs.getString("START_DATE"),
                         rs.getString("END_DATE"),
                         rs.getString("IS_ACTIVE"),
-                        rs.getString("USED"));
+                        rs.getString("USED"),
+                        rs.getString("USING_LIMIT"));
                 return coupon;
             }
         } catch (SQLException e) {
@@ -617,7 +618,8 @@ public class Repository {
                         rs.getString("START_DATE"),
                         rs.getString("END_DATE"),
                         rs.getString("IS_ACTIVE"),
-                        rs.getString("USED"));
+                        rs.getString("USED"),
+                        rs.getString("USING_LIMIT"));
                 couponList.add(coupon);
             }
         } catch (SQLException e) {
@@ -725,7 +727,8 @@ public class Repository {
         String query = "SELECT * FROM \"COUPON\" " +
                 "WHERE \"COUPON_CODE\" = ? AND \"IS_ACTIVE\" = 'ACTIVE' AND" +
                 " CURRENT_DATE BETWEEN TO_DATE(\"START_DATE\", 'MM-DD-YYYY')" +
-                " AND TO_DATE(\"END_DATE\", 'MM-DD-YYYY')";
+                " AND TO_DATE(\"END_DATE\", 'MM-DD-YYYY')" +
+                " AND CAST(\"USED\" AS INT) < CAST(\"USING_LIMIT\" AS INT)";
 
         try (Connection conn = DatabasePool.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -740,7 +743,8 @@ public class Repository {
                         rs.getString("START_DATE"),
                         rs.getString("END_DATE"),
                         rs.getString("IS_ACTIVE"),
-                        rs.getString("USED"));
+                        rs.getString("USED"),
+                        rs.getString("USING_LIMIT"));
                 return coupon;
             }
         } catch (Exception e) {

@@ -28,6 +28,8 @@
             </padding>
             <Button fx:id="btnGoToSalesScreen" minHeight="60.0" minWidth="350.0" onAction="#goToSalesScreen"
                     text="Sale"/>
+            <Button fx:id="btnGoToReturnsScreen" minHeight="60.0" minWidth="350.0" onAction="#goToReturnsScreen"
+                    text="Return"/>
             <Button fx:id="btnGoToStockInventoryScreen" minHeight="60.0" minWidth="350.0"
                     onAction="#goToStockInventoryScreen"
                     text="Stock and Inventory"/>
