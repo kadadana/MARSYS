@@ -28,6 +28,8 @@ public class InvoiceDetailsController {
     @FXML
     private TableView<Product> productTable;
     @FXML
+    private Label lblInvoiceDate;
+    @FXML
     private TableColumn<Product, String> colBarcode;
     @FXML
     private TableColumn<Product, String> colProductName;
@@ -52,7 +54,7 @@ public class InvoiceDetailsController {
         lblDiscountTotal.setText(invoice.getDiscountAmount());
         lblLastTotal.setText(invoice.getPaidAmount());
         products.addAll(productList);
-
+        lblInvoiceDate.setText(invoice.getDate());
         colBarcode.prefWidthProperty().bind(productTable.widthProperty().multiply(0.10));
         colProductName.prefWidthProperty().bind(productTable.widthProperty().multiply(0.20));
         colQuantity.prefWidthProperty().bind(productTable.widthProperty().multiply(0.08));

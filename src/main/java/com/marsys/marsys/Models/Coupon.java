@@ -7,14 +7,16 @@ public class Coupon {
     private String EndDate;
     private String IsActive;
     private String Used;
+    private String UsingLimit;
 
-    public Coupon(String couponCode, String discountAmount, String startDate, String endDate, String isActive, String used) {
+    public Coupon(String couponCode, String discountAmount, String startDate, String endDate, String isActive, String used, String usingLimit) {
         this.CouponCode = couponCode;
         this.DiscountAmount = discountAmount;
         this.StartDate = startDate;
         this.EndDate = endDate;
         this.IsActive = isActive;
         this.Used = used;
+        this.UsingLimit = usingLimit;
 
     }
 
@@ -65,6 +67,14 @@ public class Coupon {
 
     public void setUsed(String used) {
         this.Used = used;
+    }
+
+    public String getUsingLimit() {
+        return UsingLimit;
+    }
+
+    public void setUsingLimit(String usingLimit) {
+        this.UsingLimit = usingLimit;
     }
 }
 

@@ -45,6 +45,8 @@ public class CouponListController implements Initializable {
     @FXML
     private TableColumn<Coupon, Integer> colUsed;
     @FXML
+    private TableColumn<Coupon, Integer> colUsingLimit;
+    @FXML
     private TableColumn<Coupon, Void> colEdit;
     @FXML
     private Button btnBack;
@@ -61,12 +63,13 @@ public class CouponListController implements Initializable {
 
         couponList.addAll(_repository.getCouponList());
 
-        colCouponCode.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.2));
-        colDiscountAmount.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.2));
+        colCouponCode.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.1));
+        colDiscountAmount.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.1));
         colStartDate.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.2));
         colEndDate.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.2));
-        colIsActive.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.07));
-        colIsActive.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.1));
+        colUsed.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.1));
+        colUsingLimit.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.1));
+        colIsActive.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.14));
         colEdit.prefWidthProperty().bind(couponTable.widthProperty().multiply(0.04));
 
         colCouponCode.setCellValueFactory(cellData ->
@@ -81,6 +84,8 @@ public class CouponListController implements Initializable {
                 new SimpleStringProperty(cellData.getValue().getIsActive()));
         colUsed.setCellValueFactory(cellData ->
                 new SimpleIntegerProperty(Integer.parseInt(cellData.getValue().getUsed())).asObject());
+        colUsingLimit.setCellValueFactory(cellData ->
+                new SimpleIntegerProperty(Integer.parseInt(cellData.getValue().getUsingLimit())).asObject());
 
         couponTable.setItems(couponList);
         TableViewHelper.adjustTableHeight(couponTable);

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.marsys.marsys.Controllers.ReturnsController">
+
+    <top>
+        <HBox spacing="10" style="-fx-background-color: #2c3e50;">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <VBox alignment="CENTER_RIGHT">
+                <Label text="Sale" style="-fx-text-fill: red; -fx-font-size: 50px;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <VBox alignment="CENTER_RIGHT">
+                <Label fx:id="lblUserName" style="-fx-text-fill: white; -fx-font-size: 25px;"/>
+                <Label fx:id="lblUserId" style="-fx-text-fill: lightgray; -fx-font-size: 20px;"/>
+            </VBox>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Label text="Return" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+            <HBox spacing="10">
+                <Label text="Invoice Number: "/>
+                <TextField fx:id="invoiceField"/>
+                <Button text="Add" onAction="#getInvoice"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Barcode: "/>
+                <TextField fx:id="barcodeField"/>
+            </HBox>
+
+            <!-- Satış Listesi Tablosu -->
+            <TableView fx:id="invoiceTable" prefHeight="300">
+                <columns>
+                    <TableColumn fx:id="colBarcode" text="Barcode"/>
+                    <TableColumn fx:id="colProductName" text="Product Name"/>
+                    <TableColumn fx:id="colQuantity" text="Quantity"/>
+                    <TableColumn fx:id="colPrice" text="Price"/>
+                    <TableColumn fx:id="colCategory" text="Category"/>
+                    <TableColumn fx:id="colBrand" text="Brand"/>
+                    <TableColumn fx:id="colBuyingPrice" text="Buying Price"/>
+                    <TableColumn fx:id="colExpiration" text="Expiration"/>
+                </columns>
+            </TableView>
+
+
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15 10 15 10;">
+            <Button fx:id="btnBack" text="Back" onAction="#back"
+                    style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+
+            <!-- Total -->
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Label text="Total:" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblTotal" minWidth="80" maxWidth="80"
+                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <!-- Discount Total -->
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Label text="Discount Total:" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblDiscountTotal" minWidth="80" maxWidth="80"
+                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <!-- Last Total -->
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Label text="Last Total:" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblLastTotal" minWidth="80" maxWidth="80"
+                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button text="Cancel Process" onAction="#cancelProcess"
+                    style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+            <Button text="Cash Payment" onAction="#completeReturn"
+                    style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

@@ -23,6 +23,8 @@ public class MainController implements Initializable {
     @FXML
     private Button btnGoToSalesScreen;
     @FXML
+    private Button btnGoToReturnsScreen;
+    @FXML
     private Button btnGoToDiscountCampaignScreen;
     @FXML
     private Button btnGoToEmployeeManagementScreen;
@@ -42,6 +44,18 @@ public class MainController implements Initializable {
         if (user.getPosition().equals("MANAGER") || user.getPosition().equals("CASHIER")) {
 
             _layoutController.loadPageByButton("/com/marsys/marsys/Views/sales.fxml", btnGoToSalesScreen);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("You don't have access for this operation!");
+            alert.showAndWait();
+        }
+    }
+
+    public void goToReturnsScreen() {
+        if (user.getPosition().equals("MANAGER") || user.getPosition().equals("CASHIER")) {
+
+            _layoutController.loadPageByButton("/com/marsys/marsys/Views/returns.fxml", btnGoToReturnsScreen);
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");

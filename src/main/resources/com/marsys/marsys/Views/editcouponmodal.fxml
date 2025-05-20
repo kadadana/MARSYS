@@ -55,6 +55,8 @@
                 <CheckBox fx:id="isActiveCheckBox"/>
             </HBox>
 
+            <Label text="Using Limit(Maximum 999):"/>
+            <TextField fx:id="usingLimitField"/>
 
 
         </VBox>

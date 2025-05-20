@@ -13,6 +13,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
 
 public class EditCouponModalController implements Initializable {
     Repository _repository = new Repository();
@@ -24,6 +25,8 @@ public class EditCouponModalController implements Initializable {
     private Label lblUserName;
     @FXML
     private TextField discountAmountField;
+    @FXML
+    private TextField usingLimitField;
     @FXML
     private DatePicker startDatePicker;
     @FXML
@@ -40,6 +43,16 @@ public class EditCouponModalController implements Initializable {
         couponCodeField.setEditable(false);
         discountAmountField.setEditable(false);
 
+        UnaryOperator<TextFormatter.Change> filter2 = change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("\\d{0,3}")) {
+                return change;
+            }
+            return null;
+        };
+        TextFormatter<String> textFormatter2 = new TextFormatter<>(filter2);
+        usingLimitField.setTextFormatter(textFormatter2);
+
     }
 
     public void setCoupon(Coupon coupon) {
@@ -54,6 +67,7 @@ public class EditCouponModalController implements Initializable {
             startDatePicker.setValue(startDate);
             endDatePicker.setValue(endDate);
             isActiveCheckBox.setSelected(isActive);
+            usingLimitField.setText(coupon.getUsingLimit());
         }
     }
 
@@ -68,7 +82,8 @@ public class EditCouponModalController implements Initializable {
             String used = _repository.getCouponUsed(couponCodeField.getText());
             if (!discountAmountField.getText().isEmpty() &&
                     startDatePicker.getValue() != null &&
-                    endDatePicker.getValue() != null) {
+                    endDatePicker.getValue() != null &&
+                    usingLimitField.getText() != null) {
                 LocalDate selectedStartDate = startDatePicker.getValue();
                 LocalDate selectedEndDate = endDatePicker.getValue();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
@@ -79,7 +94,13 @@ public class EditCouponModalController implements Initializable {
                     strIsActive = "INACTIVE";
                 }
                 Coupon coupon = new Coupon(
-                        couponCodeField.getText(), discountAmountField.getText(), selectedStartDate.format(formatter), selectedEndDate.format(formatter), strIsActive, used);
+                        couponCodeField.getText(),
+                        discountAmountField.getText(),
+                        selectedStartDate.format(formatter),
+                        selectedEndDate.format(formatter),
+                        strIsActive,
+                        used,
+                        usingLimitField.getText());
                 try {
                     _repository.updateCouponTable(coupon);
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);

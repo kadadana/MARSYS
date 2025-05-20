@@ -107,7 +107,8 @@ public class CreateEmployeeController implements Initializable {
                         selectedStartDate.format(formatter),
                         "12-31-9999",
                         "ACTIVE",
-                        "0");
+                        "0",
+                        "1");
                 try {
                     _repository.insertIntoEmployeeTable(employee);
                     repository.insertIntoCouponTable(employeeCoupon);
