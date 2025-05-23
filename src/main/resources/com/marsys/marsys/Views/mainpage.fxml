@@ -11,7 +11,7 @@
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <VBox alignment="CENTER_RIGHT">
-                <Label text="Main Page" style="-fx-text-fill: red; -fx-font-size: 50px;"/>
+                <Label text="MARSYS" style="-fx-text-fill: red; -fx-font-size: 50px;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
             <VBox alignment="CENTER_RIGHT">

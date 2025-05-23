@@ -1,5 +1,6 @@
 package com.marsys.marsys.Controllers;
 
+import com.marsys.marsys.Helpers.ProgramHelpers;
 import com.marsys.marsys.Models.Coupon;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Session;
@@ -11,7 +12,6 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
@@ -57,15 +57,13 @@ public class EditCouponModalController implements Initializable {
 
     public void setCoupon(Coupon coupon) {
         if (coupon != null) {
-            LocalDate startDate = LocalDate.parse(coupon.getStartDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
-            LocalDate endDate = LocalDate.parse(coupon.getEndDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
             boolean isActive = coupon.getIsActive().equals("ACTIVE");
 
 
             couponCodeField.setText(String.valueOf(coupon.getCouponCode()));
             discountAmountField.setText(String.valueOf(coupon.getDiscountAmount()));
-            startDatePicker.setValue(startDate);
-            endDatePicker.setValue(endDate);
+            startDatePicker.setValue(ProgramHelpers.getLocalDateByStringDate(coupon.getStartDate()));
+            endDatePicker.setValue(ProgramHelpers.getLocalDateByStringDate(coupon.getEndDate()));
             isActiveCheckBox.setSelected(isActive);
             usingLimitField.setText(coupon.getUsingLimit());
         }
@@ -86,7 +84,6 @@ public class EditCouponModalController implements Initializable {
                     usingLimitField.getText() != null) {
                 LocalDate selectedStartDate = startDatePicker.getValue();
                 LocalDate selectedEndDate = endDatePicker.getValue();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
                 String strIsActive;
                 if (isActiveCheckBox.isSelected()) {
                     strIsActive = "ACTIVE";
@@ -96,8 +93,8 @@ public class EditCouponModalController implements Initializable {
                 Coupon coupon = new Coupon(
                         couponCodeField.getText(),
                         discountAmountField.getText(),
-                        selectedStartDate.format(formatter),
-                        selectedEndDate.format(formatter),
+                        ProgramHelpers.getStringDateByLocalDate(selectedStartDate),
+                        ProgramHelpers.getStringDateByLocalDate(selectedEndDate),
                         strIsActive,
                         used,
                         usingLimitField.getText());

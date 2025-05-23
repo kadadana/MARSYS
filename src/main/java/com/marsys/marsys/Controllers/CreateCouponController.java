@@ -1,5 +1,6 @@
 package com.marsys.marsys.Controllers;
 
+import com.marsys.marsys.Helpers.ProgramHelpers;
 import com.marsys.marsys.Models.Coupon;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Session;
@@ -10,7 +11,6 @@ import javafx.scene.control.*;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
@@ -95,7 +95,6 @@ public class CreateCouponController implements Initializable {
                 usingLimitField.getText() != null) {
             LocalDate selectedStartDate = startDatePicker.getValue();
             LocalDate selectedEndDate = endDatePicker.getValue();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
             String strIsActive;
 
             if (isActiveCheckBox.isSelected()) {
@@ -106,8 +105,8 @@ public class CreateCouponController implements Initializable {
             Coupon coupon = new Coupon(
                     repository.getLatestCouponCode(),
                     discountAmountField.getText(),
-                    selectedStartDate.format(formatter),
-                    selectedEndDate.format(formatter),
+                    ProgramHelpers.getStringDateByLocalDate(selectedStartDate),
+                    ProgramHelpers.getStringDateByLocalDate(selectedEndDate),
                     strIsActive,
                     "0",
                     usingLimitField.getText()

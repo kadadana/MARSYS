@@ -1,6 +1,6 @@
 package com.marsys.marsys.Controllers;
 
-import com.marsys.marsys.Helpers.TableViewHelper;
+import com.marsys.marsys.Helpers.ProgramHelpers;
 import com.marsys.marsys.Models.*;
 import com.marsys.marsys.Repository.Repository;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.UnaryOperator;
 
@@ -127,7 +128,7 @@ public class SalesController implements Initializable {
 
 
         salesTable.setItems(productList);
-        TableViewHelper.adjustTableHeight(salesTable);
+        ProgramHelpers.adjustTableHeight(salesTable);
         addDeleteButtonToTable();
 
     }
@@ -192,7 +193,7 @@ public class SalesController implements Initializable {
                 barcodeField.clear();
                 quantityField.setText("1");
                 barcodeField.requestFocus();
-                TableViewHelper.adjustTableHeight(salesTable);
+                ProgramHelpers.adjustTableHeight(salesTable);
                 campaignChecker();
             }
 
@@ -227,7 +228,7 @@ public class SalesController implements Initializable {
                     alert.showAndWait().ifPresent(response -> {
                         if (response == yes) {
                             productList.remove(product);
-                            TableViewHelper.adjustTableHeight(salesTable);
+                            ProgramHelpers.adjustTableHeight(salesTable);
                             campaignChecker();
                         }
                     });
@@ -277,7 +278,7 @@ public class SalesController implements Initializable {
             alert.setContentText("You haven't added a product to sale!");
             alert.showAndWait();
         }
-        TableViewHelper.adjustTableHeight(salesTable);
+        ProgramHelpers.adjustTableHeight(salesTable);
 
     }
 
@@ -286,29 +287,32 @@ public class SalesController implements Initializable {
             if (salesTable.getItems() != null && !salesTable.getItems().isEmpty()) {
                 String movementType = "SALE";
                 String invoiceNumber = _repository.getLatestInvoiceNumber();
-                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
-                String date = sdf.format(new Date());
+                String date = ProgramHelpers.getStringDateTimeByLocalDateTime(LocalDateTime.now());
 
                 for (Product p : productList) {
                     for (int i = 1; i <= p.getQuantity(); i++) {
-                        _repository.insertIntoStockMovementTable(_repository.getLatestMovementId(), movementType, p, invoiceNumber, user.getId(), date);
+                        StockMovement stockMovement = new StockMovement(_repository.getLatestMovementId(), movementType, p.getBarcode(), invoiceNumber, user.getId(), date);
+                        _repository.insertIntoStockMovementTable(stockMovement);
                     }
                     _repository.reduceStockQuantity(p);
                 }
                 if (couponField.getText() != null) {
                     _repository.updateCouponUsed(couponField.getText());
                 }
-                _repository.insertIntoInvoicesTable(
+                String paymentType = cardNumber.equals("000000") ? "CASH" : "CARD";
+
+                Invoice invoice = new Invoice(
                         invoiceNumber,
-                        user,
-                        cardNumber,
+                        paymentType,
                         cardNumber,
                         String.format(Locale.US, "%.2f", newTotal),
-                        date,
                         String.format(Locale.US, "%.2f", discountAmount),
-                        String.format(Locale.US, "%.2f", actualCartTotal)
+                        String.format(Locale.US, "%.2f", actualCartTotal),
+                        user.getId(),
+                        ProgramHelpers.getStringDateTimeByLocalDateTime(LocalDateTime.now()),
+                        "000000"
                 );
-
+                _repository.insertIntoInvoicesTable(invoice);
                 total = 0.00;
                 lblTotal.setText(total + " TL");
 
@@ -342,14 +346,14 @@ public class SalesController implements Initializable {
             alert.setContentText(e.toString());
             alert.showAndWait();
         }
-        TableViewHelper.adjustTableHeight(salesTable);
+        ProgramHelpers.adjustTableHeight(salesTable);
 
     }
 
     @FXML
     private void cashPayment() {
         if (salesTable.getItems() != null && !salesTable.getItems().isEmpty()) {
-            Double lastDiscountedTotal = lastTotal * 0.75;
+            Double lastDiscountedTotal = lastTotal * 0.85;
             if (_repository.getCampaignModelById("005").getIsActive().equals("ACTIVE")) {
                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmation.setTitle("Discount Confirmation");

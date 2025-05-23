@@ -1,6 +1,6 @@
 package com.marsys.marsys.Controllers;
 
-import com.marsys.marsys.Helpers.TableViewHelper;
+import com.marsys.marsys.Helpers.ProgramHelpers;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Product;
 import com.marsys.marsys.Models.Session;
@@ -78,7 +78,7 @@ public class StockAndInventoryController implements Initializable {
                 new SimpleStringProperty(cellData.getValue().getBrand()));
 
         stockTable.setItems(productList);
-        TableViewHelper.adjustTableHeight(stockTable);
+        ProgramHelpers.adjustTableHeight(stockTable);
         addProductInfoButtonsToTable();
 
     }

@@ -11,6 +11,8 @@ public class Product {
     private String ExpirationDate;
     private boolean discounted = false;
     private double discountedPrice = getPrice();
+    private String movementType;
+    private boolean recentlyAdded;
 
     public Product(String barcode, String productName, int quantity, double price, String category,
                    String brand, double buyingPrice, String expirationDate) {
@@ -103,5 +105,21 @@ public class Product {
     public void setDiscountedPrice(double discountedPrice) {
         this.discountedPrice = discountedPrice;
     }
+    public String getMovementType() {
+        return movementType;
+    }
+
+    public void setMovementType(String movementType) {
+        this.movementType = movementType;
+    }
+
+    public boolean isRecentlyAdded() {
+        return recentlyAdded;
+    }
+
+    public void setRecentlyAdded(boolean recentlyAdded) {
+        this.recentlyAdded = recentlyAdded;
+    }
+
 
 }

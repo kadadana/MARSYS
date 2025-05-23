@@ -21,16 +21,12 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
-import com.marsys.marsys.Helpers.TableViewHelper;
+import com.marsys.marsys.Helpers.ProgramHelpers;
 import org.jetbrains.annotations.NotNull;
 
 public class StockMovementTableController implements Initializable {
@@ -62,7 +58,7 @@ public class StockMovementTableController implements Initializable {
     @FXML
     private TableColumn<StockMovement, String> colUser;
     @FXML
-    private TableColumn<StockMovement, Date> colDate;
+    private TableColumn<StockMovement, LocalDateTime> colDate;
     @FXML
     private Button btnBack;
     @FXML
@@ -117,8 +113,6 @@ public class StockMovementTableController implements Initializable {
         colProductInfo.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.1));
         colInvoiceInfo.prefWidthProperty().bind(stockMovementTable.widthProperty().multiply(0.1));
 
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
-        SimpleDateFormat displayFormatter = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 
         colMovementId.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getMovementId()));
@@ -133,10 +127,9 @@ public class StockMovementTableController implements Initializable {
         colDate.setCellValueFactory(cellData -> {
             try {
                 String dateStr = cellData.getValue().getDate();
-                LocalDateTime ldt = LocalDateTime.parse(dateStr, inputFormatter);
-                Date date = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+                LocalDateTime ldt = ProgramHelpers.getLocalDateTimeTimeByStringDateTime(dateStr);
 
-                return new SimpleObjectProperty<>(date);
+                return new SimpleObjectProperty<>(ldt);
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Program Error");
@@ -148,24 +141,24 @@ public class StockMovementTableController implements Initializable {
         });
         colDate.setCellFactory(column -> new TableCell<>() {
             @Override
-            protected void updateItem(Date item, boolean empty) {
+            protected void updateItem(LocalDateTime item, boolean empty) {
                 super.updateItem(item, empty);
 
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(displayFormatter.format(item));
+                    setText(ProgramHelpers.getStringDateTimeByLocalDateTime(item));
                 }
             }
         });
 
 
         stockMovementTable.setItems(stockMovementList);
-        stockMovementTable.getItems().addListener((ListChangeListener<StockMovement>) c -> TableViewHelper.adjustTableHeight(stockMovementTable));
+        stockMovementTable.getItems().addListener((ListChangeListener<StockMovement>) c -> ProgramHelpers.adjustTableHeight(stockMovementTable));
         addProductInfoButtonsToTable();
         addInvoiceInfoButtonsToTable();
 
-        TableViewHelper.adjustTableHeight(stockMovementTable);
+        ProgramHelpers.adjustTableHeight(stockMovementTable);
     }
 
     @FXML
@@ -185,13 +178,12 @@ public class StockMovementTableController implements Initializable {
         }
         LocalDate firstDate = firstDatePicker.getValue();
         LocalDate lastDate = lastDatePicker.getValue();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
         String strFirstDate = null;
         String strLastDate = null;
 
         if (firstDate != null && lastDate != null) {
-            strFirstDate = firstDate.format(formatter);
-            strLastDate = lastDate.format(formatter);
+            strFirstDate = ProgramHelpers.getStringDateByLocalDate(firstDate);
+            strLastDate = ProgramHelpers.getStringDateByLocalDate(lastDate);
         }
         boolean datePicked = firstDatePicker.getValue() != null && lastDatePicker.getValue() != null;
         stockMovementList.clear();
@@ -210,7 +202,7 @@ public class StockMovementTableController implements Initializable {
         btnClear.setVisible(true);
         stockMovementTable.refresh();
 
-        TableViewHelper.adjustTableHeight(stockMovementTable);
+        ProgramHelpers.adjustTableHeight(stockMovementTable);
 
     }
 
@@ -242,7 +234,7 @@ public class StockMovementTableController implements Initializable {
         stockMovementList.addAll(repositoryMete.getStockMovementList());
         stockMovementTable.refresh();
 
-        TableViewHelper.adjustTableHeight(stockMovementTable);
+        ProgramHelpers.adjustTableHeight(stockMovementTable);
 
     }
 
@@ -326,7 +318,7 @@ public class StockMovementTableController implements Initializable {
 
 
             InvoiceDetailsController controller = loader.getController();
-            controller.setInvoice(repository.getInvoiceModelByInvoiceNumber(invoiceNumber), repository.getProductListInvoiceNumber(invoiceNumber));
+            controller.setInvoice(repository.getInvoiceModelByInvoiceNumber(invoiceNumber));
 
             Stage stage = new Stage();
             stage.setWidth(900);
