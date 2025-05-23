@@ -1,5 +1,6 @@
 package com.marsys.marsys.Controllers;
 
+import com.marsys.marsys.Helpers.ProgramHelpers;
 import com.marsys.marsys.Models.Coupon;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Session;
@@ -11,7 +12,6 @@ import javafx.scene.control.*;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class CreateEmployeeController implements Initializable {
@@ -88,8 +88,6 @@ public class CreateEmployeeController implements Initializable {
                 LocalDate selectedStartDate = startDatePicker.getValue();
                 LocalDate selectedBirthDate = birthDatePicker.getValue();
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-
 
                 Employee employee = new Employee(
                         employeeFirstName.getText(),
@@ -98,13 +96,13 @@ public class CreateEmployeeController implements Initializable {
                         employeeId.getText(),
                         passwordField.getText(),
                         storeCodeComboBox.getValue(),
-                        selectedStartDate.format(formatter),
+                        ProgramHelpers.getStringDateByLocalDate(selectedStartDate),
                         formattedDate,
-                        selectedBirthDate.format(formatter),
+                        ProgramHelpers.getStringDateByLocalDate(selectedBirthDate),
                         repository.getLatestCouponCode());
                 Coupon employeeCoupon = new Coupon(repository.getLatestCouponCode(),
                         "1000",
-                        selectedStartDate.format(formatter),
+                        ProgramHelpers.getStringDateByLocalDate(selectedStartDate),
                         "12-31-9999",
                         "ACTIVE",
                         "0",

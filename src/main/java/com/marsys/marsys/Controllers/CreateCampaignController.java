@@ -1,5 +1,6 @@
 package com.marsys.marsys.Controllers;
 
+import com.marsys.marsys.Helpers.ProgramHelpers;
 import com.marsys.marsys.Models.Campaign;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Session;
@@ -10,7 +11,6 @@ import javafx.scene.control.*;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class CreateCampaignController implements Initializable {
@@ -104,7 +104,7 @@ public class CreateCampaignController implements Initializable {
                 endDatePicker.getValue() != null) {
             LocalDate selectedStartDate = startDatePicker.getValue();
             LocalDate selectedEndDate = endDatePicker.getValue();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+
             String strIsActive;
             String discountTypeCode = "00";
 
@@ -137,8 +137,8 @@ public class CreateCampaignController implements Initializable {
                         discountTypeComboBox.getSelectionModel().getSelectedItem(),
                         discountTypeCode,
                         categoryComboBox.getSelectionModel().getSelectedItem(),
-                        selectedStartDate.format(formatter),
-                        selectedEndDate.format(formatter),
+                        ProgramHelpers.getStringDateByLocalDate(selectedStartDate),
+                        ProgramHelpers.getStringDateByLocalDate(selectedEndDate),
                         strIsActive);
             } else {
                 campaign = new Campaign(
@@ -146,8 +146,8 @@ public class CreateCampaignController implements Initializable {
                         discountTypeComboBox.getSelectionModel().getSelectedItem(),
                         discountTypeCode,
                         barcodeField.getText(),
-                        selectedStartDate.format(formatter),
-                        selectedEndDate.format(formatter),
+                        ProgramHelpers.getStringDateByLocalDate(selectedStartDate),
+                        ProgramHelpers.getStringDateByLocalDate(selectedEndDate),
                         strIsActive);
             }
 

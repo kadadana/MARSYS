@@ -138,21 +138,16 @@ public class Repository {
     }
 
     //STOCK_MOVEMENT tablosun yeni kayıt eklemek için olan metod
-    public void insertIntoStockMovementTable(String movementId,
-                                             String movementType,
-                                             Product product,
-                                             String invoiceNumber,
-                                             String user,
-                                             String date) {
+    public void insertIntoStockMovementTable(StockMovement stockMovement) {
         String query = "INSERT INTO \"STOCK_MOVEMENT\" VALUES ( ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabasePool.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, movementId);
-            stmt.setString(2, movementType);
-            stmt.setString(3, product.getBarcode());
-            stmt.setString(4, invoiceNumber);
-            stmt.setString(5, user);
-            stmt.setString(6, date);
+            stmt.setString(1, stockMovement.getMovementId());
+            stmt.setString(2, stockMovement.getMovementType());
+            stmt.setString(3, stockMovement.getBarcode());
+            stmt.setString(4, stockMovement.getInvoiceNumber());
+            stmt.setString(5, stockMovement.getUser());
+            stmt.setString(6, stockMovement.getDate());
 
             stmt.executeUpdate();
 
@@ -259,32 +254,22 @@ public class Repository {
     }
 
     //INVOICE tablosunda yeni fiş kaydı oluşturan metod
-    public void insertIntoInvoicesTable(String invoiceNumber,
-                                        Employee cashier,
-                                        String paymentType,
-                                        String cardNumber,
-                                        String totalAmount,
-                                        String date,
-                                        String discountTotal,
-                                        String actualcartTotal) {
-        if (paymentType.equals("000000")) {
-            paymentType = "CASH";
-        } else {
-            paymentType = "CARD";
-        }
+    public void insertIntoInvoicesTable(Invoice invoice) {
 
-        String query = "INSERT INTO \"INVOICES\" VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        String query = "INSERT INTO \"INVOICES\" VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabasePool.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, invoiceNumber);
-            stmt.setString(2, paymentType);
-            stmt.setString(3, cardNumber);
-            stmt.setString(4, totalAmount);
-            stmt.setString(5, discountTotal);
-            stmt.setString(6, actualcartTotal);
-            stmt.setString(7, cashier.getId());
-            stmt.setString(8, date);
+            stmt.setString(1, invoice.getInvoiceNumber());
+            stmt.setString(2, invoice.getPaymentType());
+            stmt.setString(3, invoice.getCardNumber());
+            stmt.setString(4, invoice.getPaidAmount());
+            stmt.setString(5, invoice.getDiscountAmount());
+            stmt.setString(6, invoice.getActualCartAmount());
+            stmt.setString(7, invoice.getCashierId());
+            stmt.setString(8, invoice.getDate());
+            stmt.setString(9, invoice.getOriginalInvoiceNumber());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -675,7 +660,7 @@ public class Repository {
 
     //COUPON tablosuna bir satır ekleme metodu
     public void insertIntoCouponTable(Coupon coupon) {
-        String query = "INSERT INTO \"COUPON\" VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO \"COUPON\" VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabasePool.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -685,6 +670,7 @@ public class Repository {
             stmt.setString(4, coupon.getEndDate());
             stmt.setString(5, coupon.getIsActive());
             stmt.setString(6, "0");
+            stmt.setString(7, coupon.getUsingLimit());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -809,15 +795,15 @@ public class Repository {
     }
 
     public String getLatestMovementId() {
-        String invoiceNumber;
+        String movementId;
         String query = "SELECT \"MOVEMENT_ID\" FROM \"STOCK_MOVEMENT\" ORDER BY \"MOVEMENT_ID\" DESC LIMIT 1";
         try (Connection conn = DatabasePool.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                invoiceNumber = rs.getString("MOVEMENT_ID");
-                return String.format("%06d", Integer.parseInt(invoiceNumber) + 1);
+                movementId = rs.getString("MOVEMENT_ID");
+                return String.format("%06d", Integer.parseInt(movementId) + 1);
 
             } else {
                 return "000001";
@@ -832,7 +818,7 @@ public class Repository {
         }
     }
 
-    public List<Product> getProductListInvoiceNumber(String invoiceNumber) {
+    public List<Product> getProductListByInvoiceNumber(String invoiceNumber) {
         String query = "SELECT \"BARCODE\" FROM \"STOCK_MOVEMENT\" WHERE \"INVOICE_NUMBER\" = ? ";
         String barcode;
         List<Product> productList = new ArrayList<>();
@@ -874,7 +860,8 @@ public class Repository {
                         rs.getString("DISCOUNT_AMOUNT"),
                         rs.getString("ACTUAL_CART_AMOUNT"),
                         rs.getString("CASHIER_ID"),
-                        rs.getString("DATE"));
+                        rs.getString("DATE"),
+                        rs.getString("ORIGINAL_INVOICE_NUMBER"));
                 return invoice;
             }
         } catch (SQLException e) {

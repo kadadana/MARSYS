@@ -10,10 +10,11 @@ public class Invoice {
     private String actualCartAmount;
     private String cashierId;
     private String date;
+    private String originalInvoiceNumber;
 
     public Invoice(String invoiceNumber, String paymentType, String cardNumber,
                    String paidAmount, String discountAmount, String actualCartAmount,
-                   String cashierId, String date) {
+                   String cashierId, String date, String originalInvoiceNumber) {
         this.invoiceNumber = invoiceNumber;
         this.paymentType = paymentType;
         this.cardNumber = cardNumber;
@@ -87,5 +88,14 @@ public class Invoice {
     public void setDate(String date) {
         this.date = date;
     }
+
+    public String getOriginalInvoiceNumber() {
+        return originalInvoiceNumber;
+    }
+
+    public void setOriginalInvoiceNumber(String originalInvoiceNumber) {
+        this.originalInvoiceNumber = originalInvoiceNumber;
+    }
+
 
 }

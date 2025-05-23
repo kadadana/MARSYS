@@ -120,10 +120,16 @@ public class RepositoryMete {
         return product;
     }
 
-    public void updateStockQuantity(Product product) {
-
+    public void updateStockQuantity(Product product, boolean isReducing) {
         int firstQuantity = Integer.parseInt(getInventoryCellByBarcode("QUANTITY", product.getBarcode()));
-        int newQuantity = firstQuantity + product.getQuantity();//18
+        int newQuantity;
+        if (isReducing) {
+            newQuantity = firstQuantity - product.getQuantity();
+        } else {
+            newQuantity = firstQuantity + product.getQuantity();
+
+        }
+
 
         String query = "UPDATE \"INVENTORY\" SET \"QUANTITY\" = ? WHERE \"BARCODE\" = ?";
 

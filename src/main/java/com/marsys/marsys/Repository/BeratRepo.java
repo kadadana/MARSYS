@@ -118,6 +118,7 @@ public class BeratRepo {
                 "\"START_DATE\" = ?, " +
                 "\"END_DATE\" = ?, " +
                 "\"BIRTH_DATE\" = ? " +
+                "\"COUPON_CODE\" = ? " +
                 "WHERE \"ID\" = ?";
 
         try (Connection conn = DatabasePool.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -130,6 +131,7 @@ public class BeratRepo {
             stmt.setString(7, employee.getStartDate());
             stmt.setString(8, employee.getEndDate());
             stmt.setString(9, employee.getBirthDate());
+            stmt.setString(9, employee.getCouponCode());
             stmt.setString(10, employee.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -166,7 +168,7 @@ public class BeratRepo {
 
     public void insertIntoEmployeeTable(Employee employee) {
 
-        String query = "INSERT INTO \"EMPLOYEE\" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO \"EMPLOYEE\" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabasePool.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, employee.getId());
@@ -178,6 +180,7 @@ public class BeratRepo {
             stmt.setString(7, employee.getStartDate());
             stmt.setString(8, employee.getEndDate());
             stmt.setString(9, employee.getBirthDate());
+            stmt.setString(10, employee.getCouponCode());
 
             stmt.executeUpdate();
 

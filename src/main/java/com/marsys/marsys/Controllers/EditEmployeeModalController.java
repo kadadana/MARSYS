@@ -1,5 +1,6 @@
 package com.marsys.marsys.Controllers;
 
+import com.marsys.marsys.Helpers.ProgramHelpers;
 import com.marsys.marsys.Models.Coupon;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Repository.BeratRepo;
@@ -9,8 +10,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import com.marsys.marsys.Models.Session;
 import javafx.stage.Stage;
-
-import java.time.format.DateTimeFormatter;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -81,12 +80,9 @@ public class EditEmployeeModalController implements Initializable {
 
     public void setEmployee(Employee employee) {
         if (employee != null) {
-            LocalDate startDate = LocalDate.parse(employee.getStartDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
             if (employee.getEndDate() != null && !employee.getEndDate().equals("-")) {
-                LocalDate endDate = LocalDate.parse(employee.getEndDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
-                endDatePicker.setValue(endDate);
+                endDatePicker.setValue(ProgramHelpers.getLocalDateByStringDate(employee.getEndDate()));
             }
-            LocalDate birthDate = LocalDate.parse(employee.getBirthDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
 
             employeeId.setText(String.valueOf(employee.getId()));
             employeeFirstName.setText(String.valueOf(employee.getFirstName()));
@@ -94,8 +90,8 @@ public class EditEmployeeModalController implements Initializable {
             positionComboBox.setValue(employee.getPosition());
             passwordField.setText(employee.getPassword());
             storeCodeComboBox.setValue(employee.getStoreCode());
-            startDatePicker.setValue(startDate);
-            birthDatePicker.setValue(birthDate);
+            startDatePicker.setValue(ProgramHelpers.getLocalDateByStringDate(employee.getStartDate()));
+            birthDatePicker.setValue(ProgramHelpers.getLocalDateByStringDate(employee.getBirthDate()));
             couponCode = employee.getCouponCode();
 
         }
@@ -136,9 +132,8 @@ public class EditEmployeeModalController implements Initializable {
                 LocalDate selectedEndDate = endDatePicker.getValue();
                 LocalDate selectedBirthDate = birthDatePicker.getValue();
                 if (selectedEndDate != null) {
-                    formattedDate = selectedEndDate.format(DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+                    formattedDate = ProgramHelpers.getStringDateByLocalDate(selectedEndDate);
                 }
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
                 Employee employee = new Employee(
                         employeeFirstName.getText(),
                         employeeLastName.getText(),
@@ -146,9 +141,9 @@ public class EditEmployeeModalController implements Initializable {
                         employeeId.getText(),
                         passwordField.getText(),
                         storeCodeComboBox.getValue(),
-                        selectedStartDate.format(formatter),
+                        ProgramHelpers.getStringDateByLocalDate(selectedStartDate),
                         formattedDate,
-                        selectedBirthDate.format(formatter),
+                        ProgramHelpers.getStringDateByLocalDate(selectedBirthDate),
                         couponCode
                 );
                 try {
@@ -157,7 +152,7 @@ public class EditEmployeeModalController implements Initializable {
                     if (endDatePicker.getValue() == null) {
                         employeeCoupon.setEndDate("12-31-9999");
                     } else {
-                        employeeCoupon.setEndDate(endDatePicker.getValue().format(formatter));
+                        employeeCoupon.setEndDate(ProgramHelpers.getStringDateByLocalDate(endDatePicker.getValue()));
                     }
                     repository.updateCouponTable(employeeCoupon);
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);

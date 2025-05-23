@@ -1,6 +1,6 @@
 package com.marsys.marsys.Controllers;
 
-import com.marsys.marsys.Helpers.TableViewHelper;
+import com.marsys.marsys.Helpers.ProgramHelpers;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Session;
 import javafx.beans.property.SimpleStringProperty;
@@ -101,7 +101,7 @@ public class EmployeeManagementController implements Initializable {
                 new SimpleStringProperty(cellData.getValue().getCouponCode()));
 
         employeeTable.setItems(employeeList);
-        TableViewHelper.adjustTableHeight(employeeTable);
+        ProgramHelpers.adjustTableHeight(employeeTable);
         addEditButtonToTable();
 
     }
@@ -156,7 +156,7 @@ public class EmployeeManagementController implements Initializable {
         employeeList.clear();
         employeeList.addAll(_repository.getAllEmployees());
         employeeTable.setItems(employeeList);
-        TableViewHelper.adjustTableHeight(employeeTable);
+        ProgramHelpers.adjustTableHeight(employeeTable);
 
     }
 

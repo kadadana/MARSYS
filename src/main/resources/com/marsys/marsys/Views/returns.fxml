@@ -32,23 +32,23 @@
             <HBox spacing="10">
                 <Label text="Invoice Number: "/>
                 <TextField fx:id="invoiceField"/>
-                <Button text="Add" onAction="#getInvoice"/>
-                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnFetch" text="Fetch" onAction="#fetchInvoice"/>
                 <Label text="Barcode: "/>
                 <TextField fx:id="barcodeField"/>
+                <Button fx:id="btnFind" text="Find" onAction="#addToReturn"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblDate" style="-fx-text-fill: #2c3e50;
+                -fx-font-size: 20px; -fx-font-weight: bold"/>
             </HBox>
 
-            <!-- Satış Listesi Tablosu -->
-            <TableView fx:id="invoiceTable" prefHeight="300">
+            <TableView fx:id="productTable" prefHeight="300">
                 <columns>
                     <TableColumn fx:id="colBarcode" text="Barcode"/>
                     <TableColumn fx:id="colProductName" text="Product Name"/>
-                    <TableColumn fx:id="colQuantity" text="Quantity"/>
-                    <TableColumn fx:id="colPrice" text="Price"/>
                     <TableColumn fx:id="colCategory" text="Category"/>
                     <TableColumn fx:id="colBrand" text="Brand"/>
-                    <TableColumn fx:id="colBuyingPrice" text="Buying Price"/>
-                    <TableColumn fx:id="colExpiration" text="Expiration"/>
+                    <TableColumn fx:id="colPrice" text="Price"/>
+                    <TableColumn fx:id="colAction" prefWidth="100"/>
                 </columns>
             </TableView>
 
@@ -57,38 +57,47 @@
     </center>
 
     <bottom>
-        <HBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15 10 15 10;">
-            <Button fx:id="btnBack" text="Back" onAction="#back"
-                    style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+        <VBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15 10 15 10;">
 
-            <!-- Total -->
-            <HBox spacing="5" alignment="CENTER_LEFT">
-                <Label text="Total:" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
-                <Label fx:id="lblTotal" minWidth="80" maxWidth="80"
+            <HBox spacing="18" alignment="CENTER_LEFT">
+                <Label text="Total: " style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblTotal" text="0.00" minWidth="80" maxWidth="80"
                        style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+                <Label text="Discount Total: "
+                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblDiscountTotal" text="0.00" minWidth="80" maxWidth="80"
+                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+                <Label text="Last Total: " style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblLastTotal" text="0.00" minWidth="80" maxWidth="80"
+                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+                <Label text="Total Refunded: "
+                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblTotalRefunded" text="0.00" minWidth="80" maxWidth="80"
+                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+                <Label text="Refunding :" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblRefunding" text="0.00" minWidth="80" maxWidth="80"
+                       style="-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+
             </HBox>
 
-            <!-- Discount Total -->
-            <HBox spacing="5" alignment="CENTER_LEFT">
-                <Label text="Discount Total:" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
-                <Label fx:id="lblDiscountTotal" minWidth="80" maxWidth="80"
-                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <HBox spacing="10">
+                <Button fx:id="btnBack" text="Back" onAction="#back"
+                        style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="Cancel Process" onAction="#cancelProcess"
+                        style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+                <Button text="Complete Return" onAction="#completeReturn"
+                        style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
             </HBox>
+        </VBox>
 
-            <!-- Last Total -->
-            <HBox spacing="5" alignment="CENTER_LEFT">
-                <Label text="Last Total:" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
-                <Label fx:id="lblLastTotal" minWidth="80" maxWidth="80"
-                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
-            </HBox>
 
-            <Region HBox.hgrow="ALWAYS"/>
-
-            <Button text="Cancel Process" onAction="#cancelProcess"
-                    style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
-            <Button text="Cash Payment" onAction="#completeReturn"
-                    style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
-        </HBox>
     </bottom>
 
 </BorderPane>

@@ -1,6 +1,6 @@
 package com.marsys.marsys.Controllers;
 
-import com.marsys.marsys.Helpers.TableViewHelper;
+import com.marsys.marsys.Helpers.ProgramHelpers;
 import com.marsys.marsys.Models.Coupon;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Session;
@@ -88,7 +88,7 @@ public class CouponListController implements Initializable {
                 new SimpleIntegerProperty(Integer.parseInt(cellData.getValue().getUsingLimit())).asObject());
 
         couponTable.setItems(couponList);
-        TableViewHelper.adjustTableHeight(couponTable);
+        ProgramHelpers.adjustTableHeight(couponTable);
 
         addEditButtonToTable();
     }
@@ -154,7 +154,7 @@ public class CouponListController implements Initializable {
         couponList.clear();
         couponList.addAll(_repository.getCouponList());
         couponTable.setItems(couponList);
-        TableViewHelper.adjustTableHeight(couponTable);
+        ProgramHelpers.adjustTableHeight(couponTable);
 
     }
 }

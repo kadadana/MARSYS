@@ -1,6 +1,6 @@
 package com.marsys.marsys.Controllers;
 
-import com.marsys.marsys.Helpers.TableViewHelper;
+import com.marsys.marsys.Helpers.ProgramHelpers;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Product;
 import com.marsys.marsys.Models.Session;
@@ -16,8 +16,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.IntegerStringConverter;
 
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
@@ -127,7 +126,7 @@ public class ProductEntryController implements Initializable {
         productEntryTable.setEditable(true);
         colQuantity.setEditable(true);
         productEntryTable.setItems(productList);
-        TableViewHelper.adjustTableHeight(productEntryTable);
+        ProgramHelpers.adjustTableHeight(productEntryTable);
 
         addDeleteButtonToTable();
     }
@@ -156,7 +155,7 @@ public class ProductEntryController implements Initializable {
                             total -= product.getQuantity();
                             lblTotal.setText(total.toString());
                             productList.remove(product);
-                            TableViewHelper.adjustTableHeight(productEntryTable);
+                            ProgramHelpers.adjustTableHeight(productEntryTable);
 
                         }
                     });
@@ -217,7 +216,7 @@ public class ProductEntryController implements Initializable {
                     productEntryTable.refresh();
                     quantityField.setText("1");
                     barcodeField.requestFocus();
-                    TableViewHelper.adjustTableHeight(productEntryTable);
+                    ProgramHelpers.adjustTableHeight(productEntryTable);
 
                 }
 
@@ -265,18 +264,17 @@ public class ProductEntryController implements Initializable {
             alert.setContentText("You haven't added a product to sale!");
             alert.showAndWait();
         }
-        TableViewHelper.adjustTableHeight(productEntryTable);
+        ProgramHelpers.adjustTableHeight(productEntryTable);
 
     }
 
     @FXML
     private void addToInventory() {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
-        String date = sdf.format(new Date());
+        String date = ProgramHelpers.getStringDateTimeByLocalDateTime(LocalDateTime.now());
         if (productEntryTable.getItems() != null && !productEntryTable.getItems().isEmpty()) {
             try {
                 for (Product p : productList) {
-                    _repository.updateStockQuantity(p);
+                    _repository.updateStockQuantity(p, true);
                     for (int i = 1; i <= p.getQuantity(); i++) {
                         _repository.insertIntoStockMovementTable(_repository.getLatestMovementId(), "ENTRY", p, "000000", user.getId(), date);
                     }
@@ -307,7 +305,7 @@ public class ProductEntryController implements Initializable {
             alert.setContentText("You haven't added a product to sale!");
             alert.showAndWait();
         }
-        TableViewHelper.adjustTableHeight(productEntryTable);
+        ProgramHelpers.adjustTableHeight(productEntryTable);
     }
 
 

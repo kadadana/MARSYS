@@ -1,5 +1,6 @@
 package com.marsys.marsys.Controllers;
 
+import com.marsys.marsys.Helpers.ProgramHelpers;
 import com.marsys.marsys.Models.Campaign;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Session;
@@ -11,7 +12,6 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class EditCampaignModalController implements Initializable {
@@ -51,16 +51,14 @@ public class EditCampaignModalController implements Initializable {
 
     public void setCampaign(Campaign campaign) {
         if (campaign != null) {
-            LocalDate startDate = LocalDate.parse(campaign.getStartDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
-            LocalDate endDate = LocalDate.parse(campaign.getEndDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
-            boolean isActive = campaign.getIsActive().equals("ACTIVE");
 
+            boolean isActive = campaign.getIsActive().equals("ACTIVE");
 
             campaignId.setText(String.valueOf(campaign.getCampaignId()));
             discountTypeComboBox.setValue(campaign.getDiscountType());
             barcodeField.setText(String.valueOf(campaign.getDiscountFor()));
-            startDatePicker.setValue(startDate);
-            endDatePicker.setValue(endDate);
+            startDatePicker.setValue(ProgramHelpers.getLocalDateByStringDate(campaign.getStartDate()));
+            endDatePicker.setValue(ProgramHelpers.getLocalDateByStringDate(campaign.getEndDate()));
             isActiveCheckBox.setSelected(isActive);
             categoryComboBox.setValue(campaign.getDiscountFor());
             if (discountTypeComboBox.getValue().equals("50% Discount for 2nd from the same category")) {
@@ -98,7 +96,6 @@ public class EditCampaignModalController implements Initializable {
                     endDatePicker.getValue() != null) {
                 LocalDate selectedStartDate = startDatePicker.getValue();
                 LocalDate selectedEndDate = endDatePicker.getValue();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
                 String strIsActive;
                 String discountTypeCode = "00";
 
@@ -132,8 +129,8 @@ public class EditCampaignModalController implements Initializable {
                             discountTypeComboBox.getSelectionModel().getSelectedItem(),
                             discountTypeCode,
                             categoryComboBox.getSelectionModel().getSelectedItem(),
-                            selectedStartDate.format(formatter),
-                            selectedEndDate.format(formatter),
+                            ProgramHelpers.getStringDateByLocalDate(selectedStartDate),
+                            ProgramHelpers.getStringDateByLocalDate(selectedEndDate),
                             strIsActive);
                 } else {
                     campaign = new Campaign(
@@ -141,8 +138,8 @@ public class EditCampaignModalController implements Initializable {
                             discountTypeComboBox.getSelectionModel().getSelectedItem(),
                             discountTypeCode,
                             barcodeField.getText(),
-                            selectedStartDate.format(formatter),
-                            selectedEndDate.format(formatter),
+                            ProgramHelpers.getStringDateByLocalDate(selectedStartDate),
+                            ProgramHelpers.getStringDateByLocalDate(selectedEndDate),
                             strIsActive);
                 }
 
