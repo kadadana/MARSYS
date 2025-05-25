@@ -36,7 +36,7 @@
 
 
                     <!-- En Çok Satan Ürünler -->
-                    <TitledPane fx:id="topProductsPane" text="Top Selling Products (Last Week)" >
+                    <TitledPane text="Top Selling Products (Last Week)" >
                         <TableView fx:id="topProductsTable" prefHeight="400" prefWidth="900">
                             <columns>
                                 <TableColumn fx:id="colProductName" text="Product Name"/>
@@ -47,7 +47,7 @@
                     </TitledPane>
 
                     <!-- En Çok Satan Kategoriler -->
-                    <TitledPane fx:id="topCategoriesPane" text="Top Categories (Last Week)" >
+                    <TitledPane text="Top Categories (Last Week)" >
                         <TableView fx:id="topCategoriesTable" prefHeight="400" prefWidth="900">
                             <columns>
                                 <TableColumn fx:id="colCategoryName" text="Category Name"/>
@@ -58,7 +58,7 @@
                     </TitledPane>
 
                     <!-- Ödeme Özeti -->
-                    <TitledPane fx:id="dailyPaymentSummaryPane" text="Daily Payment Summary (Last Month)">
+                    <TitledPane text="Daily Payment Summary (Last Month)">
                         <TableView fx:id="paymentSummaryTable" prefHeight="400" prefWidth="900">
                             <columns>
                                 <TableColumn fx:id="colPaymentDate" text="Date"/>
@@ -76,7 +76,7 @@
                     </padding>
 
                     <!-- Günlük Gelir Grafiği -->
-                    <TitledPane fx:id="dailyRevenueSummaryPane" text="Daily Revenue Summary (Last Month)">
+                    <TitledPane text="Daily Revenue Summary (Last Month)">
                         <LineChart fx:id="dailyRevenueChart" prefHeight="400" prefWidth="900"
                                    animated="false">
                             <xAxis>
@@ -90,7 +90,7 @@
 
 
                     <!-- Kar Marjı -->
-                    <TitledPane fx:id="profitMarginPane" text="Profit Margin (Last Month)">
+                    <TitledPane text="Profit Margin (Last Month)">
                         <TableView fx:id="profitMarginTable" prefHeight="400" prefWidth="900">
                             <columns>
                                 <TableColumn fx:id="colPeriod" text="Period"/>
@@ -103,7 +103,7 @@
                     </TitledPane>
 
                     <!-- En İyi Personel -->
-                    <TitledPane fx:id="topStaffPane" text="Top Performing Staff (Last Month)">
+                    <TitledPane text="Top Performing Staff (Last Month)">
                         <TableView fx:id="topStaffTable" prefHeight="400" prefWidth="900">
                             <columns>
                                 <TableColumn fx:id="colStaffName" text="Staff Name"/>
