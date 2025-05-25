@@ -4,7 +4,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.marsys.marsys.Controllers.ProductEntryController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.marsys.marsys.Controllers.ProductEntryController"
+            stylesheets="@styles.css">
 
     <top>
         <HBox spacing="10" style="-fx-background-color: #2c3e50;">

@@ -4,7 +4,8 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.marsys.marsys.Controllers.ProductDetailsController" prefWidth="300" prefHeight="400" >
+            fx:controller="com.marsys.marsys.Controllers.ProductDetailsController" prefWidth="300" prefHeight="400"
+            stylesheets="@styles.css">
 
     <!-- Üst bar -->
     <top>

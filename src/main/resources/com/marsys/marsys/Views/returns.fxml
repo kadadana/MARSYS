@@ -4,7 +4,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.marsys.marsys.Controllers.ReturnsController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.marsys.marsys.Controllers.ReturnsController"
+            stylesheets="@styles.css">
 
     <top>
         <HBox spacing="10" style="-fx-background-color: #2c3e50;">
@@ -27,7 +28,7 @@
             <padding>
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
-            <Label text="Return" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label text="Return" style="-fx-font-size: 30px; -fx-font-weight: bold;"/>
 
             <HBox spacing="10">
                 <Label text="Invoice Number: "/>

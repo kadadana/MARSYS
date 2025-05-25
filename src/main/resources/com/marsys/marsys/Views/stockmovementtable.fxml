@@ -6,7 +6,8 @@
 
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.marsys.marsys.Controllers.StockMovementTableController">
+            fx:controller="com.marsys.marsys.Controllers.StockMovementTableController"
+            stylesheets="@styles.css">
 
     <!-- Üst bar -->
     <top>
@@ -33,7 +34,7 @@
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
 
-            <Label text="Stock Movements" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label text="Stock Movements" style="-fx-font-size: 30px; -fx-font-weight: bold;"/>
             <HBox spacing="10">
                 <Label text="Date Range: "/>
                 <HBox spacing="10">

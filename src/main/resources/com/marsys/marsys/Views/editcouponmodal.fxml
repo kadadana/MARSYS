@@ -6,7 +6,8 @@
 
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.marsys.marsys.Controllers.EditCouponModalController" minWidth="800" minHeight="600">
+            fx:controller="com.marsys.marsys.Controllers.EditCouponModalController" minWidth="1000" minHeight="800"
+            stylesheets="@styles.css">
 
     <!-- Üst bar -->
     <top>

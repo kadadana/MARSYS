@@ -1,26 +1,145 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-
+<?import javafx.scene.chart.*?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.marsys.marsys.Controllers.ReportsController">
-
+            fx:controller="com.marsys.marsys.Controllers.ReportsController"
+            stylesheets="@styles.css">
 
     <top>
-        <!-- Üst bar -->
+        <HBox spacing="10" style="-fx-background-color: #2c3e50;">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <VBox alignment="CENTER_RIGHT">
+                <Label text="Reports" style="-fx-text-fill: red; -fx-font-size: 50px;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <VBox alignment="CENTER_RIGHT">
+                <Label fx:id="lblUserName" style="-fx-text-fill: white; -fx-font-size: 25px;"/>
+                <Label fx:id="lblUserId" style="-fx-text-fill: lightgray; -fx-font-size: 20px;"/>
+            </VBox>
+        </HBox>
     </top>
 
     <center>
+        <ScrollPane fitToWidth="true">
+            <HBox spacing="30" alignment="CENTER">
+                <!-- Sol Panel -->
+                <VBox spacing="25" alignment="TOP_CENTER">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
 
-        <VBox spacing="20">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
+                    <!-- Aylık Satış Raporu -->
+                    <TitledPane fx:id="monthlySalesPane" text="Last Month Sales Report" expanded="false">
+                        <TableView fx:id="monthlySalesTable" prefHeight="400" prefWidth="500">
+                            <columns>
+                                <TableColumn fx:id="colDate" text="Date"/>
+                                <TableColumn fx:id="colInvoiceNumber" text="Invoice Number"/>
+                                <TableColumn fx:id="colTotalAmount" text="Total Amount"/>
+                                <TableColumn fx:id="colPaymentType" text="Payment Type"/>
+                            </columns>
+                        </TableView>
+                    </TitledPane>
+
+                    <!-- En Çok Satan Ürünler -->
+                    <TitledPane fx:id="topProductsPane" text="Top Selling Products (Last Week)" expanded="false">
+                        <TableView fx:id="topProductsTable" prefHeight="400" prefWidth="900">
+                            <columns>
+                                <TableColumn fx:id="colProductName" text="Product Name"/>
+                                <TableColumn fx:id="colQuantity" text="Quantity"/>
+                                <TableColumn fx:id="colTotalSales" text="Total Sales"/>
+                            </columns>
+                        </TableView>
+                    </TitledPane>
+
+                    <!-- En Çok Satan Kategoriler -->
+                    <TitledPane fx:id="topCategoriesPane" text="Top Categories (Last Week)" expanded="false">
+                        <TableView fx:id="topCategoriesTable" prefHeight="400" prefWidth="900">
+                            <columns>
+                                <TableColumn fx:id="colCategoryName" text="Category Name"/>
+                                <TableColumn fx:id="colCategoryQuantity" text="Quantity"/>
+                                <TableColumn fx:id="colCategorySales" text="Total Sales"/>
+                            </columns>
+                        </TableView>
+                    </TitledPane>
+
+                    <!-- Ödeme Özeti -->
+                    <TitledPane fx:id="dailyPaymentSummaryPane" text="Daily Payment Summary (Last Month)"
+                                expanded="false">
+                        <TableView fx:id="paymentSummaryTable" prefHeight="200" prefWidth="900">
+                            <columns>
+                                <TableColumn fx:id="colPaymentDate" text="Date"/>
+                                <TableColumn fx:id="colCashAmount" text="Cash Amount"/>
+                                <TableColumn fx:id="colCardAmount" text="Card Amount"/>
+                            </columns>
+                        </TableView>
+                    </TitledPane>
+                </VBox>
+
+                <!-- Sağ Panel -->
+                <VBox spacing="25" alignment="TOP_CENTER">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+
+                    <!-- Günlük Gelir Grafiği -->
+                    <TitledPane fx:id="dailyRevenueSummaryPane" text="Daily Revenue Summary (Last Month)"
+                                expanded="false">
+                        <LineChart fx:id="dailyRevenueChart" prefHeight="400" prefWidth="900"
+                                   animated="false">
+                            <xAxis>
+                                <CategoryAxis fx:id="xAxis" label="Date" tickLabelRotation="45"/>
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis fx:id="yAxis" label="Revenue"/>
+                            </yAxis>
+                        </LineChart>
+                    </TitledPane>
 
 
-        </VBox>
+                    <!-- Kar Marjı -->
+                    <TitledPane fx:id="profitMarginPane" text="Profit Margin (Last Month)" expanded="false">
+                        <TableView fx:id="profitMarginTable" prefHeight="400" prefWidth="900">
+                            <columns>
+                                <TableColumn fx:id="colPeriod" text="Period"/>
+                                <TableColumn fx:id="colRevenue" text="Revenue"/>
+                                <TableColumn fx:id="colCost" text="Cost"/>
+                                <TableColumn fx:id="colProfit" text="Profit"/>
+                                <TableColumn fx:id="colMargin" text="Margin %"/>
+                            </columns>
+                        </TableView>
+                    </TitledPane>
+
+                    <!-- En İyi Personel -->
+                    <TitledPane fx:id="topStaffPane" text="Top Performing Staff (Last Month)" expanded="false">
+                        <TableView fx:id="topStaffTable" prefHeight="400" prefWidth="900">
+                            <columns>
+                                <TableColumn fx:id="colStaffName" text="Staff Name"/>
+                                <TableColumn fx:id="colStaffTransactions" text="Number of Transactions"/>
+                                <TableColumn fx:id="colStaffSales" text="Total Sales"/>
+                            </columns>
+                        </TableView>
+                    </TitledPane>
+                </VBox>
+            </HBox>
+        </ScrollPane>
     </center>
+
+
+    <bottom>
+        <HBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15 10 15 10;">
+            <Button fx:id="btnBack" text="Close" onAction="#back"
+                    style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+        </HBox>
+    </bottom>
+
 
 </BorderPane>

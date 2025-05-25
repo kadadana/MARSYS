@@ -5,7 +5,8 @@
 <?import javafx.geometry.Insets?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.marsys.marsys.Controllers.CouponListController">
+            fx:controller="com.marsys.marsys.Controllers.CouponListController"
+            stylesheets="@styles.css">
 
     <!-- Üst bar -->
     <top>
@@ -32,7 +33,7 @@
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
 
-            <Label text="Coupons" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label text="Coupons" style="-fx-font-size: 30px; -fx-font-weight: bold;"/>
 
             <!-- Coupon List Table -->
             <TableView fx:id="couponTable" prefHeight="300">

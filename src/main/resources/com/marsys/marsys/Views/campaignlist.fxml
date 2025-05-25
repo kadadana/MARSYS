@@ -5,7 +5,8 @@
 <?import javafx.geometry.Insets?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.marsys.marsys.Controllers.CampaignListController">
+            fx:controller="com.marsys.marsys.Controllers.CampaignListController"
+            stylesheets="@styles.css">
 
     <!-- Üst bar -->
     <top>
@@ -32,7 +33,7 @@
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
 
-            <Label text="Campaigns" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label text="Campaigns" style="-fx-font-size: 30px; -fx-font-weight: bold;"/>
 
             <!-- Campaign List Table -->
             <TableView fx:id="campaignTable" prefHeight="300">
