@@ -23,7 +23,6 @@ import javafx.util.Duration;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -42,21 +41,7 @@ public class ReportsController implements Initializable {
     @FXML
     public Label lblUserName;
 
-    @FXML
-    private TitledPane monthlySalesPane;
-    @FXML
-    private TableView<Invoice> monthlySalesTable;
-    @FXML
-    private TableColumn<Invoice, LocalDateTime> colDate;
-    @FXML
-    private TableColumn<Invoice, String> colInvoiceNumber;
-    @FXML
-    private TableColumn<Invoice, Double> colTotalAmount;
-    @FXML
-    private TableColumn<Invoice, String> colPaymentType;
 
-    @FXML
-    private TitledPane topProductsPane;
     @FXML
     private TableView<TopProducts> topProductsTable;
     @FXML
@@ -67,8 +52,6 @@ public class ReportsController implements Initializable {
     private TableColumn<TopProducts, Double> colTotalSales;
 
     @FXML
-    private TitledPane topCategoriesPane;
-    @FXML
     private TableView<TopProducts> topCategoriesTable;
     @FXML
     private TableColumn<TopProducts, String> colCategoryName;
@@ -77,8 +60,6 @@ public class ReportsController implements Initializable {
     @FXML
     private TableColumn<TopProducts, Double> colCategorySales;
 
-    @FXML
-    private TitledPane dailyPaymentSummaryPane;
     @FXML
     private TableView<DailyPaymentSummary> paymentSummaryTable;
     @FXML
@@ -89,16 +70,12 @@ public class ReportsController implements Initializable {
     private TableColumn<DailyPaymentSummary, Double> colCardAmount;
 
     @FXML
-    private TitledPane dailyRevenueSummaryPane;
-    @FXML
     private LineChart<String, Double> dailyRevenueChart;
     @FXML
     private CategoryAxis xAxis;
     @FXML
     private NumberAxis yAxis;
 
-    @FXML
-    private TitledPane profitMarginPane;
     @FXML
     private TableView<DailyInvoiceReport> profitMarginTable;
     @FXML
@@ -113,8 +90,6 @@ public class ReportsController implements Initializable {
     private TableColumn<DailyInvoiceReport, Double> colMargin;
 
     @FXML
-    private TitledPane topStaffPane;
-    @FXML
     private TableView<TopStaffs> topStaffTable;
     @FXML
     private TableColumn<TopStaffs, String> colStaffName;
@@ -122,15 +97,7 @@ public class ReportsController implements Initializable {
     private TableColumn<TopStaffs, Double> colStaffSales;
     @FXML
     private TableColumn<TopStaffs, Integer> colStaffTransactions;
-
-
-    private boolean isTopProductsTableInitialized = false;
-    private boolean isMonthlySalesTableInitialized = false;
-    private boolean isTopCategoriesInitialized = false;
-    private boolean isDailyPaymentSummaryInitialized = false;
-    private boolean isDailyRevenueSummaryInitialized = false;
-    private boolean isProfitMarginInitialized = false;
-    private boolean isTopStaffInitialized = false;
+    
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -138,10 +105,6 @@ public class ReportsController implements Initializable {
         lblUserName.setText(user.getFirstName() + " " + user.getLastName());
         lblUserId.setText("ID: " + user.getId());
 
-        colDate.prefWidthProperty().bind(monthlySalesTable.widthProperty().multiply(0.3));
-        colInvoiceNumber.prefWidthProperty().bind(monthlySalesTable.widthProperty().multiply(0.27));
-        colTotalAmount.prefWidthProperty().bind(monthlySalesTable.widthProperty().multiply(0.2));
-        colPaymentType.prefWidthProperty().bind(monthlySalesTable.widthProperty().multiply(0.2));
 
         colProductName.prefWidthProperty().bind(topProductsTable.widthProperty().multiply(0.35));
         colQuantity.prefWidthProperty().bind(topProductsTable.widthProperty().multiply(0.35));
@@ -165,92 +128,15 @@ public class ReportsController implements Initializable {
         colStaffSales.prefWidthProperty().bind(topStaffTable.widthProperty().multiply(0.35));
         colStaffTransactions.prefWidthProperty().bind(topStaffTable.widthProperty().multiply(0.35));
 
-        monthlySalesPane.expandedProperty().addListener(
-                (obs, oldVal, newVal) -> {
-                    if (newVal && !isMonthlySalesTableInitialized) {
-                        initializeMonthlySalesTable();
-                        isMonthlySalesTableInitialized = true;
-                    }
-                });
-        topProductsPane.expandedProperty().addListener(
-                (obs, oldVal, newVal) -> {
-                    if (newVal && !isTopProductsTableInitialized) {
-                        initializeTopProductsTable();
-                        isTopProductsTableInitialized = true;
-                    }
-                });
-        topCategoriesPane.expandedProperty().addListener(
-                (obs, oldVal, newVal) -> {
-                    if (newVal && !isTopCategoriesInitialized) {
-                        initializeTopCategoriesTable();
-                        isTopCategoriesInitialized = true;
-                    }
-                });
-        dailyPaymentSummaryPane.expandedProperty().addListener(
-                (obs, oldVal, newVal) -> {
-                    if (newVal && !isDailyPaymentSummaryInitialized) {
-                        initializePaymentSummaryTable();
-                        isDailyPaymentSummaryInitialized = true;
-                    }
-                });
-        dailyRevenueSummaryPane.expandedProperty().addListener(
-                (obs, oldVal, newVal) -> {
-                    if (newVal && !isDailyRevenueSummaryInitialized) {
-                        initializeDailyRevenueChart();
-                        isDailyRevenueSummaryInitialized = true;
-                    }
-                });
-        profitMarginPane.expandedProperty().addListener(
-                (obs, oldVal, newVal) -> {
-                    if (newVal && !isProfitMarginInitialized) {
-                        initializeProfitMarginTable();
-                        isProfitMarginInitialized = true;
-                    }
-                });
-        topStaffPane.expandedProperty().addListener(
-                (obs, oldVal, newVal) -> {
-                    if (newVal && !isTopStaffInitialized) {
-                        initializeTopStaffTable();
-                        isTopStaffInitialized = true;
-                    }
-                });
+        initializeTopProductsTable();
+        initializeTopCategoriesTable();
+        initializePaymentSummaryTable();
+        initializeDailyRevenueChart();
+        initializeProfitMarginTable();
+        initializeTopStaffTable();
 
     }
 
-    private void initializeMonthlySalesTable() {
-        ObservableList<Invoice> invoiceList = FXCollections.observableArrayList();
-
-        invoiceList.addAll(omerRepo.getInvoiceListForLastMonth());
-
-        colDate.setCellValueFactory(cellData ->
-                new SimpleObjectProperty<>(
-                        ProgramHelpers.getLocalDateTimeByStringDateTime(cellData.getValue().getDate())
-                )
-        );
-
-        colDate.setCellFactory(column -> new TableCell<>() {
-
-            @Override
-            protected void updateItem(LocalDateTime item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(ProgramHelpers.getStringDateTimeByLocalDateTime(item));
-                }
-            }
-        });
-        colInvoiceNumber.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getInvoiceNumber()));
-        colTotalAmount.setCellValueFactory(cellData ->
-                new SimpleDoubleProperty(ProgramHelpers.
-                        get2DecimalDoubleFromString(cellData.getValue().getPaidAmount())).asObject());
-        colPaymentType.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getPaymentType()));
-
-        monthlySalesTable.setItems(invoiceList);
-
-    }
 
     private void initializeTopProductsTable() {
         ObservableList<TopProducts> topProductsList = FXCollections.observableArrayList();

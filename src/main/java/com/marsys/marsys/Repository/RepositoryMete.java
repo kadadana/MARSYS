@@ -55,9 +55,13 @@ public class RepositoryMete {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                product = new Product(rs.getString("BARCODE"), rs.getString("NAME"), Integer.parseInt(rs.getString("QUANTITY")),
-                        Double.parseDouble(rs.getString("SALE_PRICE")), rs.getString("CATEGORY"), rs.getString("BRAND"),
-                        Double.parseDouble(rs.getString("BUYING_PRICE")), rs.getString("EXPIRATION"));
+                product = new Product(rs.getString("BARCODE"),
+                        rs.getString("NAME"),
+                        Integer.parseInt(rs.getString("QUANTITY")),
+                        Double.parseDouble(rs.getString("SALE_PRICE")),
+                        rs.getString("CATEGORY"), rs.getString("BRAND"),
+                        Double.parseDouble(rs.getString("BUYING_PRICE")),
+                        rs.getString("EXPIRATION"));
                 productList.add(product);
             }
         } catch (SQLException e) {
