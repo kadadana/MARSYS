@@ -1,7 +1,9 @@
 package com.marsys.marsys.Repository;
 
 import com.marsys.marsys.Helpers.*;
+import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Invoice;
+import com.marsys.marsys.Models.Product;
 import com.marsys.marsys.Models.StockMovement;
 import javafx.scene.control.Alert;
 
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 
 public class OmerRepo {
     Repository repository = new Repository();
+    RepositoryMete repositoryMete = new RepositoryMete();
+    BeratRepo beratRepo = new BeratRepo();
 
     static {
         try {
@@ -27,50 +31,10 @@ public class OmerRepo {
         }
     }
 
-    public List<Invoice> getInvoiceListForLastMonth() {
-        List<Invoice> invoiceList = new ArrayList<>();
-
-        String query = "SELECT * FROM \"INVOICES\" WHERE " +
-                "TO_DATE(\"DATE\", 'MM-DD-YYYY') BETWEEN TO_DATE(?, 'MM-DD-YYYY') " +
-                "AND TO_DATE(?, 'MM-DD-YYYY') " +
-                "ORDER BY TO_TIMESTAMP(\"DATE\", 'MM-DD-YYYY HH24:MI:SS') DESC";
-
-        try (Connection conn = DatabasePool.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, ProgramHelpers.
-                    getStringDateByLocalDate(LocalDate.now().minusMonths(1)));
-            stmt.setString(2, ProgramHelpers.getStringDateByLocalDate(LocalDate.now()));
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                Invoice invoice = new Invoice(rs.getString("INVOICE_NUMBER"),
-                        rs.getString("PAYMENT_TYPE"),
-                        rs.getString("CARD_NUMBER"),
-                        rs.getString("PAID_AMOUNT"),
-                        rs.getString("DISCOUNT_AMOUNT"),
-                        rs.getString("ACTUAL_CART_AMOUNT"),
-                        rs.getString("CASHIER_ID"),
-                        rs.getString("DATE"),
-                        rs.getString("ORIGINAL_INVOICE_NUMBER"));
-                invoiceList.add(invoice);
-            }
-            invoiceList.sort(Comparator.comparing(Invoice::getPaidAmount).reversed());
-
-            return invoiceList;
-
-        } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText("An error occured while getting invoice list.");
-            alert.setContentText(e.toString());
-            alert.showAndWait();
-        }
-        return invoiceList;
-    }
-
     public List<TopProducts> getTop20ProductSoldLastWeek() {
         List<TopProducts> topProductsList = new ArrayList<>();
-
+        List<Invoice> invoiceList = repository.getInvoiceList();
+        List<Product> productList = repositoryMete.getAllStockList();
         String query = "SELECT " +
                 "        \"BARCODE\", " +
                 "        COUNT(*) AS repeat_count," +
@@ -87,6 +51,7 @@ public class OmerRepo {
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
+                String productName = "";
                 String barcode = rs.getString("BARCODE");
                 int repeatCount = rs.getInt("repeat_count");
                 Array invoiceArray = rs.getArray("invoices");
@@ -95,14 +60,23 @@ public class OmerRepo {
                 double totalPaid = 0.0;
 
                 for (String invoiceNumber : invoiceNumbers) {
-                    Invoice invoice = repository.getInvoiceModelByInvoiceNumber(invoiceNumber);
-                    double rate = Double.parseDouble(invoice.getPaidAmount()) / Double.parseDouble(invoice.getActualCartAmount());
-                    double price = repository.getProductModelByBarcode(barcode).getPrice();
+                    for (Invoice i : invoiceList) {
+                        if (i.getInvoiceNumber().equals(invoiceNumber)) {
+                            for (Product p : productList) {
+                                if (p.getBarcode().equals(barcode)) {
+                                    double rate = Double.parseDouble(i.getPaidAmount()) / Double.parseDouble(i.getActualCartAmount());
+                                    double price = p.getPrice();
+                                    productName = p.getProductName();
+                                    totalPaid += rate * price;
+                                }
+                            }
 
-                    totalPaid += rate * price;
+                        }
+
+                    }
+
                 }
 
-                String productName = repository.getProductModelByBarcode(barcode).getProductName();
 
                 TopProducts topProduct = new TopProducts(productName, repeatCount, totalPaid);
                 topProductsList.add(topProduct);
@@ -125,6 +99,8 @@ public class OmerRepo {
 
     public List<TopProducts> getOrderedCategorySoldLastWeek() {
         List<TopProducts> topCategorySalesList = new ArrayList<>();
+        List<Invoice> invoiceList = repository.getInvoiceList();
+        List<Product> productList = repositoryMete.getAllStockList();
         String query = "SELECT " +
                 "    i.\"CATEGORY\", " +
                 "    sm.\"BARCODE\", " +
@@ -153,11 +129,21 @@ public class OmerRepo {
                 double totalPaid = 0.0;
 
                 for (String invoiceNumber : invoiceNumbers) {
-                    Invoice invoice = repository.getInvoiceModelByInvoiceNumber(invoiceNumber);
-                    double rate = Double.parseDouble(invoice.getPaidAmount()) / Double.parseDouble(invoice.getActualCartAmount());
-                    double price = repository.getProductModelByBarcode(barcode).getPrice();
+                    for (Invoice i : invoiceList) {
+                        if (i.getInvoiceNumber().equals(invoiceNumber)) {
+                            for (Product p : productList) {
+                                if (p.getBarcode().equals(barcode)) {
+                                    double rate = Double.parseDouble(i.getPaidAmount()) / Double.parseDouble(i.getActualCartAmount());
+                                    double price = p.getPrice();
 
-                    totalPaid += rate * price;
+                                    totalPaid += rate * price;
+                                }
+                            }
+
+                        }
+
+                    }
+
                 }
 
                 if (categoryMap.containsKey(category)) {
@@ -196,7 +182,7 @@ public class OmerRepo {
                 "FROM \"INVOICES\" " +
                 "WHERE TO_TIMESTAMP(\"DATE\", 'MM-DD-YYYY HH24:MI:SS') >= CURRENT_DATE - INTERVAL '30 days' " +
                 "GROUP BY DATE(TO_TIMESTAMP(\"DATE\", 'MM-DD-YYYY HH24:MI:SS')) " +
-                "ORDER BY DATE(TO_TIMESTAMP(\"DATE\", 'MM-DD-YYYY HH24:MI:SS'));";
+                "ORDER BY DATE(TO_TIMESTAMP(\"DATE\", 'MM-DD-YYYY HH24:MI:SS')) DESC;";
 
         try (Connection conn = DatabasePool.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -261,6 +247,7 @@ public class OmerRepo {
         double cost = 0;
         Invoice invoice;
         List<Invoice> invoiceList = new ArrayList<>();
+        List<Product> productList = repositoryMete.getAllStockList();
         String query = "SELECT * FROM \"INVOICES\" WHERE \"ORIGINAL_INVOICE_NUMBER\" IS NULL AND " +
                 " TO_DATE(\"DATE\", 'MM-DD-YYYY') >= CURRENT_DATE - INTERVAL '1 MONTH';";
 
@@ -284,6 +271,7 @@ public class OmerRepo {
             for (Invoice i : invoiceList) {
                 double rate = ProgramHelpers.get2DecimalDoubleFromString(i.getPaidAmount()) /
                         ProgramHelpers.get2DecimalDoubleFromString(i.getActualCartAmount());
+
                 List<StockMovement> stockMovementList = new ArrayList<>();
                 String _query = "SELECT * FROM \"STOCK_MOVEMENT\" WHERE \"INVOICE_NUMBER\" = ?;";
                 try (PreparedStatement _stmt = conn.prepareStatement(_query)) {
@@ -298,46 +286,63 @@ public class OmerRepo {
                                 _rs.getString("USER"),
                                 _rs.getString("DATE"));
                         stockMovementList.add(stockMovement);
-
                     }
+
                     for (StockMovement sm : stockMovementList) {
+                        // productList içinde barkodu direkt arıyoruz
+                        Product matchedProduct = null;
+                        for (Product p : productList) {
+                            if (sm.getBarcode().equals(p.getBarcode())) {
+                                matchedProduct = p;
+                                break;
+                            }
+                        }
+
+                        if (matchedProduct == null) continue; // ürün eşleşmemişse geç
+
+                        double saleAmount = ProgramHelpers.get2DecimalDouble(rate * matchedProduct.getPrice());
+                        double costAmount = ProgramHelpers.get2DecimalDouble(matchedProduct.getBuyingPrice());
+
                         if (sm.getMovementType().equals("RETURN")) {
-                            revenue -= ProgramHelpers.get2DecimalDouble(
-                                    rate * repository.getProductModelByBarcode(sm.getBarcode()).getPrice());
-                            cost -= repository.getProductModelByBarcode(sm.getBarcode()).getBuyingPrice();
-
+                            revenue -= saleAmount;
+                            cost -= costAmount;
+                        } else if (sm.getMovementType().equals("SALE")) {
+                            revenue += saleAmount;
+                            cost += costAmount;
                         }
-                        if (sm.getMovementType().equals("SALE")) {
-                            revenue += ProgramHelpers.get2DecimalDouble(
-                                    rate * repository.getProductModelByBarcode(sm.getBarcode()).getPrice());
-                            cost += repository.getProductModelByBarcode(sm.getBarcode()).getBuyingPrice();
-
-                        }
-
                     }
+
                 } catch (SQLException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Database Error");
                     alert.setHeaderText("An error occured while getting daily invoice report.");
                     alert.setContentText(e.toString());
                     alert.showAndWait();
-
                 }
+
+                // Tarih formatla
                 DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
                 DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-
                 LocalDateTime dateTime = LocalDateTime.parse(i.getDate(), inputFormat);
                 i.setDate(outputFormat.format(dateTime.toLocalDate()));
 
+                // Günlük rapor hesapla
                 double profit = revenue - cost;
                 double margin = cost != 0 ? profit / cost : 0.00;
-                dailyInvoiceReport = new DailyInvoiceReport(i.getDate(), revenue, cost, profit, margin);
+
+                dailyInvoiceReport = new DailyInvoiceReport(i.getDate(),
+                        ProgramHelpers.get2DecimalDouble(revenue),
+                        ProgramHelpers.get2DecimalDouble(cost),
+                        ProgramHelpers.get2DecimalDouble(profit),
+                        ProgramHelpers.get2DecimalDouble(margin));
+
                 boolean found = false;
                 for (DailyInvoiceReport dir : dailyInvoiceReportList) {
-                    if ((dailyInvoiceReport.getDate().equals(dir.getDate()))) {
-                        dir.setRevenue(ProgramHelpers.get2DecimalDouble(dailyInvoiceReport.getRevenue() + dir.getRevenue()));
-                        dir.setCost(ProgramHelpers.get2DecimalDouble(dailyInvoiceReport.getCost() + dir.getCost()));
-                        dir.setProfit(ProgramHelpers.get2DecimalDouble(dailyInvoiceReport.getProfit() + dir.getProfit()));
+                    if (dailyInvoiceReport.getDate().equals(dir.getDate())) {
+                        dir.setRevenue(ProgramHelpers.get2DecimalDouble(dir.getRevenue() + dailyInvoiceReport.getRevenue()));
+                        dir.setCost(ProgramHelpers.get2DecimalDouble(dir.getCost() + dailyInvoiceReport.getCost()));
+                        dir.setProfit(ProgramHelpers.get2DecimalDouble(dir.getProfit() + dailyInvoiceReport.getProfit()));
+
                         double newRevenue = dir.getRevenue();
                         double newProfit = dir.getProfit();
 
@@ -355,14 +360,13 @@ public class OmerRepo {
                     dailyInvoiceReportList.add(dailyInvoiceReport);
                 }
 
-
                 revenue = 0;
                 cost = 0;
             }
             dailyInvoiceReportList.sort((o1, o2) -> {
                 LocalDate date1 = ProgramHelpers.getLocalDateByStringDate(o1.getDate());
                 LocalDate date2 = ProgramHelpers.getLocalDateByStringDate(o2.getDate());
-                return date1.compareTo(date2);
+                return date2.compareTo(date1);
             });
 
 
@@ -377,37 +381,33 @@ public class OmerRepo {
     }
 
     public List<TopStaffs> getTopStaffs() {
-        TopStaffs topStaffs;
-        int staffTransactions = 0;
         List<TopStaffs> topStaffList = new ArrayList<>();
         List<Invoice> invoiceList = repository.getInvoiceList();
-        double totalSales = 0.00;
-        for (Invoice i : invoiceList) {
-            totalSales += ProgramHelpers.get2DecimalDoubleFromString(i.getPaidAmount());
-            topStaffs = new TopStaffs(repository.getEmployeeModelById(i.getCashierId()).getFirstName() +
-                    " " + repository.getEmployeeModelById(i.getCashierId()).getLastName(),
-                    ProgramHelpers.get2DecimalDouble(totalSales),
-                    staffTransactions + 1);
-            boolean found = false;
-            for (TopStaffs ts : topStaffList) {
-                if (topStaffs.getStaffName().equals(ts.getStaffName())) {
-                    ts.setStaffSales(ProgramHelpers.get2DecimalDouble(totalSales) +
-                            ProgramHelpers.get2DecimalDouble(ts.getStaffSales()));
-                    ts.setStaffTransactions(ts.getStaffTransactions() + 1);
-                    found = true;
-                    break;
+        List<Employee> employeeList = beratRepo.getAllEmployees();
+
+        for (Employee e : employeeList) {
+            String name = e.getFirstName() + " " + e.getLastName();
+            double staffSales = 0.0;
+            int staffTransactions = 0;
+
+            for (Invoice i : invoiceList) {
+
+                if (i.getCashierId().equals(e.getId())) {
+                    staffSales += ProgramHelpers.get2DecimalDoubleFromString(i.getPaidAmount());
+                    staffTransactions++;
                 }
-
             }
-            if (!found) {
-                topStaffList.add(topStaffs);
 
+            if (staffTransactions > 0) {
+                TopStaffs topStaff = new TopStaffs(name,
+                        ProgramHelpers.get2DecimalDouble(staffSales),
+                        staffTransactions);
+                topStaffList.add(topStaff);
             }
-            totalSales = 0.00;
-
         }
-        topStaffList.sort(Comparator.comparingDouble(TopStaffs::getStaffSales).reversed());
 
+        topStaffList.sort(Comparator.comparingDouble(TopStaffs::getStaffSales).reversed());
         return topStaffList;
     }
+
 }

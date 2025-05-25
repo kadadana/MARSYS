@@ -34,20 +34,9 @@
                         <Insets top="20" right="20" bottom="20" left="20"/>
                     </padding>
 
-                    <!-- Aylık Satış Raporu -->
-                    <TitledPane fx:id="monthlySalesPane" text="Last Month Sales Report" expanded="false">
-                        <TableView fx:id="monthlySalesTable" prefHeight="400" prefWidth="500">
-                            <columns>
-                                <TableColumn fx:id="colDate" text="Date"/>
-                                <TableColumn fx:id="colInvoiceNumber" text="Invoice Number"/>
-                                <TableColumn fx:id="colTotalAmount" text="Total Amount"/>
-                                <TableColumn fx:id="colPaymentType" text="Payment Type"/>
-                            </columns>
-                        </TableView>
-                    </TitledPane>
 
                     <!-- En Çok Satan Ürünler -->
-                    <TitledPane fx:id="topProductsPane" text="Top Selling Products (Last Week)" expanded="false">
+                    <TitledPane fx:id="topProductsPane" text="Top Selling Products (Last Week)" >
                         <TableView fx:id="topProductsTable" prefHeight="400" prefWidth="900">
                             <columns>
                                 <TableColumn fx:id="colProductName" text="Product Name"/>
@@ -58,7 +47,7 @@
                     </TitledPane>
 
                     <!-- En Çok Satan Kategoriler -->
-                    <TitledPane fx:id="topCategoriesPane" text="Top Categories (Last Week)" expanded="false">
+                    <TitledPane fx:id="topCategoriesPane" text="Top Categories (Last Week)" >
                         <TableView fx:id="topCategoriesTable" prefHeight="400" prefWidth="900">
                             <columns>
                                 <TableColumn fx:id="colCategoryName" text="Category Name"/>
@@ -69,9 +58,8 @@
                     </TitledPane>
 
                     <!-- Ödeme Özeti -->
-                    <TitledPane fx:id="dailyPaymentSummaryPane" text="Daily Payment Summary (Last Month)"
-                                expanded="false">
-                        <TableView fx:id="paymentSummaryTable" prefHeight="200" prefWidth="900">
+                    <TitledPane fx:id="dailyPaymentSummaryPane" text="Daily Payment Summary (Last Month)">
+                        <TableView fx:id="paymentSummaryTable" prefHeight="400" prefWidth="900">
                             <columns>
                                 <TableColumn fx:id="colPaymentDate" text="Date"/>
                                 <TableColumn fx:id="colCashAmount" text="Cash Amount"/>
@@ -88,8 +76,7 @@
                     </padding>
 
                     <!-- Günlük Gelir Grafiği -->
-                    <TitledPane fx:id="dailyRevenueSummaryPane" text="Daily Revenue Summary (Last Month)"
-                                expanded="false">
+                    <TitledPane fx:id="dailyRevenueSummaryPane" text="Daily Revenue Summary (Last Month)">
                         <LineChart fx:id="dailyRevenueChart" prefHeight="400" prefWidth="900"
                                    animated="false">
                             <xAxis>
@@ -103,7 +90,7 @@
 
 
                     <!-- Kar Marjı -->
-                    <TitledPane fx:id="profitMarginPane" text="Profit Margin (Last Month)" expanded="false">
+                    <TitledPane fx:id="profitMarginPane" text="Profit Margin (Last Month)">
                         <TableView fx:id="profitMarginTable" prefHeight="400" prefWidth="900">
                             <columns>
                                 <TableColumn fx:id="colPeriod" text="Period"/>
@@ -116,7 +103,7 @@
                     </TitledPane>
 
                     <!-- En İyi Personel -->
-                    <TitledPane fx:id="topStaffPane" text="Top Performing Staff (Last Month)" expanded="false">
+                    <TitledPane fx:id="topStaffPane" text="Top Performing Staff (Last Month)">
                         <TableView fx:id="topStaffTable" prefHeight="400" prefWidth="900">
                             <columns>
                                 <TableColumn fx:id="colStaffName" text="Staff Name"/>

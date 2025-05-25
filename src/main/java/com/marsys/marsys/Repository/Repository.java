@@ -899,8 +899,39 @@ public class Repository {
             alert.setTitle("Database Error");
             alert.setHeaderText("An error occured while getting invoice list.");
             alert.setContentText(e.toString());
-            alert.showAndWait();        }
+            alert.showAndWait();
+        }
         return invoiceList;
+    }
+
+    public List<Product> getProductList() {
+        Product product;
+        List<Product> productList = new ArrayList<>();
+        String query = "SELECT * FROM \"INVENTORY\"";
+        try (Connection conn = DatabasePool.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                product = new Product(
+                        rs.getString("BARCODE"),
+                        rs.getString("NAME"),
+                        Integer.parseInt(rs.getString("QUANTITY")),
+                        Double.parseDouble(rs.getString("SALE_PRICE")),
+                        rs.getString("CATEGORY"),
+                        rs.getString("BRAND"),
+                        Double.parseDouble(rs.getString("BUYING_PRICE")),
+                        rs.getString("EXPIRATION"));
+                productList.add(product);
+            }
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Database Error");
+            alert.setHeaderText("An error occured while getting invoice list.");
+            alert.setContentText(e.toString());
+            alert.showAndWait();
+        }
+        return productList;
     }
 
 
