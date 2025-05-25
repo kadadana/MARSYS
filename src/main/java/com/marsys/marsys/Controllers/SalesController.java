@@ -250,9 +250,10 @@ public class SalesController implements Initializable {
                 Parent root = loader.load();
 
                 PaymentModalController paymentModalController = loader.getController();
-                paymentModalController.setPaymentTotal(lastTotal);
+                paymentModalController.setPaymentTotal(ProgramHelpers.get2DecimalDouble(lastTotal));
 
-                paymentModalController.setPaymentCompleteListener(cardNumber -> completeSale(cardNumber, lastTotal));
+                paymentModalController.setPaymentCompleteListener(
+                        cardNumber -> completeSale(cardNumber, ProgramHelpers.get2DecimalDouble(lastTotal)));
                 Stage stage = new Stage();
                 stage.setTitle("Payment");
                 stage.initModality(Modality.APPLICATION_MODAL);
@@ -299,9 +300,9 @@ public class SalesController implements Initializable {
                         invoiceNumber,
                         paymentType,
                         cardNumber,
-                        String.format(Locale.US, "%.2f", newTotal),
-                        String.format(Locale.US, "%.2f", discountAmount),
-                        String.format(Locale.US, "%.2f", actualCartTotal),
+                        ProgramHelpers.get2DecimalString(newTotal),
+                        ProgramHelpers.get2DecimalString(discountAmount),
+                        ProgramHelpers.get2DecimalString(actualCartTotal),
                         user.getId(),
                         ProgramHelpers.getStringDateTimeByLocalDateTime(LocalDateTime.now()),
                         "000000"
@@ -316,9 +317,9 @@ public class SalesController implements Initializable {
                 lastTotal = 0;
                 couponDiscount = 0;
                 discountAmount = 0;
-                lblLastTotal.setText(String.format("%.2f TL", lastTotal));
-                lblDiscountTotal.setText(String.format("%.2f TL", discountAmount));
-                lblTotal.setText(String.format("%.2f TL", actualCartTotal));
+                lblLastTotal.setText(ProgramHelpers.get2DecimalString(lastTotal));
+                lblDiscountTotal.setText(ProgramHelpers.get2DecimalString(discountAmount));
+                lblTotal.setText(ProgramHelpers.get2DecimalString(actualCartTotal));
                 salesTable.getItems().clear();
                 salesTable.refresh();
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
