@@ -6,7 +6,8 @@
 
 <BorderPane prefHeight="400" prefWidth="900" xmlns:fx="http://javafx.com/fxml/1"
             xmlns="http://javafx.com/javafx/17.0.12"
-            fx:controller="com.marsys.marsys.Controllers.InvoiceDetailsController">
+            fx:controller="com.marsys.marsys.Controllers.InvoiceDetailsController"
+            stylesheets="@styles.css">
 
     <!-- Üst bar -->
     <top>

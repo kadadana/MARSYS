@@ -1,24 +1,26 @@
 package com.marsys.marsys.Helpers;
 
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextFormatter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.function.UnaryOperator;
 
 public class ProgramHelpers {
 
     public static void adjustTableHeight(TableView<?> tableView) {
         int rows = tableView.getItems().size();
         double rowHeight = tableView.getFixedCellSize();
-        tableView.setFixedCellSize(30);
+        tableView.setFixedCellSize(43);
 
         if (rowHeight <= 0) {
-            rowHeight = 30;
+            rowHeight = 43;
         }
 
-        double headerHeight = 30;
+        double headerHeight = 43;
 
         double newHeight = headerHeight + ((rows) * rowHeight);
 
@@ -47,8 +49,8 @@ public class ProgramHelpers {
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
     }
 
-    public static LocalDateTime getLocalDateTimeTimeByStringDateTime(String date) {
-        return LocalDateTime.parse(date, DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss"));
+    public static LocalDateTime getLocalDateTimeByStringDateTime(String date) {
+        return LocalDateTime.parse(date.trim(), DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss"));
     }
 
 
@@ -73,5 +75,21 @@ public class ProgramHelpers {
         return String.format(Locale.US, "%.2f", doubleNumber);
     }
 
+    public static TextFormatter<String> unaryOperator(int i) {
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String newText = change.getControlNewText();
+            String regex = String.format("\\d{0,%d}", i);
+            if (newText.matches(regex)) {
+                return change;
+            }
+            return null;
+        };
+
+        return new TextFormatter<>(filter);
+    }
+
+    public static String getPercentageDisplay(double rate) {
+        return String.format("%.2f%%", rate * 100);
+    }
 
 }

@@ -11,7 +11,8 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.marsys.marsys.Controllers.CreateEmployeeController"
             prefWidth="1200" prefHeight="800"
-            maxWidth="Infinity" maxHeight="Infinity">
+            maxWidth="Infinity" maxHeight="Infinity"
+            stylesheets="@styles.css">
     <!-- Üst bar -->
     <top>
         <HBox spacing="10" style="-fx-background-color: #2c3e50;">

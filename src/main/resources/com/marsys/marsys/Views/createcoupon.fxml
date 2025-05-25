@@ -5,7 +5,8 @@
 <?import javafx.geometry.Insets?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.marsys.marsys.Controllers.CreateCouponController" minWidth="800" minHeight="600">
+            fx:controller="com.marsys.marsys.Controllers.CreateCouponController" minWidth="800" minHeight="600"
+            stylesheets="@styles.css">
 
     <!-- Üst bar -->
     <top>

@@ -4,7 +4,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.marsys.marsys.Controllers.SalesController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.marsys.marsys.Controllers.SalesController"
+            stylesheets="@styles.css">
 
     <top>
         <HBox spacing="10" style="-fx-background-color: #2c3e50;">
@@ -27,7 +28,7 @@
             <padding>
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
-            <Label text="Sale" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label text="Sale" style="-fx-font-size: 30px; -fx-font-weight: bold;"/>
 
             <HBox spacing="10">
                 <Label text="Barcode: "/>
@@ -58,40 +59,40 @@
     </center>
 
     <bottom>
-        <HBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15 10 15 10;">
-            <Button fx:id="btnBack" text="Back" onAction="#back"
-                    style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+        <VBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15 10 15 10;">
 
-            <!-- Total -->
-            <HBox spacing="5" alignment="CENTER_LEFT">
+            <HBox spacing="40" alignment="CENTER">
                 <Label text="Total:" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
                 <Label fx:id="lblTotal" minWidth="80" maxWidth="80"
                        style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
-            </HBox>
 
-            <!-- Discount Total -->
-            <HBox spacing="5" alignment="CENTER_LEFT">
-                <Label text="Discount Total:" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label text="Discount Total:"
+                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
                 <Label fx:id="lblDiscountTotal" minWidth="80" maxWidth="80"
                        style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
-            </HBox>
 
-            <!-- Last Total -->
-            <HBox spacing="5" alignment="CENTER_LEFT">
                 <Label text="Last Total:" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
                 <Label fx:id="lblLastTotal" minWidth="80" maxWidth="80"
                        style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
             </HBox>
+            <HBox spacing="10">
 
-            <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnBack" text="Back" onAction="#back"
+                        style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
 
-            <Button text="Cancel Process" onAction="#cancelProcess"
-                    style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
-            <Button text="Cash Payment" onAction="#cashPayment"
-                    style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
-            <Button text="Card Payment" onAction="#cardPayment"
-                    style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
-        </HBox>
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="Cancel Process" onAction="#cancelProcess"
+                        style="-fx-text-fill: red; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+                <Button text="Cash Payment" onAction="#cashPayment"
+                        style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+                <Button text="Card Payment" onAction="#cardPayment"
+                        style="-fx-text-fill: blue; -fx-font-weight: bold;-fx-font-size: 16px;"/>
+            </HBox>
+        </VBox>
+
+
     </bottom>
+
 
 </BorderPane>

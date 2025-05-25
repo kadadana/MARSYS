@@ -24,7 +24,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
-import java.util.function.UnaryOperator;
 
 import com.marsys.marsys.Helpers.ProgramHelpers;
 import org.jetbrains.annotations.NotNull;
@@ -79,25 +78,9 @@ public class StockMovementTableController implements Initializable {
         barcodeField.setOnAction(event -> search());
         invoiceNumberField.setOnAction(event -> search());
 
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String newText = change.getControlNewText();
-            if (newText.matches("\\d{0,6}")) {
-                return change;
-            }
-            return null;
-        };
-        UnaryOperator<TextFormatter.Change> filter2 = change -> {
-            String newText = change.getControlNewText();
-            if (newText.matches("\\d{0,3}")) {
-                return change;
-            }
-            return null;
-        };
-        TextFormatter<String> textFormatter2 = new TextFormatter<>(filter2);
-        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
 
-        invoiceNumberField.setTextFormatter(textFormatter);
-        barcodeField.setTextFormatter(textFormatter2);
+        invoiceNumberField.setTextFormatter(ProgramHelpers.unaryOperator(6));
+        barcodeField.setTextFormatter(ProgramHelpers.unaryOperator(3));
         btnClear.setVisible(false);
         lblUserName.setText(user.getFirstName() + " " + user.getLastName());
         lblUserId.setText("ID: " + user.getId());
@@ -127,7 +110,7 @@ public class StockMovementTableController implements Initializable {
         colDate.setCellValueFactory(cellData -> {
             try {
                 String dateStr = cellData.getValue().getDate();
-                LocalDateTime ldt = ProgramHelpers.getLocalDateTimeTimeByStringDateTime(dateStr);
+                LocalDateTime ldt = ProgramHelpers.getLocalDateTimeByStringDateTime(dateStr);
 
                 return new SimpleObjectProperty<>(ldt);
             } catch (Exception e) {
@@ -321,8 +304,8 @@ public class StockMovementTableController implements Initializable {
             controller.setInvoice(repository.getInvoiceModelByInvoiceNumber(invoiceNumber));
 
             Stage stage = new Stage();
-            stage.setWidth(900);
-            stage.setHeight(600);
+            stage.setWidth(1400);
+            stage.setHeight(800);
             stage.setResizable(false);
 
             stage.initModality(Modality.APPLICATION_MODAL);

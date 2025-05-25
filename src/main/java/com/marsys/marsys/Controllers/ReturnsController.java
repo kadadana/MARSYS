@@ -64,7 +64,6 @@ public class ReturnsController implements Initializable {
     @FXML
     private Label lblRefunding;
 
-    private double refunding;
     private Invoice invoice;
     double returningActualCartAmount = 0.00;
     double returningDiscountTotal = 0.00;
@@ -82,6 +81,8 @@ public class ReturnsController implements Initializable {
         barcodeField.setOnAction(event -> addToReturn());
         barcodeField.setDisable(true);
         btnFind.setDisable(true);
+        invoiceField.setTextFormatter(ProgramHelpers.unaryOperator(6));
+        barcodeField.setTextFormatter(ProgramHelpers.unaryOperator(3));
 
         lblUserName.setText(user.getFirstName() + " " + user.getLastName());
         lblUserId.setText("ID: " + user.getId());

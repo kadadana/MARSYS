@@ -314,7 +314,8 @@ public class RepositoryMete {
     public String getLatestMovementId() {
         String invoiceNumber;
         String query = "SELECT \"MOVEMENT_ID\" FROM \"STOCK_MOVEMENT\" ORDER BY \"MOVEMENT_ID\" DESC LIMIT 1";
-        try (Connection conn = DatabasePool.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (Connection conn = DatabasePool.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {

@@ -78,24 +78,9 @@ public class SalesController implements Initializable {
         quantityField.setOnAction(event -> onAddProduct());
         couponField.setOnAction(event -> applyCoupon());
 
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String newText = change.getControlNewText();
-            if (newText.matches("\\d{0,2}")) {
-                return change;
-            }
-            return null;
-        };
-        UnaryOperator<TextFormatter.Change> filter2 = change -> {
-            String newText = change.getControlNewText();
-            if (newText.matches("\\d{0,3}")) {
-                return change;
-            }
-            return null;
-        };
-        TextFormatter<String> textFormatter2 = new TextFormatter<>(filter2);
-        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
-        quantityField.setTextFormatter(textFormatter);
-        barcodeField.setTextFormatter(textFormatter2);
+
+        quantityField.setTextFormatter(ProgramHelpers.unaryOperator(2));
+        barcodeField.setTextFormatter(ProgramHelpers.unaryOperator(3));
 
         colBarcode.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.2));
         colProductName.prefWidthProperty().bind(salesTable.widthProperty().multiply(0.3));
@@ -135,6 +120,15 @@ public class SalesController implements Initializable {
 
     @FXML
     public void onAddProduct() {
+        if (quantityField.getText().startsWith("0")) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Alert");
+            alert.setHeaderText("Failed");
+            alert.setContentText("Check the quantity!");
+            alert.showAndWait();
+            return;
+        }
+
         Product scannedProduct;
         String scannedBarcode = barcodeField.getText();
         if (!barcodeField.getText().isBlank() && !quantityField.getText().isBlank()) {

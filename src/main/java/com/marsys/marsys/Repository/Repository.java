@@ -874,5 +874,34 @@ public class Repository {
         return invoice;
     }
 
+    public List<Invoice> getInvoiceList() {
+        Invoice invoice;
+        List<Invoice> invoiceList = new ArrayList<>();
+        String query = "SELECT * FROM \"INVOICES\"";
+        try (Connection conn = DatabasePool.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                invoice = new Invoice(rs.getString("INVOICE_NUMBER"),
+                        rs.getString("PAYMENT_TYPE"),
+                        rs.getString("CARD_NUMBER"),
+                        rs.getString("PAID_AMOUNT"),
+                        rs.getString("DISCOUNT_AMOUNT"),
+                        rs.getString("ACTUAL_CART_AMOUNT"),
+                        rs.getString("CASHIER_ID"),
+                        rs.getString("DATE"),
+                        rs.getString("ORIGINAL_INVOICE_NUMBER"));
+                invoiceList.add(invoice);
+            }
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Database Error");
+            alert.setHeaderText("An error occured while getting invoice list.");
+            alert.setContentText(e.toString());
+            alert.showAndWait();        }
+        return invoiceList;
+    }
+
 
 }
