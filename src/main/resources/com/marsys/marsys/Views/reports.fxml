@@ -26,7 +26,7 @@
     </top>
 
     <center>
-        <ScrollPane fitToWidth="true">
+        <ScrollPane fx:id="scrollPane" fitToWidth="true">
             <HBox spacing="30" alignment="CENTER">
                 <!-- Sol Panel -->
                 <VBox spacing="25" alignment="TOP_CENTER">
@@ -36,7 +36,7 @@
 
 
                     <!-- En Çok Satan Ürünler -->
-                    <TitledPane text="Top Selling Products (Last Week)" >
+                    <TitledPane fx:id="topSellingPane" text="Top Selling Products (Last Week)" >
                         <TableView fx:id="topProductsTable" prefHeight="400" prefWidth="900">
                             <columns>
                                 <TableColumn fx:id="colProductName" text="Product Name"/>

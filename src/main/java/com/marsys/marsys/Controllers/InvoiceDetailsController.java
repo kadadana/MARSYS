@@ -4,6 +4,7 @@ import com.marsys.marsys.Helpers.ProgramHelpers;
 import com.marsys.marsys.Models.Invoice;
 import com.marsys.marsys.Models.Product;
 import com.marsys.marsys.Models.StockMovement;
+import com.marsys.marsys.Repository.BeratRepo;
 import com.marsys.marsys.Repository.Repository;
 import com.marsys.marsys.Repository.RepositoryMete;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -23,6 +24,8 @@ import java.util.List;
 public class InvoiceDetailsController {
     @FXML
     private Label lblInvoiceNumber;
+    @FXML
+    private Label lblCashier;
     @FXML
     private Label lblTotal;
     @FXML
@@ -57,6 +60,7 @@ public class InvoiceDetailsController {
     private TableColumn<Product, Double> colPrice;
 
     Repository repository = new Repository();
+    BeratRepo beratRepo = new BeratRepo();
     RepositoryMete repositoryMete = new RepositoryMete();
     private final ObservableList<Product> products = FXCollections.observableArrayList();
 
@@ -92,6 +96,9 @@ public class InvoiceDetailsController {
         lblRefundedTotal.setText(ProgramHelpers.get2DecimalString(refundedTotal));
         products.addAll(productList);
         lblInvoiceDate.setText(invoice.getDate());
+        lblCashier.setText(invoice.getCashierId() + " - " +
+                beratRepo.getEmployeeModelById(invoice.getCashierId()).getFirstName() + " " +
+                beratRepo.getEmployeeModelById(invoice.getCashierId()).getLastName());
 
         colBarcode.prefWidthProperty().bind(productTable.widthProperty().multiply(0.07));
         colProductName.prefWidthProperty().bind(productTable.widthProperty().multiply(0.13));
