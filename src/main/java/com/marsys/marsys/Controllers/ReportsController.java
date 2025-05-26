@@ -11,6 +11,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -19,13 +20,16 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.input.ScrollEvent;
 import javafx.util.Duration;
+import javafx.geometry.Orientation;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 
 public class ReportsController implements Initializable {
@@ -42,6 +46,11 @@ public class ReportsController implements Initializable {
     public Label lblUserName;
 
 
+    @FXML
+    private ScrollPane scrollPane;
+
+    @FXML
+    private TitledPane topSellingPane;
     @FXML
     private TableView<TopProducts> topProductsTable;
     @FXML
@@ -97,7 +106,7 @@ public class ReportsController implements Initializable {
     private TableColumn<TopStaffs, Double> colStaffSales;
     @FXML
     private TableColumn<TopStaffs, Integer> colStaffTransactions;
-    
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -368,6 +377,8 @@ public class ReportsController implements Initializable {
 
         topStaffTable.setItems(topStaffList);
     }
+
+
 
     @FXML
     public void back() {
