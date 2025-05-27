@@ -2,7 +2,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.marsys.marsys.Controllers.LayoutController"
-            minWidth="800" minHeight="600">
+            prefWidth="1200" prefHeight="1000">
 
     <center>
         <AnchorPane fx:id="mainContent"

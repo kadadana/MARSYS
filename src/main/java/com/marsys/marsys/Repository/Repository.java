@@ -40,8 +40,16 @@ public class Repository {
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                employee = new Employee(rs.getString("NAME"), rs.getString("LAST_NAME"), rs.getString("POSITION"),
-                        rs.getString("ID"), rs.getString("PASSWORD"), rs.getString("STORE_CODE"));
+                employee = new Employee(
+                        rs.getString("NAME"),
+                        rs.getString("LAST_NAME"),
+                        rs.getString("POSITION"),
+                        rs.getString("ID"),
+                        rs.getString("PASSWORD"),
+                        rs.getString("STORE_CODE"),
+                        rs.getString("START_DATE"),
+                        rs.getString("END_DATE"),
+                        rs.getString("BIRTH_DATE"));
                 return employee;
             }
 
