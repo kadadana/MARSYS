@@ -2,7 +2,9 @@ package com.marsys.marsys.Controllers;
 
 import com.marsys.marsys.Helpers.ProgramHelpers;
 import com.marsys.marsys.Models.*;
+import com.marsys.marsys.Repository.BeratRepo;
 import com.marsys.marsys.Repository.Repository;
+import com.marsys.marsys.Repository.RepositoryMete;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -70,6 +72,9 @@ public class SalesController implements Initializable {
 
     private final ObservableList<Product> productList = FXCollections.observableArrayList();
     Repository _repository = new Repository();
+    BeratRepo beratRepo = new BeratRepo();
+    RepositoryMete repositoryMete = new RepositoryMete();
+    List<Product> allStockList = repositoryMete.getAllStockList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

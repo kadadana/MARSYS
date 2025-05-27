@@ -19,6 +19,9 @@ public class OmerRepo {
     RepositoryMete repositoryMete = new RepositoryMete();
     BeratRepo beratRepo = new BeratRepo();
 
+    private final List<Invoice> invoiceList = repository.getInvoiceList();
+    List<Product> productList = repositoryMete.getAllStockList();
+
     static {
         try {
             Class.forName("org.postgresql.Driver");
@@ -33,8 +36,7 @@ public class OmerRepo {
 
     public List<TopProducts> getTop20ProductSoldLastWeek() {
         List<TopProducts> topProductsList = new ArrayList<>();
-        List<Invoice> invoiceList = repository.getInvoiceList();
-        List<Product> productList = repositoryMete.getAllStockList();
+
         String query = "SELECT " +
                 "        \"BARCODE\", " +
                 "        COUNT(*) AS repeat_count," +
@@ -99,8 +101,7 @@ public class OmerRepo {
 
     public List<TopProducts> getOrderedCategorySoldLastWeek() {
         List<TopProducts> topCategorySalesList = new ArrayList<>();
-        List<Invoice> invoiceList = repository.getInvoiceList();
-        List<Product> productList = repositoryMete.getAllStockList();
+
         String query = "SELECT " +
                 "    i.\"CATEGORY\", " +
                 "    sm.\"BARCODE\", " +
@@ -247,7 +248,6 @@ public class OmerRepo {
         double cost = 0;
         Invoice invoice;
         List<Invoice> invoiceList = new ArrayList<>();
-        List<Product> productList = repositoryMete.getAllStockList();
         String query = "SELECT * FROM \"INVOICES\" WHERE \"ORIGINAL_INVOICE_NUMBER\" IS NULL AND " +
                 " TO_DATE(\"DATE\", 'MM-DD-YYYY') >= CURRENT_DATE - INTERVAL '1 MONTH';";
 
@@ -289,7 +289,7 @@ public class OmerRepo {
                     }
 
                     for (StockMovement sm : stockMovementList) {
-                        // productList içinde barkodu direkt arıyoruz
+
                         Product matchedProduct = null;
                         for (Product p : productList) {
                             if (sm.getBarcode().equals(p.getBarcode())) {
@@ -298,7 +298,7 @@ public class OmerRepo {
                             }
                         }
 
-                        if (matchedProduct == null) continue; // ürün eşleşmemişse geç
+                        if (matchedProduct == null) continue;
 
                         double saleAmount = ProgramHelpers.get2DecimalDouble(rate * matchedProduct.getPrice());
                         double costAmount = ProgramHelpers.get2DecimalDouble(matchedProduct.getBuyingPrice());
@@ -363,6 +363,26 @@ public class OmerRepo {
                 revenue = 0;
                 cost = 0;
             }
+            LocalDate today = LocalDate.now();
+            LocalDate startDate = today.minusMonths(1);
+
+            for (LocalDate date = startDate; !date.isAfter(today); date = date.plusDays(1)) {
+
+
+                boolean exists = false;
+                for (DailyInvoiceReport report : dailyInvoiceReportList) {
+                    if (report.getDate().equals(ProgramHelpers.getStringDateByLocalDate(date))) {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                if (!exists) {
+                    dailyInvoiceReportList.add(new DailyInvoiceReport(
+                            ProgramHelpers.getStringDateByLocalDate(date), 0.0, 0.0, 0.0, 0.0
+                    ));
+                }
+            }
             dailyInvoiceReportList.sort((o1, o2) -> {
                 LocalDate date1 = ProgramHelpers.getLocalDateByStringDate(o1.getDate());
                 LocalDate date2 = ProgramHelpers.getLocalDateByStringDate(o2.getDate());
@@ -382,7 +402,7 @@ public class OmerRepo {
 
     public List<TopStaffs> getTopStaffs() {
         List<TopStaffs> topStaffList = new ArrayList<>();
-        List<Invoice> invoiceList = repository.getInvoiceList();
+
         List<Employee> employeeList = beratRepo.getAllEmployees();
 
         for (Employee e : employeeList) {

@@ -14,12 +14,12 @@ public class DatabasePool {
         try {
             HikariConfig config = new HikariConfig();
 
-            String host = System.getenv("MARSYS_DB_URL");
+            String host = "ep-fragrant-term-a9jwf1gb-pooler.gwc.azure.neon.tech";
             String database = System.getenv("MARSYS_DB_DATABASE");
             String user = System.getenv("MARSYS_DB_USER");
             String password = System.getenv("MARSYS_DB_PASSWORD");
 
-            if (host == null || database == null || user == null || password == null) {
+            if (database == null || user == null || password == null) {
                 throw new IllegalStateException("Database environment variables are missing!");
             }
 
