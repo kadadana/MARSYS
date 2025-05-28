@@ -163,9 +163,9 @@ public class RepositoryMete {
             stmt.setString(1, movementId);
             stmt.setString(2, movementType);
             stmt.setString(3, product.getBarcode());
-            stmt.setString(9, invoiceNumber);
-            stmt.setString(10, user);
-            stmt.setString(11, date);
+            stmt.setString(4, invoiceNumber);
+            stmt.setString(5, user);
+            stmt.setString(6, date);
 
             stmt.executeUpdate();
 
