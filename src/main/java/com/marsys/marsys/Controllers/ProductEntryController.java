@@ -274,7 +274,7 @@ public class ProductEntryController implements Initializable {
         if (productEntryTable.getItems() != null && !productEntryTable.getItems().isEmpty()) {
             try {
                 for (Product p : productList) {
-                    _repository.updateStockQuantity(p, true);
+                    _repository.updateStockQuantity(p, false);
                     for (int i = 1; i <= p.getQuantity(); i++) {
                         _repository.insertIntoStockMovementTable(_repository.getLatestMovementId(), "ENTRY", p, "000000", user.getId(), date);
                     }
