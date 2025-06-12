@@ -1,5 +1,6 @@
 package com.marsys.marsys.Controllers;
 
+import com.marsys.marsys.Helpers.ProgramHelpers;
 import com.marsys.marsys.Models.Employee;
 import com.marsys.marsys.Models.Session;
 import javafx.beans.property.SimpleStringProperty;
@@ -60,7 +61,7 @@ public class EmployeeManagementController implements Initializable {
     BeratRepo _repository = new BeratRepo();
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        lblUserId.setText(user.getId());
+        lblUserId.setText("ID: " + user.getId());
         lblUserName.setText(user.getFirstName() + " " + user.getLastName());
 
         employeeList.addAll(_repository.getAllEmployees());
@@ -100,6 +101,7 @@ public class EmployeeManagementController implements Initializable {
                 new SimpleStringProperty(cellData.getValue().getCouponCode()));
 
         employeeTable.setItems(employeeList);
+        ProgramHelpers.adjustTableHeight(employeeTable);
         addEditButtonToTable();
 
     }
@@ -154,6 +156,8 @@ public class EmployeeManagementController implements Initializable {
         employeeList.clear();
         employeeList.addAll(_repository.getAllEmployees());
         employeeTable.setItems(employeeList);
+        ProgramHelpers.adjustTableHeight(employeeTable);
+
     }
 
     public void back() {
