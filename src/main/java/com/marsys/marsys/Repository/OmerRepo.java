@@ -402,15 +402,15 @@ public class OmerRepo {
 
     public List<TopStaffs> getTopStaffs() {
         List<TopStaffs> topStaffList = new ArrayList<>();
-
         List<Employee> employeeList = beratRepo.getAllEmployees();
+        List<Invoice> lastMonthInvoices = repository.getLastMonthInvoiceList();
 
         for (Employee e : employeeList) {
             String name = e.getFirstName() + " " + e.getLastName();
             double staffSales = 0.0;
             int staffTransactions = 0;
 
-            for (Invoice i : invoiceList) {
+            for (Invoice i : lastMonthInvoices) {
 
                 if (i.getCashierId().equals(e.getId())) {
                     staffSales += ProgramHelpers.get2DecimalDoubleFromString(i.getPaidAmount());
