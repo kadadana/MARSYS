@@ -110,7 +110,7 @@ This separation improves maintainability, readability, and scalability.
 ---
 
 ## 📂 Project Structure
-
+```
 MARSYS/
 ├── src/
 │ ├── main/
@@ -121,7 +121,7 @@ MARSYS/
 ├── diagrams/
 ├── pom.xml
 ├── README.md
-
+```
 ## 📈 Learning Outcomes
 
 Through this project, the following concepts were practiced:
