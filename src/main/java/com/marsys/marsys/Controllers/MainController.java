@@ -66,7 +66,7 @@ public class MainController implements Initializable {
 
 
     public void goToStockInventoryScreen() {
-        if (user.getPosition().equals("MANAGER") || user.getPosition().equals("CASHIER")) {
+        if (user.getPosition().equals("MANAGER") || user.getPosition().equals("WAREHOUSE")) {
 
             _layoutController.loadPageByButton("/com/marsys/marsys/Views/stockandinventory.fxml", btnGoToStockInventoryScreen);
         } else {

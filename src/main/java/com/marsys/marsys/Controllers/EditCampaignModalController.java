@@ -125,7 +125,7 @@ public class EditCampaignModalController implements Initializable {
                 Campaign campaign;
                 if (discountTypeCode.equals("03")) {
                     campaign = new Campaign(
-                            _repository.getLatestCampaignId(),
+                            campaignId.getText(),
                             discountTypeComboBox.getSelectionModel().getSelectedItem(),
                             discountTypeCode,
                             categoryComboBox.getSelectionModel().getSelectedItem(),
@@ -134,7 +134,7 @@ public class EditCampaignModalController implements Initializable {
                             strIsActive);
                 } else {
                     campaign = new Campaign(
-                            _repository.getLatestCampaignId(),
+                            campaignId.getText(),
                             discountTypeComboBox.getSelectionModel().getSelectedItem(),
                             discountTypeCode,
                             barcodeField.getText(),

@@ -404,7 +404,6 @@ public class Repository {
         String query = "UPDATE \"CAMPAIGN\" SET " + "\"CAMPAIGN_ID\" = ?, " + "\"DISCOUNT_TYPE\" = ?, " +
                 "\"DISCOUNT_TYPE_CODE\" = ?, " + "\"DISCOUNT_FOR\" = ?, " + "\"START_DATE\" = ?, " +
                 "\"END_DATE\" = ?, " + "\"IS_ACTIVE\" = ? " + "WHERE \"CAMPAIGN_ID\" = ?";
-
         try (Connection conn = DatabasePool.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, campaign.getCampaignId());
@@ -415,6 +414,8 @@ public class Repository {
             stmt.setString(6, campaign.getEndDate());
             stmt.setString(7, campaign.getIsActive());
             stmt.setString(8, campaign.getCampaignId());
+            System.out.println(stmt);
+
             stmt.executeUpdate();
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
