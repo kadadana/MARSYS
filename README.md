@@ -109,19 +109,6 @@ This separation improves maintainability, readability, and scalability.
 
 ---
 
-## 📂 Project Structure
-```
-MARSYS/
-├── src/
-│ ├── main/
-│ │ ├── java/
-│ │ └── resources/
-│ │ ├── fxml/
-│ │ └── styles/
-├── diagrams/
-├── pom.xml
-├── README.md
-```
 ## 📈 Learning Outcomes
 
 Through this project, the following concepts were practiced:
