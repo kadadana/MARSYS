@@ -1,14 +1,17 @@
-# 🗄️ MARSYS – Cloud-Based DBMS Project
+# 🗄️ MARSYS – Supermarket Automation DBMS
 
-MARSYS is a **Database Management System (DBMS) university project** developed using **Java and JavaFX (FXML)** with a **cloud-based PostgreSQL database hosted on NeonDB**.
+MARSYS is a **ERP-like Supermarket Automation System** developed as a **Database Management System (DBMS) university project** using **Java and JavaFX (FXML)** with a **cloud-based PostgreSQL database hosted on NeonDB**.
 
-The project demonstrates real-world DBMS practices by combining **secure cloud database access**, **environment variable–based configuration**, and **high-performance connection pooling**.
+The system models core supermarket operations such as product, category, and inventory management while applying real-world DBMS principles.
+
+The project emphasizes **secure cloud database access**, **environment variable–based configuration**, and **high-performance connection pooling**.
 
 ---
 
 ## 🎓 Project Context
 
-- **Type:** University DBMS Course Project  
+- **Type:** University DBMS Course Project
+- - **Domain**: Supermarket Automation  
 - **Database:** Cloud-based PostgreSQL (NeonDB)  
 - **Interface:** JavaFX GUI (FXML)  
 - **Configuration:** Environment variables  
@@ -21,6 +24,7 @@ This project focuses on **database design, cloud-based DB access, security, and 
 ## ✨ Features
 
 - JavaFX-based graphical user interface using FXML
+- Supermarket-oriented data management
 - Secure connection to a private cloud PostgreSQL database
 - Environment variable–based database configuration
 - Full CRUD operations (Create, Read, Update, Delete)
