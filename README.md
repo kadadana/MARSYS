@@ -11,7 +11,7 @@ The project emphasizes **secure cloud database access**, **environment variableâ
 ## ðŸŽ“ Project Context
 
 - **Type:** University DBMS Course Project
-- - **Domain**: Supermarket Automation  
+- **Domain**: Supermarket Automation  
 - **Database:** Cloud-based PostgreSQL (NeonDB)  
 - **Interface:** JavaFX GUI (FXML)  
 - **Configuration:** Environment variables  
